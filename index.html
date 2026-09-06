@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
   
-  <!-- Iconos de FontAwesome (Para redes sociales) -->
+  <!-- Iconos de FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -205,32 +205,58 @@
     <div class="container">
       <div class="contact-box fade-in">
         <h2>¿Listo para desafiar tu gravedad?</h2>
-        <p>Escríbenos para iniciar tu proceso o coordinar tu primera clase de evaluación.</p>
+        <p>Escríbenos directamente por WhatsApp o envíanos un correo electrónico para coordinar tu primera clase.</p>
         
-        <form class="contact-form" id="contactForm">
+        <!-- Opción 1: Botón directo a WhatsApp con texto codificado -->
+        <a href="https://wa.me/5214433019533?text=Hola%20Control%20Gravedad%20%F0%9F%AA%90%2C%20me%20gustar%C3%ADa%20solicitar%20informaci%C3%B3n%20sobre%20los%20programas." 
+           target="_blank" 
+           rel="noopener" 
+           class="btn btn-whatsapp full-width mb-20">
+          <i class="fa-brands fa-whatsapp"></i> Hablar por WhatsApp
+        </a>
+
+        <div class="divider"><span>o envíanos un correo</span></div>
+
+        <!-- Opción 2: Formulario por Email -->
+        <form class="contact-form" id="contactForm" action="https://formsubmit.co/chesaremozartyt@gmail.com" method="POST">
+          
+          <input type="hidden" name="_captcha" value="false">
+          <input type="hidden" name="_subject" value="¡Nuevo interesado en Control Gravedad!">
+          <input type="hidden" name="_next" value="#">
+
           <div class="form-group">
-            <input type="text" id="nombre" placeholder="Tu Nombre" required>
+            <input type="text" name="nombre" id="nombre" placeholder="Tu Nombre" required>
           </div>
           <div class="form-group">
-            <input type="email" id="email" placeholder="Tu Correo Electrónico" required>
+            <input type="email" name="email" id="email" placeholder="Tu Correo Electrónico" required>
           </div>
           <div class="form-group">
-            <select id="interes" required>
+            <select name="interes" id="interes" required>
               <option value="" disabled selected>Selecciona tu objetivo principal</option>
-              <option value="calistenia">Calistenia Base / Iniciación</option>
-              <option value="streetlifting">Streetlifting / Fuerza Lastrada</option>
-              <option value="skills">Aprender Skills (Handstand, Lever, etc.)</option>
-              <option value="funcional">Acondicionamiento Funcional</option>
+              <option value="Calistenia Base">Calistenia Base / Iniciación</option>
+              <option value="Streetlifting">Streetlifting / Fuerza Lastrada</option>
+              <option value="Skills">Aprender Skills (Handstand, Lever, etc.)</option>
+              <option value="Funcional">Acondicionamiento Funcional</option>
             </select>
           </div>
           <div class="form-group">
-            <textarea id="mensaje" rows="4" placeholder="Cuéntanos sobre tu nivel actual y metas..." required></textarea>
+            <textarea name="mensaje" id="mensaje" rows="4" placeholder="Cuéntanos sobre tu nivel actual y metas..." required></textarea>
           </div>
-          <button type="submit" class="btn btn-primary full-width">Enviar Mensaje</button>
+          <button type="submit" class="btn btn-primary full-width">Enviar por Correo</button>
         </form>
+
       </div>
     </div>
   </section>
+
+  <!-- Botón flotante fijo de WhatsApp -->
+  <a href="https://wa.me/5214433019533?text=Hola%20Control%20Gravedad%20%F0%9F%AA%90%2C%20me%20gustar%C3%ADa%20solicitar%20informaci%C3%B3n." 
+     class="whatsapp-float" 
+     target="_blank" 
+     rel="noopener" 
+     aria-label="Contacto por WhatsApp">
+    <i class="fa-brands fa-whatsapp"></i>
+  </a>
 
   <!-- Footer -->
   <footer>
@@ -241,7 +267,6 @@
       </div>
       <p class="tagline">Calistenia • Streetlifting • Skills • Funcional</p>
       
-      <!-- Redes Sociales en Footer -->
       <div class="socials">
         <a href="https://www.instagram.com/controlgravedad/" target="_blank" rel="noopener" class="social-circle" title="Control Gravedad">
           <i class="fa-brands fa-instagram"></i>

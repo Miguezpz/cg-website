@@ -83,7 +83,7 @@ span {
   text-transform: uppercase;
   font-size: 0.85rem;
   letter-spacing: 1px;
-  min-height: 48px; /* Táctil óptimo */
+  min-height: 48px;
 }
 
 .btn-primary {
@@ -108,6 +108,80 @@ span {
   border-color: var(--accent);
   color: var(--accent);
   background: rgba(170, 207, 130, 0.05);
+}
+
+/* Botón de WhatsApp */
+.btn-whatsapp {
+  background-color: #25d366;
+  color: #ffffff;
+  gap: 10px;
+  font-size: 0.95rem;
+  box-shadow: 0 0 15px rgba(37, 211, 102, 0.2);
+}
+
+.btn-whatsapp:hover {
+  background-color: #1ebc57;
+  color: #ffffff;
+  box-shadow: 0 0 25px rgba(37, 211, 102, 0.4);
+  transform: translateY(-2px);
+}
+
+.mb-20 {
+  margin-bottom: 20px;
+}
+
+/* Divisor en la sección de contacto */
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 25px 0;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.divider:not(:empty)::before {
+  margin-right: 1em;
+}
+
+.divider:not(:empty)::after {
+  margin-left: 1em;
+}
+
+/* Botón flotante WhatsApp */
+.whatsapp-float {
+  position: fixed;
+  width: 58px;
+  height: 58px;
+  bottom: 25px;
+  right: 25px;
+  background-color: #25d366;
+  color: #ffffff;
+  border-radius: 50%;
+  text-align: center;
+  font-size: 30px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.whatsapp-float:hover {
+  transform: scale(1.1);
+  box-shadow: 0px 6px 20px rgba(37, 211, 102, 0.6);
+  color: #ffffff;
 }
 
 /* Botones de iconos (Redes Sociales Hero) */
@@ -612,11 +686,7 @@ footer .copy {
   transform: translateY(0);
 }
 
-/* ==========================================================================
-   MEDIA QUERIES - RESPONSIVE DESIGN (TABLETS & MÓVILES)
-   ========================================================================== */
-
-/* Tablets / Pantallas Medianas (<= 992px) */
+/* Responsive */
 @media (max-width: 992px) {
   .section {
     padding: 70px 0;
@@ -632,7 +702,6 @@ footer .copy {
   }
 }
 
-/* Móviles y Tablets Pequeñas (<= 768px) */
 @media (max-width: 768px) {
   .section {
     padding: 60px 0;
@@ -643,7 +712,6 @@ footer .copy {
     margin-bottom: 30px;
   }
 
-  /* Menú desplegable Móvil */
   .menu-toggle {
     display: flex;
   }
@@ -679,7 +747,6 @@ footer .copy {
     font-weight: 600;
   }
 
-  /* Hero Section */
   .hero {
     padding: 120px 15px 50px;
     min-height: auto;
@@ -703,7 +770,6 @@ footer .copy {
     margin-bottom: 10px;
   }
 
-  /* Stats Bar */
   .stats-bar {
     flex-direction: column;
     gap: 25px;
@@ -714,7 +780,6 @@ footer .copy {
     font-size: 1.8rem;
   }
 
-  /* Seccion Coach */
   .about-container {
     flex-direction: column;
     gap: 35px;
@@ -740,7 +805,6 @@ footer .copy {
     text-align: left;
   }
 
-  /* Programas / Tarjetas */
   .grid-plans,
   .grid-cards {
     grid-template-columns: 1fr;
@@ -752,15 +816,21 @@ footer .copy {
     padding: 25px 20px;
   }
 
-  /* Formulario (iOS Zoom Fix) */
   .contact-form input,
   .contact-form select,
   .contact-form textarea {
-    font-size: 16px; /* Evita zoom automático en Safari iOS */
+    font-size: 16px;
+  }
+
+  .whatsapp-float {
+    width: 50px;
+    height: 50px;
+    font-size: 26px;
+    bottom: 20px;
+    right: 20px;
   }
 }
 
-/* Móviles Pequeños (<= 480px) */
 @media (max-width: 480px) {
   .nav-container {
     padding: 12px 15px;

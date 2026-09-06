@@ -35,24 +35,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
   fadeElements.forEach(el => observer.observe(el));
 
-  // 3. Envío del Formulario a WhatsApp
-  const contactForm = document.getElementById('contactForm');
-
-  if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-
-      const nombre = document.getElementById('nombre').value;
-      const interes = document.getElementById('interes').value;
-      const mensaje = document.getElementById('mensaje').value;
-
-      const textoWhatsApp = `Hola Control Gravedad 🪐,%0AMi nombre es *${encodeURIComponent(nombre)}*.%0AMe interesa el programa: *${encodeURIComponent(interes)}*.%0A%0AMensaje: ${encodeURIComponent(mensaje)}`;
-      
-      // Reemplaza por tu número de teléfono real con clave de país
-      const numeroWhatsApp = "5210000000000"; 
-      
-      window.open(`https://wa.me/${numeroWhatsApp}?text=${textoWhatsApp}`, '_blank');
-    });
-  }
-
 });
