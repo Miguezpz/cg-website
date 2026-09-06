@@ -1,0 +1,802 @@
+:root {
+  --bg-main: #000000;
+  --bg-card: #0d0d0d;
+  --bg-card-hover: #171717;
+  --accent: #AACF82;
+  --accent-glow: rgba(170, 207, 130, 0.3);
+  --accent-dark: #8eb366;
+  --text-main: #FFFFFF;
+  --text-muted: rgba(255, 255, 255, 0.7);
+  --border-color: rgba(255, 255, 255, 0.12);
+  --font-heading: 'Orbitron', sans-serif;
+  --font-body: 'Plus Jakarta Sans', sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  font-family: var(--font-body);
+  line-height: 1.6;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+/* Tipografía y Utilidades */
+h1, h2, h3 {
+  font-family: var(--font-heading);
+  letter-spacing: 1px;
+}
+
+span {
+  color: var(--accent);
+}
+
+.container {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 20px;
+  width: 100%;
+}
+
+.section {
+  padding: 90px 0;
+}
+
+.section-title {
+  font-size: 2.2rem;
+  margin-bottom: 40px;
+  text-transform: uppercase;
+}
+
+.badge {
+  display: inline-block;
+  background: rgba(170, 207, 130, 0.1);
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  margin-bottom: 15px;
+}
+
+/* Botones */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 28px;
+  border-radius: 4px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  min-height: 48px; /* Táctil óptimo */
+}
+
+.btn-primary {
+  background-color: var(--accent);
+  color: #000000;
+  box-shadow: 0 0 15px var(--accent-glow);
+}
+
+.btn-primary:hover {
+  background-color: var(--accent-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 0 25px var(--accent-glow);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(170, 207, 130, 0.05);
+}
+
+/* Botones de iconos (Redes Sociales Hero) */
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.btn-icon:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(170, 207, 130, 0.05);
+  transform: translateY(-2px);
+}
+
+.full-width {
+  width: 100%;
+  text-align: center;
+}
+
+/* Navegación */
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.92);
+  backdrop-filter: blur(12px);
+  z-index: 1000;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.nav-container {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.logo-img {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--accent);
+  transition: transform 0.3s ease;
+}
+
+.logo-brand:hover .logo-img {
+  transform: scale(1.08);
+}
+
+.logo-text {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #FFFFFF;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  align-items: center;
+  gap: 30px;
+}
+
+.nav-links a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: var(--accent);
+}
+
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  width: 40px;
+  height: 40px;
+  padding: 5px;
+}
+
+.menu-toggle .bar {
+  width: 100%;
+  height: 2px;
+  background-color: #FFFFFF;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* Hero */
+.hero {
+  position: relative;
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 140px 20px 60px;
+  background: radial-gradient(circle at center, rgba(170, 207, 130, 0.12) 0%, rgba(0, 0, 0, 1) 75%);
+}
+
+.hero-content {
+  max-width: 800px;
+}
+
+.hero h1 {
+  font-size: 3rem;
+  line-height: 1.15;
+  margin-bottom: 20px;
+}
+
+.hero p {
+  font-size: 1.15rem;
+  color: var(--text-muted);
+  margin-bottom: 35px;
+}
+
+.hero-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* Stats Bar */
+.stats-bar {
+  display: flex;
+  justify-content: space-around;
+  background-color: var(--bg-card);
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  padding: 30px 20px;
+  text-align: center;
+}
+
+.stat-item h3 {
+  font-size: 2rem;
+  color: var(--accent);
+}
+
+.stat-item p {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+/* Cards (Disciplinas) */
+.grid-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 25px;
+}
+
+.card {
+  background-color: var(--bg-card);
+  padding: 30px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  border-color: var(--accent);
+  background-color: var(--bg-card-hover);
+}
+
+.card-icon {
+  font-size: 2.2rem;
+  margin-bottom: 15px;
+}
+
+.card h3 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.card p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+/* Sección El Coach (Imagen Retrato) */
+.about-section {
+  background-color: var(--bg-main);
+  border-top: 1px solid var(--border-color);
+  overflow: hidden;
+}
+
+.about-container {
+  display: flex;
+  align-items: center;
+  gap: 60px;
+}
+
+.about-image {
+  flex: 1;
+  position: relative;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.about-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  display: block;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.image-accent {
+  position: absolute;
+  top: 15px;
+  left: -15px;
+  width: 100%;
+  height: 100%;
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+  z-index: 1;
+}
+
+.about-text {
+  flex: 1;
+}
+
+.about-text h2 {
+  font-size: 2.2rem;
+  margin-bottom: 20px;
+  line-height: 1.2;
+}
+
+.about-text p {
+  color: var(--text-muted);
+  margin-bottom: 20px;
+  font-size: 1.05rem;
+}
+
+.coach-list {
+  list-style: none;
+  margin-top: 20px;
+}
+
+.coach-list li {
+  margin-bottom: 12px;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.coach-list li i {
+  color: var(--accent);
+}
+
+/* Filosofía */
+.philosophy-section {
+  background: linear-gradient(180deg, var(--bg-main) 0%, var(--bg-card) 50%, var(--bg-main) 100%);
+  text-align: center;
+}
+
+.philosophy-container {
+  max-width: 750px;
+}
+
+.philosophy-text h2 {
+  font-size: 2.2rem;
+  margin-bottom: 20px;
+}
+
+.philosophy-text p {
+  color: var(--text-muted);
+  margin-bottom: 15px;
+  font-size: 1.05rem;
+}
+
+/* Programas / Pricing */
+.grid-plans {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+}
+
+.plan-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 35px 25px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.plan-card.featured {
+  border-color: var(--accent);
+  box-shadow: 0 0 20px rgba(170, 207, 130, 0.15);
+}
+
+.popular-tag {
+  position: absolute;
+  top: -12px;
+  right: 20px;
+  background: var(--accent);
+  color: #000000;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 10px;
+  text-transform: uppercase;
+}
+
+.plan-card h3 {
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+}
+
+.plan-card .price {
+  font-size: 1.1rem;
+  color: var(--accent);
+  font-weight: 700;
+  margin-bottom: 25px;
+}
+
+.plan-card ul {
+  list-style: none;
+  margin-bottom: 20px;
+  flex-grow: 1;
+}
+
+.plan-card ul li {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 12px;
+}
+
+.ig-promo {
+  background: rgba(170, 207, 130, 0.1);
+  border-radius: 4px;
+  padding: 12px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 25px;
+  text-align: center;
+  border: 1px dashed var(--accent);
+}
+
+.ig-promo a {
+  color: var(--accent);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+/* Formulario Contacto */
+.contact-section {
+  background-color: var(--bg-card);
+}
+
+.contact-box {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.contact-box h2 {
+  margin-bottom: 10px;
+}
+
+.contact-box p {
+  color: var(--text-muted);
+  margin-bottom: 30px;
+}
+
+.contact-form .form-group {
+  margin-bottom: 18px;
+}
+
+.contact-form input,
+.contact-form select,
+.contact-form textarea {
+  width: 100%;
+  padding: 14px;
+  background-color: var(--bg-main);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  color: var(--text-main);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.contact-form input:focus,
+.contact-form select:focus,
+.contact-form textarea:focus {
+  border-color: var(--accent);
+}
+
+/* Footer */
+footer {
+  border-top: 1px solid var(--border-color);
+  padding: 50px 0 30px;
+  text-align: center;
+  background-color: var(--bg-main);
+}
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.logo-img-footer {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--accent);
+}
+
+footer .tagline {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin: 10px 0 20px;
+}
+
+/* Círculos de Redes Sociales en el Footer */
+.socials {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin: 25px 0;
+}
+
+.social-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: var(--bg-card);
+  color: var(--text-main);
+  font-size: 1.2rem;
+  text-decoration: none;
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+}
+
+.social-circle:hover {
+  background-color: var(--accent);
+  color: #000000;
+  border-color: var(--accent);
+  transform: translateY(-4px);
+  box-shadow: 0 5px 15px var(--accent-glow);
+}
+
+footer .copy {
+  margin-top: 25px;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+
+/* Animación Reveal */
+.fade-in {
+  opacity: 0;
+  transform: translateY(25px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ==========================================================================
+   MEDIA QUERIES - RESPONSIVE DESIGN (TABLETS & MÓVILES)
+   ========================================================================== */
+
+/* Tablets / Pantallas Medianas (<= 992px) */
+@media (max-width: 992px) {
+  .section {
+    padding: 70px 0;
+  }
+
+  .about-container {
+    gap: 40px;
+  }
+
+  .about-text h2,
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+}
+
+/* Móviles y Tablets Pequeñas (<= 768px) */
+@media (max-width: 768px) {
+  .section {
+    padding: 60px 0;
+  }
+
+  .section-title {
+    font-size: 1.8rem;
+    margin-bottom: 30px;
+  }
+
+  /* Menú desplegable Móvil */
+  .menu-toggle {
+    display: flex;
+  }
+
+  .nav-links {
+    position: fixed;
+    top: 74px;
+    right: 0;
+    width: 100%;
+    height: calc(100vh - 74px);
+    background-color: rgba(13, 13, 13, 0.98);
+    backdrop-filter: blur(15px);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    gap: 30px;
+    border-bottom: 1px solid var(--border-color);
+    transform: translateY(-150%);
+    transition: transform 0.4s ease-in-out, opacity 0.3s ease;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .nav-links.active {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .nav-links a {
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+
+  /* Hero Section */
+  .hero {
+    padding: 120px 15px 50px;
+    min-height: auto;
+  }
+
+  .hero h1 {
+    font-size: 2.1rem;
+  }
+
+  .hero p {
+    font-size: 1rem;
+    margin-bottom: 25px;
+  }
+
+  .hero-buttons {
+    width: 100%;
+  }
+
+  .hero-buttons .btn-primary {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  /* Stats Bar */
+  .stats-bar {
+    flex-direction: column;
+    gap: 25px;
+    padding: 25px 15px;
+  }
+
+  .stat-item h3 {
+    font-size: 1.8rem;
+  }
+
+  /* Seccion Coach */
+  .about-container {
+    flex-direction: column;
+    gap: 35px;
+    text-align: center;
+  }
+
+  .about-image {
+    width: 85%;
+    max-width: 320px;
+  }
+
+  .image-accent {
+    top: 10px;
+    left: -10px;
+  }
+
+  .about-text h2 {
+    font-size: 1.8rem;
+  }
+
+  .coach-list li {
+    justify-content: center;
+    text-align: left;
+  }
+
+  /* Programas / Tarjetas */
+  .grid-plans,
+  .grid-cards {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .card,
+  .plan-card {
+    padding: 25px 20px;
+  }
+
+  /* Formulario (iOS Zoom Fix) */
+  .contact-form input,
+  .contact-form select,
+  .contact-form textarea {
+    font-size: 16px; /* Evita zoom automático en Safari iOS */
+  }
+}
+
+/* Móviles Pequeños (<= 480px) */
+@media (max-width: 480px) {
+  .nav-container {
+    padding: 12px 15px;
+  }
+
+  .logo-text {
+    font-size: 0.95rem;
+  }
+
+  .logo-img {
+    width: 38px;
+    height: 38px;
+  }
+
+  .hero h1 {
+    font-size: 1.75rem;
+  }
+
+  .hero-buttons {
+    gap: 8px;
+  }
+
+  .btn-icon {
+    width: 44px;
+    height: 44px;
+  }
+
+  .about-image {
+    width: 90%;
+  }
+
+  .philosophy-text h2 {
+    font-size: 1.6rem;
+  }
+
+  .contact-box h2 {
+    font-size: 1.5rem;
+  }
+}
