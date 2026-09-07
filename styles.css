@@ -452,6 +452,11 @@ span {
   z-index: 1;
 }
 
+/* AJUSTE: Otorga proporciones idénticas a cada columna para centrar el elemento intermedio */
+.stat-item {
+  flex: 1;
+}
+
 .stat-item h3 {
   font-size: 2rem;
   color: var(--accent);
@@ -870,8 +875,11 @@ footer .copy {
   .hero p { font-size: 1rem; margin-bottom: 25px; }
   .hero-buttons { width: 100%; }
   .hero-buttons .btn-primary { width: 100%; margin-bottom: 10px; }
+  
+  /* Nota: En móviles, se colocará uno debajo de otro automáticamente. */
   .stats-bar { flex-direction: column; gap: 25px; padding: 25px 15px; }
   .stat-item h3 { font-size: 1.8rem; }
+  
   .about-container { flex-direction: column; gap: 35px; text-align: center; }
   .about-image { width: 85%; max-width: 320px; }
   .image-accent { top: 10px; left: -10px; }
