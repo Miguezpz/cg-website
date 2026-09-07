@@ -416,9 +416,9 @@ span {
 
 /* Flecha desplegable en Hero */
 @keyframes bounce-down {
-  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-  40% { transform: translateY(-10px); }
-  60% { transform: translateY(-5px); }
+  0%, 20%, 50%, 80%, 100% { transform: translate(-50%, 0); }
+  40% { transform: translate(-50%, -10px); }
+  60% { transform: translate(-50%, -5px); }
 }
 
 .scroll-indicator {
@@ -865,7 +865,7 @@ footer .copy {
   }
 
   .nav-links a { font-size: 1.2rem; font-weight: 600; }
-  .hero { padding: 120px 15px 50px; min-height: auto; }
+  .hero { padding: 120px 15px 80px; min-height: auto; } /* <- AJUSTE DE ESPACIADO APLICADO AQUÍ */
   .hero h1 { font-size: 2.1rem; }
   .hero p { font-size: 1rem; margin-bottom: 25px; }
   .hero-buttons { width: 100%; }
