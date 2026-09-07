@@ -87,4 +87,33 @@ document.addEventListener('DOMContentLoaded', () => {
     statsObserver.observe(statsSection);
   }
 
+  // --- TRACKER DE GOOGLE ANALYTICS ---
+
+  // 5. Rastrear clics en los botones de WhatsApp
+  const whatsappButtons = document.querySelectorAll('.btn-whatsapp, .whatsapp-float');
+  
+  whatsappButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      if (typeof gtag === 'function') {
+        gtag('event', 'click_whatsapp', {
+          'event_category': 'Contacto',
+          'event_label': 'Boton WhatsApp'
+        });
+      }
+    });
+  });
+
+  // 6. Rastrear el envío del formulario de correo electrónico
+  const contactForm = document.getElementById('contactForm');
+  if (contactForm) {
+    contactForm.addEventListener('submit', () => {
+      if (typeof gtag === 'function') {
+        gtag('event', 'envio_formulario', {
+          'event_category': 'Contacto',
+          'event_label': 'Formulario Correo'
+        });
+      }
+    });
+  }
+
 });
