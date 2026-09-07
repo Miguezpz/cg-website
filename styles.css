@@ -1,3 +1,4 @@
+/* styles.css */
 :root {
   --bg-main: #000000;
   --bg-card: #0d0d0d;
@@ -9,7 +10,7 @@
   --text-muted: rgba(255, 255, 255, 0.7);
   --border-color: rgba(255, 255, 255, 0.12);
   --font-heading: 'Orbitron', sans-serif;
-  --font-body: 'Plus Jakarta Sans', sans-serif;
+  --font-body: 'Readex Pro', sans-serif;
 }
 
 * {
@@ -86,10 +87,29 @@ span {
   min-height: 48px;
 }
 
+/* Animación 4: Shimmer / Destello en botones primarios */
 .btn-primary {
   background-color: var(--accent);
   color: #000000;
   box-shadow: 0 0 15px var(--accent-glow);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 20%;
+  height: 200%;
+  background: rgba(255, 255, 255, 0.4);
+  transform: rotate(30deg);
+  transition: all 0.6s ease;
+}
+
+.btn-primary:hover::after {
+  left: 120%;
 }
 
 .btn-primary:hover {
@@ -157,7 +177,19 @@ span {
   margin-left: 1em;
 }
 
-/* Botón flotante WhatsApp */
+/* Animación 3: Respiración / Pulso para WhatsApp Flotante */
+@keyframes pulse-glow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 15px rgba(37, 211, 102, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+  }
+}
+
 .whatsapp-float {
   position: fixed;
   width: 58px;
@@ -176,6 +208,7 @@ span {
   justify-content: center;
   text-decoration: none;
   transition: all 0.3s ease;
+  animation: pulse-glow 2s infinite;
 }
 
 .whatsapp-float:hover {
@@ -366,7 +399,7 @@ span {
   padding: 30px;
   border-radius: 8px;
   border: 1px solid var(--border-color);
-  transition: transform 0.3s ease, border-color 0.3s ease;
+  transition: transform 0.3s ease, border-color 0.3s ease, background-color 0.3s ease;
 }
 
 .card:hover {
@@ -390,7 +423,7 @@ span {
   font-size: 0.9rem;
 }
 
-/* Sección El Coach (Imagen Retrato) */
+/* Sección El Coach */
 .about-section {
   background-color: var(--bg-main);
   border-top: 1px solid var(--border-color);
@@ -421,6 +454,16 @@ span {
   border: 1px solid rgba(255,255,255,0.1);
 }
 
+/* Animación 5: Flotación continua en marco decorativo */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
 .image-accent {
   position: absolute;
   top: 15px;
@@ -430,6 +473,7 @@ span {
   border: 2px solid var(--accent);
   border-radius: 8px;
   z-index: 1;
+  animation: float 4s ease-in-out infinite;
 }
 
 .about-text {
@@ -501,6 +545,7 @@ span {
   position: relative;
   display: flex;
   flex-direction: column;
+  transition: transform 0.3s ease, border-color 0.3s ease;
 }
 
 .plan-card.featured {
@@ -674,7 +719,7 @@ footer .copy {
   font-size: 0.75rem;
 }
 
-/* Animación Reveal */
+/* Animación Scroll Reveal */
 .fade-in {
   opacity: 0;
   transform: translateY(25px);
@@ -685,6 +730,18 @@ footer .copy {
   opacity: 1;
   transform: translateY(0);
 }
+
+/* Animación 2: Aparecer en cascada (Stagger Delay) */
+.grid-cards .card:nth-child(1),
+.grid-plans .plan-card:nth-child(1) { transition-delay: 0.1s; }
+
+.grid-cards .card:nth-child(2),
+.grid-plans .plan-card:nth-child(2) { transition-delay: 0.2s; }
+
+.grid-cards .card:nth-child(3),
+.grid-plans .plan-card:nth-child(3) { transition-delay: 0.3s; }
+
+.grid-cards .card:nth-child(4) { transition-delay: 0.4s; }
 
 /* Responsive */
 @media (max-width: 992px) {
