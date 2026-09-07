@@ -20,8 +20,11 @@
 </head>
 <body>
 
+  <!-- Barra de progreso de lectura superior -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
   <!-- Navegación -->
-  <nav class="navbar">
+  <nav class="navbar" id="navbar">
     <div class="nav-container">
       <a href="#" class="logo-brand">
         <img src="assets/cg.jpg" alt="Control Gravedad Logo" class="logo-img">
@@ -45,7 +48,7 @@
   <header class="hero">
     <div class="hero-overlay"></div>
     <div class="hero-content fade-in">
-      <span class="badge">FITNESS TRAINER & COACHING</span>
+      <span class="badge pulse-badge">FITNESS TRAINER & COACHING</span>
       <h1>DESAFÍA TU SER <span>GRAVITACIONAL</span></h1>
       <p>Formamos deportistas hábiles y conscientes a través del dominio del peso corporal y la fuerza de alto rendimiento.</p>
       <div class="hero-buttons">
@@ -65,6 +68,11 @@
         </a>
       </div>
     </div>
+
+    <!-- Indicador de Scroll -->
+    <a href="#disciplinas" class="scroll-indicator" aria-label="Bajar a disciplinas">
+      <i class="fa-solid fa-chevron-down"></i>
+    </a>
   </header>
 
   <!-- Barra de Stats -->

@@ -1,4 +1,3 @@
-/* styles.css */
 :root {
   --bg-main: #000000;
   --bg-card: #0d0d0d;
@@ -10,7 +9,7 @@
   --text-muted: rgba(255, 255, 255, 0.7);
   --border-color: rgba(255, 255, 255, 0.12);
   --font-heading: 'Orbitron', sans-serif;
-  --font-body: 'Readex Pro', sans-serif;
+  --font-body: 'Plus Jakarta Sans', sans-serif;
 }
 
 * {
@@ -29,6 +28,19 @@ body {
   width: 100%;
 }
 
+/* Barra de progreso de lectura */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: var(--accent);
+  box-shadow: 0 0 10px var(--accent);
+  z-index: 1001;
+  width: 0%;
+  transition: width 0.1s ease-out;
+}
+
 /* Tipografía y Utilidades */
 h1, h2, h3 {
   font-family: var(--font-heading);
@@ -37,6 +49,7 @@ h1, h2, h3 {
 
 span {
   color: var(--accent);
+  transition: color 0.3s ease;
 }
 
 .container {
@@ -56,6 +69,7 @@ span {
   text-transform: uppercase;
 }
 
+/* Badges */
 .badge {
   display: inline-block;
   background: rgba(170, 207, 130, 0.1);
@@ -67,9 +81,19 @@ span {
   font-weight: 700;
   letter-spacing: 1.5px;
   margin-bottom: 15px;
+  transition: all 0.3s ease;
 }
 
-/* Botones */
+@keyframes badge-glow {
+  0%, 100% { box-shadow: 0 0 5px rgba(170, 207, 130, 0.2); }
+  50% { box-shadow: 0 0 15px rgba(170, 207, 130, 0.6); }
+}
+
+.pulse-badge {
+  animation: badge-glow 3s infinite;
+}
+
+/* Botones con reflejo Shimmer */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -87,7 +111,6 @@ span {
   min-height: 48px;
 }
 
-/* Animación 4: Shimmer / Destello en botones primarios */
 .btn-primary {
   background-color: var(--accent);
   color: #000000;
@@ -114,7 +137,7 @@ span {
 
 .btn-primary:hover {
   background-color: var(--accent-dark);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
   box-shadow: 0 0 25px var(--accent-glow);
 }
 
@@ -128,6 +151,7 @@ span {
   border-color: var(--accent);
   color: var(--accent);
   background: rgba(170, 207, 130, 0.05);
+  transform: translateY(-2px);
 }
 
 /* Botón de WhatsApp */
@@ -150,7 +174,7 @@ span {
   margin-bottom: 20px;
 }
 
-/* Divisor en la sección de contacto */
+/* Divisor */
 .divider {
   display: flex;
   align-items: center;
@@ -169,25 +193,14 @@ span {
   border-bottom: 1px solid var(--border-color);
 }
 
-.divider:not(:empty)::before {
-  margin-right: 1em;
-}
+.divider:not(:empty)::before { margin-right: 1em; }
+.divider:not(:empty)::after { margin-left: 1em; }
 
-.divider:not(:empty)::after {
-  margin-left: 1em;
-}
-
-/* Animación 3: Respiración / Pulso para WhatsApp Flotante */
+/* Botón flotante WhatsApp animado */
 @keyframes pulse-glow {
-  0% {
-    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.6);
-  }
-  70% {
-    box-shadow: 0 0 0 15px rgba(37, 211, 102, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
-  }
+  0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.6); }
+  70% { box-shadow: 0 0 0 16px rgba(37, 211, 102, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
 }
 
 .whatsapp-float {
@@ -212,12 +225,11 @@ span {
 }
 
 .whatsapp-float:hover {
-  transform: scale(1.1);
-  box-shadow: 0px 6px 20px rgba(37, 211, 102, 0.6);
+  transform: scale(1.12);
   color: #ffffff;
 }
 
-/* Botones de iconos (Redes Sociales Hero) */
+/* Redes Hero */
 .btn-icon {
   display: inline-flex;
   align-items: center;
@@ -237,7 +249,7 @@ span {
   border-color: var(--accent);
   color: var(--accent);
   background: rgba(170, 207, 130, 0.05);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
 }
 
 .full-width {
@@ -254,6 +266,13 @@ span {
   backdrop-filter: blur(12px);
   z-index: 1000;
   border-bottom: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+}
+
+.navbar.scrolled {
+  padding: 5px 0;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
+  border-bottom-color: rgba(170, 207, 130, 0.3);
 }
 
 .nav-container {
@@ -282,7 +301,7 @@ span {
 }
 
 .logo-brand:hover .logo-img {
-  transform: scale(1.08);
+  transform: rotate(10deg) scale(1.08);
 }
 
 .logo-text {
@@ -306,7 +325,8 @@ span {
   transition: color 0.3s ease;
 }
 
-.nav-links a:hover {
+.nav-links a:hover,
+.nav-links a.active {
   color: var(--accent);
 }
 
@@ -330,7 +350,7 @@ span {
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
-/* Hero */
+/* Hero con respiración de luz ambiental 100% fluida */
 .hero {
   position: relative;
   min-height: 90vh;
@@ -339,11 +359,39 @@ span {
   justify-content: center;
   text-align: center;
   padding: 140px 20px 60px;
-  background: radial-gradient(circle at center, rgba(170, 207, 130, 0.12) 0%, rgba(0, 0, 0, 1) 75%);
+  background-color: var(--bg-main);
+  overflow: hidden;
+}
+
+/* Capa de luz ambiental animada mediante Opacity y Transform (GPU accelerated) */
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, rgba(170, 207, 130, 0.25) 0%, rgba(0, 0, 0, 1) 75%);
+  z-index: 0;
+  animation: ambient-pulse 6s infinite ease-in-out;
+  pointer-events: none;
+}
+
+@keyframes ambient-pulse {
+  0%, 100% {
+    opacity: 0.35;
+    transform: scale(0.95);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.05);
+  }
 }
 
 .hero-content {
   max-width: 800px;
+  position: relative;
+  z-index: 1;
 }
 
 .hero h1 {
@@ -366,6 +414,31 @@ span {
   gap: 12px;
 }
 
+/* Flecha desplegable en Hero */
+@keyframes bounce-down {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-10px); }
+  60% { transform: translateY(-5px); }
+}
+
+.scroll-indicator {
+  position: absolute;
+  bottom: 25px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--accent);
+  font-size: 1.5rem;
+  text-decoration: none;
+  animation: bounce-down 2.5s infinite;
+  opacity: 0.8;
+  z-index: 1;
+  transition: opacity 0.3s ease;
+}
+
+.scroll-indicator:hover {
+  opacity: 1;
+}
+
 /* Stats Bar */
 .stats-bar {
   display: flex;
@@ -375,6 +448,8 @@ span {
   border-bottom: 1px solid var(--border-color);
   padding: 30px 20px;
   text-align: center;
+  position: relative;
+  z-index: 1;
 }
 
 .stat-item h3 {
@@ -387,7 +462,7 @@ span {
   font-size: 0.85rem;
 }
 
-/* Cards (Disciplinas) */
+/* Tarjetas (Sin cambio de tamaño en el icono) */
 .grid-cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -399,13 +474,14 @@ span {
   padding: 30px;
   border-radius: 8px;
   border: 1px solid var(--border-color);
-  transition: transform 0.3s ease, border-color 0.3s ease, background-color 0.3s ease;
+  transition: transform 0.35s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-8px);
   border-color: var(--accent);
   background-color: var(--bg-card-hover);
+  box-shadow: 0 10px 25px rgba(170, 207, 130, 0.15);
 }
 
 .card-icon {
@@ -452,16 +528,16 @@ span {
   z-index: 2;
   box-shadow: 0 10px 30px rgba(0,0,0,0.5);
   border: 1px solid rgba(255,255,255,0.1);
+  transition: transform 0.4s ease;
 }
 
-/* Animación 5: Flotación continua en marco decorativo */
+.about-image:hover img {
+  transform: scale(1.02);
+}
+
 @keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-8px);
-  }
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
 }
 
 .image-accent {
@@ -545,7 +621,13 @@ span {
   position: relative;
   display: flex;
   flex-direction: column;
-  transition: transform 0.3s ease, border-color 0.3s ease;
+  transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+}
+
+.plan-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--accent);
+  box-shadow: 0 10px 25px rgba(170, 207, 130, 0.12);
 }
 
 .plan-card.featured {
@@ -643,13 +725,14 @@ span {
   font-family: var(--font-body);
   font-size: 1rem;
   outline: none;
-  transition: border-color 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .contact-form input:focus,
 .contact-form select:focus,
 .contact-form textarea:focus {
   border-color: var(--accent);
+  box-shadow: 0 0 12px rgba(170, 207, 130, 0.3);
 }
 
 /* Footer */
@@ -682,7 +765,7 @@ footer .tagline {
   margin: 10px 0 20px;
 }
 
-/* Círculos de Redes Sociales en el Footer */
+/* Redes Footer */
 .socials {
   display: flex;
   justify-content: center;
@@ -731,7 +814,7 @@ footer .copy {
   transform: translateY(0);
 }
 
-/* Animación 2: Aparecer en cascada (Stagger Delay) */
+/* Aparición en cascada */
 .grid-cards .card:nth-child(1),
 .grid-plans .plan-card:nth-child(1) { transition-delay: 0.1s; }
 
@@ -745,33 +828,15 @@ footer .copy {
 
 /* Responsive */
 @media (max-width: 992px) {
-  .section {
-    padding: 70px 0;
-  }
-
-  .about-container {
-    gap: 40px;
-  }
-
-  .about-text h2,
-  .hero h1 {
-    font-size: 2.5rem;
-  }
+  .section { padding: 70px 0; }
+  .about-container { gap: 40px; }
+  .about-text h2, .hero h1 { font-size: 2.5rem; }
 }
 
 @media (max-width: 768px) {
-  .section {
-    padding: 60px 0;
-  }
-
-  .section-title {
-    font-size: 1.8rem;
-    margin-bottom: 30px;
-  }
-
-  .menu-toggle {
-    display: flex;
-  }
+  .section { padding: 60px 0; }
+  .section-title { font-size: 1.8rem; margin-bottom: 30px; }
+  .menu-toggle { display: flex; }
 
   .nav-links {
     position: fixed;
@@ -799,131 +864,33 @@ footer .copy {
     pointer-events: auto;
   }
 
-  .nav-links a {
-    font-size: 1.2rem;
-    font-weight: 600;
-  }
-
-  .hero {
-    padding: 120px 15px 50px;
-    min-height: auto;
-  }
-
-  .hero h1 {
-    font-size: 2.1rem;
-  }
-
-  .hero p {
-    font-size: 1rem;
-    margin-bottom: 25px;
-  }
-
-  .hero-buttons {
-    width: 100%;
-  }
-
-  .hero-buttons .btn-primary {
-    width: 100%;
-    margin-bottom: 10px;
-  }
-
-  .stats-bar {
-    flex-direction: column;
-    gap: 25px;
-    padding: 25px 15px;
-  }
-
-  .stat-item h3 {
-    font-size: 1.8rem;
-  }
-
-  .about-container {
-    flex-direction: column;
-    gap: 35px;
-    text-align: center;
-  }
-
-  .about-image {
-    width: 85%;
-    max-width: 320px;
-  }
-
-  .image-accent {
-    top: 10px;
-    left: -10px;
-  }
-
-  .about-text h2 {
-    font-size: 1.8rem;
-  }
-
-  .coach-list li {
-    justify-content: center;
-    text-align: left;
-  }
-
-  .grid-plans,
-  .grid-cards {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-
-  .card,
-  .plan-card {
-    padding: 25px 20px;
-  }
-
-  .contact-form input,
-  .contact-form select,
-  .contact-form textarea {
-    font-size: 16px;
-  }
-
-  .whatsapp-float {
-    width: 50px;
-    height: 50px;
-    font-size: 26px;
-    bottom: 20px;
-    right: 20px;
-  }
+  .nav-links a { font-size: 1.2rem; font-weight: 600; }
+  .hero { padding: 120px 15px 50px; min-height: auto; }
+  .hero h1 { font-size: 2.1rem; }
+  .hero p { font-size: 1rem; margin-bottom: 25px; }
+  .hero-buttons { width: 100%; }
+  .hero-buttons .btn-primary { width: 100%; margin-bottom: 10px; }
+  .stats-bar { flex-direction: column; gap: 25px; padding: 25px 15px; }
+  .stat-item h3 { font-size: 1.8rem; }
+  .about-container { flex-direction: column; gap: 35px; text-align: center; }
+  .about-image { width: 85%; max-width: 320px; }
+  .image-accent { top: 10px; left: -10px; }
+  .about-text h2 { font-size: 1.8rem; }
+  .coach-list li { justify-content: center; text-align: left; }
+  .grid-plans, .grid-cards { grid-template-columns: 1fr; gap: 20px; }
+  .card, .plan-card { padding: 25px 20px; }
+  .contact-form input, .contact-form select, .contact-form textarea { font-size: 16px; }
+  .whatsapp-float { width: 50px; height: 50px; font-size: 26px; bottom: 20px; right: 20px; }
 }
 
 @media (max-width: 480px) {
-  .nav-container {
-    padding: 12px 15px;
-  }
-
-  .logo-text {
-    font-size: 0.95rem;
-  }
-
-  .logo-img {
-    width: 38px;
-    height: 38px;
-  }
-
-  .hero h1 {
-    font-size: 1.75rem;
-  }
-
-  .hero-buttons {
-    gap: 8px;
-  }
-
-  .btn-icon {
-    width: 44px;
-    height: 44px;
-  }
-
-  .about-image {
-    width: 90%;
-  }
-
-  .philosophy-text h2 {
-    font-size: 1.6rem;
-  }
-
-  .contact-box h2 {
-    font-size: 1.5rem;
-  }
+  .nav-container { padding: 12px 15px; }
+  .logo-text { font-size: 0.95rem; }
+  .logo-img { width: 38px; height: 38px; }
+  .hero h1 { font-size: 1.75rem; }
+  .hero-buttons { gap: 8px; }
+  .btn-icon { width: 44px; height: 44px; }
+  .about-image { width: 90%; }
+  .philosophy-text h2 { font-size: 1.6rem; }
+  .contact-box h2 { font-size: 1.5rem; }
 }

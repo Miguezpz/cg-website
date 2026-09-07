@@ -1,4 +1,3 @@
-/* script.js */
 document.addEventListener('DOMContentLoaded', () => {
 
   // 1. Menú Hamburguesa para Móvil
@@ -17,7 +16,28 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 2. Animación de Scroll Reveal (Fade-in)
+  // 2. Barra de Progreso de Lectura Superior & Navbar Reducido al Scroll
+  const scrollProgress = document.getElementById('scrollProgress');
+  const navbar = document.getElementById('navbar');
+
+  window.addEventListener('scroll', () => {
+    const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = (window.scrollY / totalHeight) * 100;
+    
+    if (scrollProgress) {
+      scrollProgress.style.width = `${progress}%`;
+    }
+
+    if (navbar) {
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    }
+  });
+
+  // 3. Animación de Scroll Reveal (Fade-in)
   const fadeElements = document.querySelectorAll('.fade-in');
 
   const observerOptions = {
@@ -36,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   fadeElements.forEach(el => observer.observe(el));
 
-  // 3. Animación 1: Contador interactivo para la sección de Stats
+  // 4. Contador interactivo para la sección de Stats
   const statsSection = document.querySelector('.stats-bar');
   const statNumbers = document.querySelectorAll('.stat-item h3');
   let animated = false;
