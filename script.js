@@ -103,17 +103,122 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 6. Rastrear el envío del formulario de correo electrónico
+  // 6. Acordeón de Preguntas Frecuentes
+  const faqItems = document.querySelectorAll('.faq-item');
+
+  faqItems.forEach(item => {
+    const question = item.querySelector('.faq-question');
+    if (!question) return;
+
+    question.addEventListener('click', () => {
+      const isOpen = item.classList.contains('open');
+
+      // Cierra los demás para mantener la lista ordenada
+      faqItems.forEach(other => {
+        other.classList.remove('open');
+        const otherQuestion = other.querySelector('.faq-question');
+        if (otherQuestion) otherQuestion.setAttribute('aria-expanded', 'false');
+      });
+
+      if (!isOpen) {
+        item.classList.add('open');
+        question.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+
+  // 7. Envío del formulario de contacto vía AJAX (sin recargar la página)
   const contactForm = document.getElementById('contactForm');
-  if (contactForm) {
-    contactForm.addEventListener('submit', () => {
-      if (typeof gtag === 'function') {
-        gtag('event', 'envio_formulario', {
-          'event_category': 'Contacto',
-          'event_label': 'Formulario Correo'
+  const submitBtn = document.getElementById('submitBtn');
+  const formFeedback = document.getElementById('formFeedback');
+
+  if (contactForm && submitBtn && formFeedback) {
+    contactForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      // Honeypot: si el campo oculto viene lleno, es un bot; se ignora silenciosamente
+      const honeypot = contactForm.querySelector('[name="_honey"]');
+      if (honeypot && honeypot.value) {
+        return;
+      }
+
+      submitBtn.classList.add('is-loading');
+      formFeedback.textContent = '';
+      formFeedback.className = 'form-feedback';
+
+      try {
+        const response = await fetch(contactForm.action, {
+          method: 'POST',
+          headers: { 'Accept': 'application/json' },
+          body: new FormData(contactForm)
         });
+
+        if (response.ok) {
+          formFeedback.textContent = '¡Gracias! Tu mensaje fue enviado. Te responderemos muy pronto.';
+          formFeedback.classList.add('success');
+          contactForm.reset();
+
+          if (typeof gtag === 'function') {
+            gtag('event', 'envio_formulario', {
+              'event_category': 'Contacto',
+              'event_label': 'Formulario Correo'
+            });
+          }
+        } else {
+          throw new Error('Respuesta no válida del servidor');
+        }
+      } catch (err) {
+        formFeedback.textContent = 'Hubo un problema al enviar tu mensaje. Intenta de nuevo o escríbenos por WhatsApp.';
+        formFeedback.classList.add('error');
+      } finally {
+        submitBtn.classList.remove('is-loading');
       }
     });
   }
+
+  // 8. Slider interactivo de Antes y Después
+  const baSliders = document.querySelectorAll('[data-ba-slider]');
+
+  baSliders.forEach(slider => {
+    const before = slider.querySelector('.ba-before');
+    const handle = slider.querySelector('[data-ba-handle]');
+    const range = slider.querySelector('[data-ba-range]');
+    if (!before || !handle || !range) return;
+
+    let dragging = false;
+
+    const setPosition = (percent) => {
+      percent = Math.max(0, Math.min(100, percent));
+      before.style.clipPath = `inset(0 ${100 - percent}% 0 0)`;
+      handle.style.left = `${percent}%`;
+      range.value = percent;
+    };
+
+    const positionFromClientX = (clientX) => {
+      const rect = slider.getBoundingClientRect();
+      return ((clientX - rect.left) / rect.width) * 100;
+    };
+
+    slider.addEventListener('pointerdown', (e) => {
+      dragging = true;
+      slider.setPointerCapture(e.pointerId);
+      setPosition(positionFromClientX(e.clientX));
+    });
+
+    slider.addEventListener('pointermove', (e) => {
+      if (!dragging) return;
+      setPosition(positionFromClientX(e.clientX));
+    });
+
+    const stopDragging = () => { dragging = false; };
+    slider.addEventListener('pointerup', stopDragging);
+    slider.addEventListener('pointercancel', stopDragging);
+    slider.addEventListener('pointerleave', stopDragging);
+
+    // Soporte de teclado: el input range sigue siendo enfocable con Tab
+    range.addEventListener('input', (e) => setPosition(Number(e.target.value)));
+
+    setPosition(Number(range.value) || 50);
+  });
 
 });
