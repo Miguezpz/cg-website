@@ -199,21 +199,27 @@ document.addEventListener('DOMContentLoaded', () => {
       return ((clientX - rect.left) / rect.width) * 100;
     };
 
-    slider.addEventListener('pointerdown', (e) => {
+    // El arrastre solo se activa al presionar el botón central (el handle),
+    // así el resto de la imagen queda libre para hacer scroll normal en móvil.
+    handle.addEventListener('pointerdown', (e) => {
       dragging = true;
-      slider.setPointerCapture(e.pointerId);
-      setPosition(positionFromClientX(e.clientX));
+      handle.setPointerCapture(e.pointerId);
+      e.preventDefault();
     });
 
-    slider.addEventListener('pointermove', (e) => {
+    handle.addEventListener('pointermove', (e) => {
       if (!dragging) return;
       setPosition(positionFromClientX(e.clientX));
     });
 
-    const stopDragging = () => { dragging = false; };
-    slider.addEventListener('pointerup', stopDragging);
-    slider.addEventListener('pointercancel', stopDragging);
-    slider.addEventListener('pointerleave', stopDragging);
+    const stopDragging = (e) => {
+      dragging = false;
+      if (e && e.pointerId !== undefined && handle.hasPointerCapture && handle.hasPointerCapture(e.pointerId)) {
+        handle.releasePointerCapture(e.pointerId);
+      }
+    };
+    handle.addEventListener('pointerup', stopDragging);
+    handle.addEventListener('pointercancel', stopDragging);
 
     // Soporte de teclado: el input range sigue siendo enfocable con Tab
     range.addEventListener('input', (e) => setPosition(Number(e.target.value)));
