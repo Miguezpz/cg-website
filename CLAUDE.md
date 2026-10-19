@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Landing page de conversión para **Control Gravedad**, la escuela de calistenia del coach **Cesar Augusto** (clases presenciales en Morelia, Michoacán, y online). Astro (estático) + Tailwind v4 + TypeScript, desplegada en **Vercel Hobby** (gratuito) en `controlgravedad.vercel.app`. Reemplaza al sitio actual de `main`, publicado en `*.netlify.app`.
+Landing page de conversión para **Control Gravedad**, la escuela de calistenia del coach **César Augusto** (clases presenciales en Morelia, Michoacán, y online). Astro (estático) + Tailwind v4 + TypeScript, desplegada en **Vercel Hobby** (gratuito) en `controlgravedad.vercel.app`. Reemplaza al sitio actual de `main`, publicado en `*.netlify.app`.
 
 **La fuente de verdad es [`spec-drive.md`](spec-drive.md).** Antes de implementar, lee la tarea (`Tx.y`) y los requisitos (`RF-xx`/`RNF-xx`) que cubre. Si algo no está en el spec o lo contradice, pregunta antes de improvisar, y refleja cualquier cambio de alcance en el spec (incluido su historial).
 

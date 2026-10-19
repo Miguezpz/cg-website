@@ -1,11 +1,11 @@
-# Spec: Landing Page — Control Gravedad (Coach Cesar Augusto)
+# Spec: Landing Page — Control Gravedad (Coach César Augusto)
 
 > Documento de especificación (spec-driven development). Es la **fuente de verdad** del proyecto: define **qué** se construye (Parte A), **cómo** (Parte B), **en qué orden** (Parte C) y **qué falta** (Parte D). Cualquier cambio de alcance se refleja primero aquí y se anota en el historial.
 
 | Campo | Valor |
 |---|---|
 | Marca / escuela | **Control Gravedad** |
-| Coach | **Cesar Augusto** |
+| Coach | **César Augusto** (en redes: "Chesare Mozart") |
 | Modalidad | **Presencial en Morelia, Michoacán** y **online** |
 | Branch | `nuevo-sitio` |
 | Versión | v0.5 (borrador) |
@@ -24,7 +24,7 @@
 
 ## 1. Objetivo
 
-Construir una **landing page de conversión** para **Control Gravedad**, la escuela de calistenia del coach **Cesar Augusto**, que funcione como embudo de ventas digital: el visitante conoce la **autoridad** del coach, ve **resultados reales**, resuelve sus **objeciones** y termina **contactándolo** para contratar clases.
+Construir una **landing page de conversión** para **Control Gravedad**, la escuela de calistenia del coach **César Augusto**, que funcione como embudo de ventas digital: el visitante conoce la **autoridad** del coach, ve **resultados reales**, resuelve sus **objeciones** y termina **contactándolo** para contratar clases.
 
 ### Métricas
 
@@ -85,7 +85,7 @@ Orden de secciones = orden del embudo: **atención → autoridad → oferta → 
 ### RF-03 · Sobre el coach (`#sobre-mi`)
 - Foto profesional, historia breve (≤ 120 palabras), al menos 3 credenciales (certificaciones, años, logros).
 - Credencial confirmada: **organizador de Gravedad Zero**, evento de calistenia en Morelia (10 de enero de 2026; participantes `[[PENDIENTE]]`). El resto de la historia y credenciales: `[[PENDIENTE]]`.
-- Nombre visible del coach: `[[PENDIENTE]]` ("Cesar/César Augusto" o "Chesare Mozart").
+- Nombre visible del coach: **César Augusto**; "Chesare Mozart" solo como referencia a sus redes.
 
 ### RF-04 · Servicios (`#servicios`)
 - Tarjetas (precios en MXN, publicados el 2024-12-18; vigencia `[[PENDIENTE]]`):
@@ -153,7 +153,7 @@ Orden de secciones = orden del embudo: **atención → autoridad → oferta → 
 | RNF-06 | WCAG 2.2 AA: contraste ≥ 4.5:1, navegable con teclado, foco visible, un solo `<h1>`, landmarks, objetivos táctiles ≥ 44 px | `web-design-guidelines` + axe en e2e (T4.1) |
 | RNF-07 | `prefers-reduced-motion` desactiva animaciones no esenciales | e2e con `reducedMotion: 'reduce'` |
 | RNF-08 | Mejora progresiva: sin JS, todo el contenido se ve y los CTAs y el formulario funcionan | e2e con `javaScriptEnabled: false` |
-| RNF-09 | SEO: `title`/`description` únicos con marca + keyword local (ej. "Control Gravedad · Clases de calistenia en Morelia y online con Cesar Augusto"), canónica, OG/Twitter 1200×630, `sitemap.xml`, `robots.txt`, JSON-LD | Rich Results Test + Lighthouse SEO |
+| RNF-09 | SEO: `title`/`description` únicos con marca + keyword local (ej. "Control Gravedad · Clases de calistenia en Morelia y online con César Augusto"), canónica, OG/Twitter 1200×630, `sitemap.xml`, `robots.txt`, JSON-LD | Rich Results Test + Lighthouse SEO |
 | RNF-10 | Seguridad: cabeceras CSP, `X-Content-Type-Options`, `Referrer-Policy` y `Permissions-Policy` vía `vercel.json`; sin secretos en el repo | securityheaders.com sobre la URL de preview |
 | RNF-11 | Compatibilidad: últimas 2 versiones de Chrome, Safari (incl. iOS), Firefox y Edge; breakpoints 375 / 768 / 1280 px | e2e en Chromium + WebKit; dispositivo real en T4.4 |
 | RNF-12 | Privacidad: el aviso declara la analítica; no se envían datos del formulario a GA4 (sin PII en eventos) | Revisión de `analytics.ts` |
@@ -339,11 +339,11 @@ Formato: **ID · tarea** — *depende de* · *cubre* · **listo cuando**.
 - **T0.2 · ✅ Inicializar Astro** (plantilla mínima, TS estricto, `engines.node`; Astro 7.4.1 fijado, Node ≥ 22.22 vía `.nvmrc`) — *dep.* T0.1. **Listo cuando** `npm run dev` y `npm run build` funcionan.
 - **T0.3 · ✅ Tailwind v4 + `@astrojs/sitemap` + Prettier** — *dep.* T0.2. **Listo cuando** una clase de Tailwind se refleja en el build.
 - **T0.4 · ✅ Configuración del repo:** `.gitignore` (incluye `.playwright-cli/`, `.env`, `dist/`), `.env.example` y scripts de npm (`check`, `test:e2e`, `check:content`, `format`). **Listo cuando** `npm run check` pasa.
-- **T0.5 · Playwright + axe + Lighthouse CI + GitHub Actions** con una prueba humo — *dep.* T0.3. **Listo cuando** CI está en verde en GitHub. *(Local en verde; falta el push.)*
+- **T0.5 · ✅ Playwright + axe + Lighthouse CI + GitHub Actions** con una prueba humo — *dep.* T0.3. **Listo cuando** CI está en verde en GitHub. *(Verde el 2026-10-19.)*
 - **T0.6 · Conectar Vercel Hobby** (importar el repo con `nuevo-sitio` como branch de preview, variables de entorno, `vercel.json` con cabeceras) — *dep.* T0.5. **Listo cuando** existe la URL de preview y securityheaders.com da A o superior. *(`vercel.json` listo; falta conectar el proyecto en Vercel.)* **→ M1**
 
 ### Fase 1 — Contexto y sistema de diseño (→ M2)
-- **T1.1 · `impeccable init`** usando §1–2 de este spec → `PRODUCT.md`. **Listo cuando** el usuario aprueba `PRODUCT.md`.
+- **T1.1 · ✅ `impeccable init`** usando §1–2 de este spec → `PRODUCT.md`. **Listo cuando** el usuario aprueba `PRODUCT.md`. *(Aprobado el 2026-10-19.)*
 - **T1.2 · `impeccable shape`** de la landing → dirección visual + `DESIGN.md` — *dep.* T1.1 y, si es posible, fotos reales (§17 🟠). **Listo cuando** el usuario aprueba la dirección visual.
 - **T1.3 · Tokens en `global.css` + fuentes Fontsource** — *dep.* T1.2 · RNF-05.
 - **T1.4 · `BaseLayout`** (meta SEO, OG, canónica, `lang="es-MX"`, *skip link*) — RNF-09.
@@ -449,7 +449,7 @@ Cada tarea se cierra con el ciclo de §13 y su prueba e2e.
 
 **Pendientes de T0.0**
 - [ ] [[PENDIENTE]] Número de participantes de Gravedad Zero (el usuario lo consulta con el coach).
-- [ ] [[PENDIENTE]] Nombre del coach en el sitio: "Cesar/César Augusto" (nombre completo: César Augusto Moreno Pérez) o "Chesare Mozart" (nombre en redes).
+- [x] Nombre del coach en el sitio: **César Augusto** (T1.1).
 - [ ] [[PENDIENTE]] ¿Siguen vigentes los precios de dic. 2024?
 - [ ] [[PENDIENTE]] ¿"Clase individual" es una clase suelta en grupo o una clase privada 1 a 1?
 - [ ] [[PENDIENTE]] CTA de la Rutina personalizada: ¿WhatsApp o correo?
@@ -471,7 +471,7 @@ Leyenda: 🔴 bloquea el inicio · 🟠 bloquea el diseño (T1.2) · 🟢 bloque
 
 | | Elemento | Especificación |
 |---|---|---|
-| ✅ | Nombre del coach / marca | **Cesar Augusto** · escuela **Control Gravedad** (confirmar si es "César" con acento) |
+| ✅ | Nombre del coach / marca | **César Augusto** · escuela **Control Gravedad** |
 | ✅ | Ciudad / zona de servicio | **Morelia, Michoacán (presencial) + online** |
 | ✅ | Información de la marca desde Instagram | §17.1.1 (T0.0) |
 | 🟠 | Foto o video del Hero | Foto ≥ 2400×1600 px (horizontal) **y** ≥ 1080×1920 px (vertical). Video: 10–20 s, sin audio, 1080p |
