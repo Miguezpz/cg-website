@@ -353,10 +353,10 @@ Formato: **ID · tarea** — *depende de* · *cubre* · **listo cuando**.
 
 ### Fase 2 — Secciones (→ M3, luego M4)
 Cada tarea se cierra con el ciclo de §13 y su prueba e2e.
-- **T2.1 · Header + menú móvil** — RF-01
-- **T2.2 · Hero** — RF-02
-- **T2.3 · Servicios** — RF-04
-- **T2.4 · Contacto (UI del formulario + WhatsApp) + botón flotante** — RF-10, RF-12. **→ M3**
+- **T2.1 · ✅ Header + menú móvil** — RF-01
+- **T2.2 · ✅ Hero** — RF-02
+- **T2.3 · ✅ Servicios** — RF-04
+- **T2.4 · ✅ Contacto (UI del formulario + WhatsApp) + botón flotante** — RF-10, RF-12. **→ M3**
 - **T2.5 · Sobre el coach** — RF-03
 - **T2.6 · Resultados + `BeforeAfterSlider`** — RF-05
 - **T2.7 · Testimonios** — RF-06

@@ -1,26 +1,42 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Button from '../components/ui/Button.astro';
-import Container from '../components/ui/Container.astro';
-import Logo from '../components/ui/Logo.astro';
+import Header from '../components/Header.astro';
+import WhatsAppButton from '../components/WhatsAppButton.astro';
+import ChalkFilter from '../components/ui/ChalkFilter.astro';
+import Hero from '../components/sections/Hero.astro';
+import Services from '../components/sections/Services.astro';
+import Contact from '../components/sections/Contact.astro';
+import heroImage from '../assets/placeholders/hero.jpg';
 import { site } from '../data/site';
-import { waAttrs } from '../lib/whatsapp';
+import { services } from '../data/services';
+import { results } from '../data/results';
+import { contact, hero, nav, servicesSection } from '../data/home';
+
+// Los enlaces a secciones sin contenido no se muestran (R-02).
+const links = nav.filter(
+  (link) => link.href !== '#resultados' || results.length > 0,
+);
+const sectionIds = new Set(['#servicios', '#contacto']);
+const navLinks = links.filter((link) => sectionIds.has(link.href));
 ---
 
 <BaseLayout>
-  <Container class="py-8">
-    <Logo class="h-10 w-auto text-chalk" title={site.name} />
-    <h1 class="stretch-display mt-10 text-display font-black uppercase">
-      {site.slogan}
-    </h1>
-    <p class="mt-4 max-w-prose text-lede">{site.tagline}</p>
-    <div class="mt-8 flex flex-wrap gap-4">
-      <Button icon="whatsapp" {...waAttrs({ source: 'hero' })}>
-        Clase muestra gratis
-      </Button>
-      <Button variant="secondary" href="#contenido">
-        Ver servicios
-      </Button>
-    </div>
-  </Container>
+  <ChalkFilter slot="header" />
+  <Header
+    slot="header"
+    brand={site.name}
+    links={navLinks}
+    cta={{ label: 'Contáctame', href: '#contacto' }}
+  />
+  <Hero {...hero} image={heroImage} />
+  <Services {...servicesSection} services={services} />
+  <Contact
+    {...contact}
+    social={site.social}
+    formAction="https://api.web3forms.com/submit"
+    accessKey={import.meta.env.PUBLIC_WEB3FORMS_KEY ?? ''}
+    redirect={new URL('/gracias/', Astro.site).href}
+    subject={`Nuevo contacto desde la web · ${site.name}`}
+  />
+  <WhatsAppButton slot="footer" label={contact.whatsappCta} />
 </BaseLayout>

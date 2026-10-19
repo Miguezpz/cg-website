@@ -1,0 +1,41 @@
+---
+import Icon from './ui/Icon.astro';
+import { waAttrs } from '../lib/whatsapp';
+
+interface Props {
+  label: string;
+}
+const { label } = Astro.props;
+---
+
+<a
+  {...waAttrs({ source: 'floating' })}
+  aria-label={label}
+  data-floating-wa
+  class="fixed right-4 bottom-[calc(1rem+env(safe-area-inset-bottom))] z-30 inline-flex size-14 items-center justify-center rounded-full bg-whatsapp text-steel-950 shadow-[0_6px_20px_rgb(0_0_0/0.45)] transition-[opacity,translate] duration-fast ease-out-expo hover:-translate-y-0.5 data-hidden:pointer-events-none data-hidden:translate-y-4 data-hidden:opacity-0"
+>
+  <Icon name="whatsapp" class="size-7" />
+</a>
+
+<script>
+  // Se oculta mientras el CTA del Hero o la sección de contacto están en pantalla.
+  const button = document.querySelector<HTMLElement>('[data-floating-wa]');
+  const targets = [
+    document.querySelector('a[data-track="whatsapp"][data-source="hero"]'),
+    document.querySelector('#contacto'),
+  ].filter((el): el is HTMLElement => el instanceof HTMLElement);
+
+  if (button && targets.length) {
+    const visible = new Set<Element>();
+    const observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) visible.add(entry.target);
+        else visible.delete(entry.target);
+      }
+      const hide = visible.size > 0;
+      button.toggleAttribute('data-hidden', hide);
+      button.toggleAttribute('inert', hide);
+    });
+    targets.forEach((target) => observer.observe(target));
+  }
+</script>

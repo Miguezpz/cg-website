@@ -1,0 +1,206 @@
+---
+import Button from '../ui/Button.astro';
+import Icon from '../ui/Icon.astro';
+import SectionHeading from '../ui/SectionHeading.astro';
+import type { SocialLink } from '../../data/types';
+import { waAttrs } from '../../lib/whatsapp';
+
+interface FormCopy {
+  title: string;
+  name: { label: string; placeholder: string };
+  phone: { label: string; placeholder: string };
+  goal: { label: string; placeholder: string; options: readonly string[] };
+  message: { label: string; placeholder: string };
+  privacy: { before: string; link: string; after: string };
+  submit: string;
+  sending: string;
+  success: string;
+  error: string;
+  required: string;
+}
+
+interface Props {
+  title: string;
+  text: string;
+  whatsappCta: string;
+  social: SocialLink[];
+  form: FormCopy;
+  formAction: string;
+  accessKey: string;
+  redirect: string;
+  subject: string;
+}
+
+const {
+  title,
+  text,
+  whatsappCta,
+  social,
+  form,
+  formAction,
+  accessKey,
+  redirect,
+  subject,
+} = Astro.props;
+
+const field =
+  'block min-h-12 w-full rounded-input border border-steel-700 bg-steel-950 px-4 py-3 text-chalk placeholder:text-concrete-400 transition-colors duration-fast hover:border-concrete-400 user-invalid:border-error-on-dark';
+const label = 'stretch-label mb-2 block text-label font-semibold uppercase';
+---
+
+<section
+  id="contacto"
+  aria-labelledby="contacto-title"
+  class="border-t-[6px] border-steel-700 py-section"
+>
+  <div class="mx-auto grid w-full max-w-content gap-12 px-gutter lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:gap-16">
+    <div>
+      <SectionHeading id="contacto-title" class="text-display">
+        {title}
+      </SectionHeading>
+      <p class="mt-5 max-w-[30ch] text-lede">{text}</p>
+      <Button
+        icon="whatsapp"
+        class="mt-8 w-full sm:w-auto"
+        {...waAttrs({ source: 'contact' })}
+      >
+        {whatsappCta}
+      </Button>
+      <ul class="mt-8 flex flex-wrap gap-2">
+        {social.map((link) => (
+          <li>
+            <a
+              href={link.url}
+              target="_blank"
+              rel="noopener"
+              data-track="social"
+              data-network={link.network}
+              class="stretch-label inline-flex min-h-11 items-center gap-2 border border-steel-700 px-4 text-label font-semibold uppercase transition-colors duration-fast hover:border-chalk"
+            >
+              <Icon name={link.network} class="size-4" />
+              <span translate="no">{link.handle}</span>
+              <span class="sr-only">
+                en {link.network === 'instagram' ? 'Instagram' : 'TikTok'}
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <form
+      method="POST"
+      action={formAction}
+      data-contact-form
+      novalidate
+      class="border border-steel-700 bg-steel-900 p-6 sm:p-8"
+      aria-labelledby="form-title"
+    >
+      <h3 id="form-title" class="stretch-heading text-h3 font-bold">
+        {form.title}
+      </h3>
+      <input type="hidden" name="access_key" value={accessKey} />
+      <input type="hidden" name="subject" value={subject} />
+      <input type="hidden" name="from_name" value="Landing Control Gravedad" />
+      <input type="hidden" name="redirect" value={redirect} />
+      <input
+        type="checkbox"
+        name="botcheck"
+        class="hidden"
+        tabindex="-1"
+        autocomplete="off"
+        aria-hidden="true"
+      />
+
+      <div class="mt-6 space-y-5">
+        <div>
+          <label for="f-name" class={label}>
+            {form.name.label} <span aria-hidden="true">*</span>
+          </label>
+          <input
+            id="f-name"
+            name="name"
+            type="text"
+            autocomplete="name"
+            required
+            placeholder={form.name.placeholder}
+            class={field}
+          />
+        </div>
+        <div>
+          <label for="f-phone" class={label}>
+            {form.phone.label} <span aria-hidden="true">*</span>
+          </label>
+          <input
+            id="f-phone"
+            name="phone"
+            type="tel"
+            inputmode="tel"
+            autocomplete="tel"
+            required
+            pattern="[0-9 +()-]{10,}"
+            placeholder={form.phone.placeholder}
+            class={field}
+          />
+        </div>
+        <div>
+          <label for="f-goal" class={label}>
+            {form.goal.label} <span aria-hidden="true">*</span>
+          </label>
+          <select id="f-goal" name="goal" required class={field}>
+            <option value="" disabled selected>
+              {form.goal.placeholder}
+            </option>
+            {form.goal.options.map((option) => (
+              <option>{option}</option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label for="f-message" class={label}>
+            {form.message.label}
+          </label>
+          <textarea
+            id="f-message"
+            name="message"
+            rows="4"
+            autocomplete="off"
+            placeholder={form.message.placeholder}
+            class={field}
+          ></textarea>
+        </div>
+        <label class="flex min-h-11 cursor-pointer items-start gap-3">
+          <input
+            type="checkbox"
+            name="privacy"
+            required
+            class="mt-0.5 size-5 shrink-0 accent-signal"
+          />
+          <span class="text-concrete-400">
+            {form.privacy.before}
+            <a
+              href="/privacidad/"
+              class="text-chalk underline hover:text-signal"
+            >
+              {form.privacy.link}
+            </a>
+            {form.privacy.after}
+          </span>
+        </label>
+      </div>
+
+      <Button type="submit" class="mt-8 w-full" data-submit>
+        {form.submit}
+      </Button>
+      <p
+        data-form-status
+        role="status"
+        aria-live="polite"
+        class="mt-4 min-h-6 text-body"
+        data-sending={form.sending}
+        data-success={form.success}
+        data-error={form.error}
+      ></p>
+    </form>
+  </div>
+</section>
