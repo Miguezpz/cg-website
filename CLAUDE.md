@@ -18,13 +18,14 @@ Si la tarea **T0.0** del spec no está marcada como cerrada, **antes de hacer cu
 > Disponibles a partir de la Fase 0.
 
 ```bash
+nvm use                # Node ≥ 22.22 (versión en .nvmrc; Astro 7 la exige)
 npm run dev            # servidor local en http://localhost:4321
 npm run build          # build de producción → dist/
 npm run preview        # sirve dist/
 npm run check          # astro check (tipos y contenido)
 npm run test:e2e       # Playwright (e2e + axe)
 npm run check:content  # falla si queda algún [[PENDIENTE]]
-npm run format         # Prettier
+npm run format         # Prettier (format:check en CI)
 ```
 
 ## Reglas del proyecto
