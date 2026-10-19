@@ -346,10 +346,10 @@ Formato: **ID · tarea** — *depende de* · *cubre* · **listo cuando**.
 - **T1.1 · ✅ `impeccable init`** usando §1–2 de este spec → `PRODUCT.md`. **Listo cuando** el usuario aprueba `PRODUCT.md`. *(Aprobado el 2026-10-19.)*
 - **T1.2 · ✅ `impeccable shape`** de la landing → dirección visual + `DESIGN.md` — *dep.* T1.1 y, si es posible, fotos reales (§17 🟠). **Listo cuando** el usuario aprueba la dirección visual. *(Elegida «Gis y acero» el 2026-10-19, sin fotos reales.)*
 - **T1.3 · ✅ Tokens en `global.css` + fuentes Fontsource** — *dep.* T1.2 · RNF-05.
-- **T1.4 · `BaseLayout`** (meta SEO, OG, canónica, `lang="es-MX"`, *skip link*) — RNF-09.
-- **T1.5 · Componentes UI** (`Button` primario/secundario/WhatsApp, `Card`, `Badge`, `SectionHeading`, `Container`) con estados hover, active, focus y disabled — RNF-06.
-- **T1.6 · Modelo de contenido** (`src/data/types.ts` + datos provisionales con `[[PENDIENTE]]`) — §8.
-- **T1.7 · `lib/whatsapp.ts` + `lib/analytics.ts`** con un listener delegado — §9.1 y §9.3. **Listo cuando** la prueba e2e valida el `href` generado. **→ M2**
+- **T1.4 · ✅ `BaseLayout`** (meta SEO, OG, canónica, `lang="es-MX"`, *skip link*) — RNF-09.
+- **T1.5 · ✅ Componentes UI** (`Button` primario/secundario/WhatsApp, `Card`, `Badge`, `SectionHeading`, `Container`) con estados hover, active, focus y disabled — RNF-06.
+- **T1.6 · ✅ Modelo de contenido** (`src/data/types.ts` + datos provisionales con `[[PENDIENTE]]`) — §8.
+- **T1.7 · ✅ `lib/whatsapp.ts` + `lib/analytics.ts`** con un listener delegado — §9.1 y §9.3. **Listo cuando** la prueba e2e valida el `href` generado. **→ M2**
 
 ### Fase 2 — Secciones (→ M3, luego M4)
 Cada tarea se cierra con el ciclo de §13 y su prueba e2e.
@@ -463,7 +463,7 @@ Cada tarea se cierra con el ciclo de §13 y su prueba e2e.
 - [ ] [[PENDIENTE]] Logo.
 - [ ] [[PENDIENTE]] Paleta oficial: la define un diseñador externo (D-10); mientras tanto se usa una provisional.
 - [x] Tipografía: restricción de "elegante" levantada por el usuario en T1.2; se usa Archivo (§10, `DESIGN.md`).
-- [ ] [[PENDIENTE]] Logo en SVG o alta resolución (el actual mide 150 px).
+- [ ] [[PENDIENTE]] Logo en SVG oficial. Mientras tanto, `src/components/ui/Logo.astro` es un redibujo vectorial del de 150 px (también en `favicon.svg` y `og-image.jpg`).
 - [ ] [[PENDIENTE]] Preguntas frecuentes que recibe por DM.
 
 ### 17.2 Assets y datos restantes
