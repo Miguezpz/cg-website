@@ -1,14 +1,16 @@
 ---
 import type { Testimonial } from '../../data/types';
 import { Image } from 'astro:assets';
+import Icon from '../ui/Icon.astro';
 import SectionHeading from '../ui/SectionHeading.astro';
 
 interface Props {
   title: string;
+  swipeHint: string;
   testimonials: Testimonial[];
 }
 
-const { title, testimonials } = Astro.props;
+const { title, swipeHint, testimonials } = Astro.props;
 ---
 
 {testimonials.length > 0 && (
@@ -19,6 +21,13 @@ const { title, testimonials } = Astro.props;
   >
     <div class="mx-auto w-full max-w-content px-gutter">
       <SectionHeading id="testimonios-title">{title}</SectionHeading>
+      <p
+        class="stretch-label mt-3 flex items-center gap-2 text-label text-concrete-400 uppercase md:hidden"
+        aria-hidden="true"
+      >
+        {swipeHint}
+        <Icon name="arrow" class="size-4" />
+      </p>
     </div>
     <ul
       class="mx-auto mt-10 flex max-w-content snap-x snap-mandatory scroll-px-gutter gap-4 overflow-x-auto overscroll-x-contain px-gutter pb-4 md:grid md:grid-cols-3 md:overflow-visible"

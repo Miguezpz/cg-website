@@ -18,4 +18,25 @@ test.describe('Hero (RF-02)', () => {
     await expect(img).toHaveAttribute('loading', 'eager');
     await expect(img).toHaveAttribute('alt', /.+/);
   });
+
+  test('ofrece una entrada directa a la rutina online', async ({ page }) => {
+    await page.goto('/');
+    const link = page.locator(
+      'section[aria-labelledby="hero-title"] a[href="#servicio-rutina"]',
+    );
+    await expect(link).toContainText('Rutina personalizada');
+    await link.click();
+    await expect(page.locator('#servicio-rutina')).toBeInViewport();
+  });
+
+  test('los CTA generales usan un solo texto', async ({ page }) => {
+    await page.goto('/');
+    for (const source of ['hero', 'offer', 'contact']) {
+      await expect(
+        page
+          .locator(`main a[data-track="whatsapp"][data-source="${source}"]`)
+          .first(),
+      ).toHaveText('Agenda tu clase muestra gratis');
+    }
+  });
 });

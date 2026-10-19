@@ -51,9 +51,8 @@ export const services: Service[] = [
     name: 'Talleres',
     audience: '[[PENDIENTE]] Temas, frecuencia y a quién van dirigidos.',
     includes: ['[[PENDIENTE]]'],
-    plans: [
-      { name: 'Taller', price: '[[PENDIENTE]]', detail: '[[PENDIENTE]]' },
-    ],
+    // [[PENDIENTE]] Precio de los talleres; sin precio real no se muestra la fila.
+    plans: [],
     cta: 'Quiero info de talleres',
     waInterest: 'los talleres',
   },

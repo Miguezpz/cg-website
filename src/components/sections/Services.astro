@@ -46,23 +46,25 @@ const { title, intro, services } = Astro.props;
           </div>
 
           <div class="flex flex-col">
-            <dl class="border-t border-steel-700">
-              {service.plans.map((plan) => (
-                <div class="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-4 border-b border-steel-700 py-4">
-                  <dt>
-                    <span class="stretch-heading block text-h3 font-bold">
-                      {plan.name}
-                    </span>
-                    <span class="stretch-label mt-1 block text-label text-concrete-400 uppercase">
-                      {plan.detail}
-                    </span>
-                  </dt>
-                  <dd class="stretch-display text-[2.5rem] leading-none font-black tabular-nums">
-                    {plan.price}
-                  </dd>
-                </div>
-              ))}
-            </dl>
+            {service.plans.length > 0 && (
+              <dl class="border-t border-steel-700">
+                {service.plans.map((plan) => (
+                  <div class="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-4 border-b border-steel-700 py-4">
+                    <dt>
+                      <span class="stretch-heading block text-h3 font-bold">
+                        {plan.name}
+                      </span>
+                      <span class="stretch-label mt-1 block text-label text-concrete-400 uppercase">
+                        {plan.detail}
+                      </span>
+                    </dt>
+                    <dd class="stretch-display text-[2.5rem] leading-none font-black tabular-nums">
+                      {plan.price}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            )}
             <Button
               icon="whatsapp"
               class="mt-6 self-start"

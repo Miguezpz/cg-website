@@ -14,6 +14,11 @@ export const hero = {
   where: 'Calistenia en Morelia y online',
   primaryCta: 'Agenda tu clase muestra gratis',
   secondaryCta: { label: 'Ver planes y precios', href: '#servicios' },
+  onlineLink: {
+    question: '¿No estás en Morelia?',
+    label: 'Rutina personalizada',
+    href: '#servicio-rutina',
+  },
   indicators: [
     { value: '5', label: 'disciplinas' },
     { value: 'Carga & Descarga', label: 'método propio' },
@@ -85,7 +90,7 @@ export const offer = {
   title: 'Tu primera clase es gratis',
   text: 'Ven a una clase muestra, conoce el método y decide sin compromiso.',
   note: 'Sujeta a disponibilidad de horario y espacio dentro de la clase.',
-  cta: 'Aparta tu clase muestra',
+  cta: 'Agenda tu clase muestra gratis',
 } as const;
 
 export const faqSection = { title: 'Preguntas frecuentes' } as const;
@@ -100,12 +105,14 @@ export const resultsSection = {
 
 export const testimonialsSection = {
   title: 'Lo que dicen los alumnos',
+  swipeHint: 'Desliza para ver más',
 } as const;
 
 export const contact = {
   title: 'Empieza hoy',
   text: 'Escríbeme por WhatsApp o déjame tus datos y te contacto.',
-  whatsappCta: 'Escríbeme por WhatsApp',
+  whatsappCta: 'Agenda tu clase muestra gratis',
+  floatingLabel: 'Escríbeme por WhatsApp',
   form: {
     title: 'Déjame tus datos',
     name: { label: 'Nombre', placeholder: 'Tu nombre…' },
