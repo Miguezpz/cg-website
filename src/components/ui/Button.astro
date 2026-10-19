@@ -3,9 +3,11 @@ import type { HTMLAttributes } from 'astro/types';
 import Icon, { type IconName } from './Icon.astro';
 
 type Variant = 'primary' | 'secondary';
+type Size = 'md' | 'sm';
 
 type Props = {
   variant?: Variant;
+  size?: Size;
   icon?: IconName;
   class?: string;
 } & (
@@ -15,6 +17,7 @@ type Props = {
 
 const {
   variant = 'primary',
+  size = 'md',
   icon,
   class: className,
   href,
@@ -22,7 +25,7 @@ const {
 } = Astro.props;
 
 const base =
-  'stretch-label inline-flex min-h-[52px] items-center justify-center gap-3 px-6 text-label font-semibold uppercase transition-[background-color,color,translate] duration-fast ease-out-expo select-none active:translate-y-px disabled:cursor-not-allowed disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:opacity-50';
+  'stretch-label inline-flex items-center justify-center gap-3 text-label font-semibold uppercase transition-[background-color,color,translate] duration-fast ease-out-expo select-none active:translate-y-px disabled:cursor-not-allowed disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:opacity-50';
 
 const variants: Record<Variant, string> = {
   primary:
@@ -31,7 +34,14 @@ const variants: Record<Variant, string> = {
     'border-2 border-chalk text-chalk hover:bg-chalk hover:text-steel-950',
 };
 
-const classes = [base, variants[variant], className];
+const sizes: Record<Size, string> = {
+  md: 'min-h-[52px] px-6',
+  sm: 'min-h-11 px-4',
+};
+
+const classes = [base, sizes[size], variants[variant], className];
+const { type: buttonType = 'button', ...buttonRest } =
+  rest as HTMLAttributes<'button'>;
 ---
 
 {href ? (
@@ -40,11 +50,7 @@ const classes = [base, variants[variant], className];
     <slot />
   </a>
 ) : (
-  <button
-    type="button"
-    class:list={classes}
-    {...(rest as HTMLAttributes<'button'>)}
-  >
+  <button type={buttonType} class:list={classes} {...buttonRest}>
     {icon && <Icon name={icon} class="size-5 shrink-0" />}
     <slot />
   </button>
