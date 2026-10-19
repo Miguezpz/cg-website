@@ -372,7 +372,7 @@ Cada tarea se cierra con el ciclo de §13 y su prueba e2e.
 - **T3.5 · ✅ `impeccable critique` + `polish`** sobre la landing completa. *(Crítica 25/32 en un solo contexto, sin subagentes; polish de todo lo que no es contenido: Hero móvil con la foto antes de los indicadores, entrada a la rutina online, un solo texto para los CTA, marcas de agarre de gis, precios pendientes ocultos, sección activa en el menú, pista del carrusel e interlineado de etiquetas. Detector: 0 hallazgos.)* **→ M4**
 
 ### Fase 4 — QA y lanzamiento (→ M5)
-- **T4.1 · Completar la suite e2e** (sin JS, reduced motion, axe, WebKit) — RNF-06–08, RNF-11.
+- **T4.1 · ✅ Completar la suite e2e** (sin JS, reduced motion, axe, WebKit) — RNF-06–08, RNF-11.
 - **T4.2 · Lighthouse CI con aserciones ≥ 95** — RNF-01, RNF-02.
 - **T4.3 · Auditoría final con `web-design-guidelines`** y corrección de hallazgos.
 - **T4.4 · Pruebas en dispositivos reales** (iPhone con Safari y Android con Chrome): formulario, WhatsApp y slider.

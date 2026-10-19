@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
-const pages = ['/', '/privacidad/', '/gracias/'];
+const pages = ['/', '/privacidad/', '/gracias/', '/no-existe/'];
 
 test('la home carga con lang es-MX y un solo h1', async ({ page }) => {
   await page.goto('/');
@@ -27,5 +27,15 @@ for (const path of pages) {
         )
         .join('\n'),
     ).toEqual([]);
+  });
+}
+
+for (const path of pages) {
+  test(`sin scroll horizontal en ${path}`, async ({ page }) => {
+    await page.goto(path);
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth - window.innerWidth,
+    );
+    expect(overflow).toBeLessThanOrEqual(0);
   });
 }

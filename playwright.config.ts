@@ -18,6 +18,13 @@ export default defineConfig({
       use: { ...devices['Pixel 7'], viewport: { width: 375, height: 667 } },
     },
     {
+      name: 'tablet-chromium',
+      use: {
+        ...devices['Desktop Chrome'],
+        viewport: { width: 768, height: 1024 },
+      },
+    },
+    {
       name: 'desktop-chromium',
       use: {
         ...devices['Desktop Chrome'],
