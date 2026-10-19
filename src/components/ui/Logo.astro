@@ -1,0 +1,40 @@
+---
+// Monograma CG redibujado en vector a partir del logo de 150 px.
+// [[PENDIENTE]] Reemplazar por el SVG oficial cuando exista (spec §17.1.1).
+interface Props {
+  class?: string;
+  title?: string;
+}
+const { class: className, title } = Astro.props;
+---
+
+<svg
+  viewBox="84 136 432 336"
+  class={className}
+  role={title ? 'img' : undefined}
+  aria-label={title}
+  aria-hidden={title ? undefined : 'true'}
+  focusable="false"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <defs>
+    <mask id="cg-knockout">
+      <rect x="0" y="0" width="600" height="600" fill="#fff" />
+      <rect x="80" y="252" width="440" height="92" fill="#000" />
+    </mask>
+  </defs>
+  <path
+    mask="url(#cg-knockout)"
+    d="M444.4 312.6 A145 145 0 1 1 372.5 174.4"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="30"
+  />
+  <g fill="currentColor">
+    <rect x="135" y="262" width="375" height="22" />
+    <rect x="90" y="308" width="375" height="26" />
+    <rect x="368" y="284" width="18" height="24" />
+    <rect x="222" y="334" width="22" height="94" />
+    <rect x="364" y="334" width="22" height="94" />
+  </g>
+</svg>

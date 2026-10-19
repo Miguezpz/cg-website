@@ -1,0 +1,51 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import Icon, { type IconName } from './Icon.astro';
+
+type Variant = 'primary' | 'secondary';
+
+type Props = {
+  variant?: Variant;
+  icon?: IconName;
+  class?: string;
+} & (
+  | ({ href: string } & Omit<HTMLAttributes<'a'>, 'href' | 'class'>)
+  | ({ href?: undefined } & Omit<HTMLAttributes<'button'>, 'class'>)
+);
+
+const {
+  variant = 'primary',
+  icon,
+  class: className,
+  href,
+  ...rest
+} = Astro.props;
+
+const base =
+  'stretch-label inline-flex min-h-[52px] items-center justify-center gap-3 px-6 text-label font-semibold uppercase transition-[background-color,color,translate] duration-fast ease-out-expo select-none active:translate-y-px disabled:cursor-not-allowed disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:opacity-50';
+
+const variants: Record<Variant, string> = {
+  primary:
+    'bg-signal text-steel-950 hover:bg-signal-strong disabled:hover:bg-signal',
+  secondary:
+    'border-2 border-chalk text-chalk hover:bg-chalk hover:text-steel-950',
+};
+
+const classes = [base, variants[variant], className];
+---
+
+{href ? (
+  <a href={href} class:list={classes} {...(rest as HTMLAttributes<'a'>)}>
+    {icon && <Icon name={icon} class="size-5 shrink-0" />}
+    <slot />
+  </a>
+) : (
+  <button
+    type="button"
+    class:list={classes}
+    {...(rest as HTMLAttributes<'button'>)}
+  >
+    {icon && <Icon name={icon} class="size-5 shrink-0" />}
+    <slot />
+  </button>
+)}

@@ -1,0 +1,20 @@
+---
+// Etiqueta de dato (precio, modalidad). Nunca como «eyebrow» sobre un título.
+interface Props {
+  tone?: 'steel' | 'signal';
+  class?: string;
+}
+const { tone = 'steel', class: className } = Astro.props;
+---
+
+<span
+  class:list={[
+    'stretch-label inline-flex items-center px-2 py-1 text-label font-semibold uppercase tabular-nums',
+    tone === 'signal'
+      ? 'bg-signal text-steel-950'
+      : 'border border-steel-700 text-concrete-400',
+    className,
+  ]}
+>
+  <slot />
+</span>
