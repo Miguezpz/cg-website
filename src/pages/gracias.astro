@@ -1,0 +1,24 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import Button from '../components/ui/Button.astro';
+import { contact, thanks } from '../data/home';
+import { site } from '../data/site';
+import { waAttrs } from '../lib/whatsapp';
+---
+
+<SiteLayout title={`${thanks.title} · ${site.name}`} noindex>
+  <section class="mx-auto w-full max-w-content px-gutter py-section">
+    <h1 class="stretch-display text-display font-black uppercase">
+      {thanks.title}
+    </h1>
+    <p class="mt-5 max-w-prose text-lede">{thanks.text}</p>
+    <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+      <Button icon="whatsapp" {...waAttrs({ source: 'contact' })}>
+        {contact.whatsappCta}
+      </Button>
+      <Button variant="secondary" href="/">
+        {thanks.back}
+      </Button>
+    </div>
+  </section>
+</SiteLayout>

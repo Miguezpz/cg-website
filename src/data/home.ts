@@ -1,11 +1,11 @@
 // Textos de la landing. Todo lo provisional va marcado con [[PENDIENTE]].
 
 export const nav = [
-  { label: 'Sobre mí', href: '#sobre-mi' },
-  { label: 'Servicios', href: '#servicios' },
-  { label: 'Resultados', href: '#resultados' },
-  { label: 'FAQ', href: '#faq' },
-  { label: 'Contacto', href: '#contacto' },
+  { label: 'Sobre mí', href: '/#sobre-mi' },
+  { label: 'Servicios', href: '/#servicios' },
+  { label: 'Resultados', href: '/#resultados' },
+  { label: 'FAQ', href: '/#faq' },
+  { label: 'Contacto', href: '/#contacto' },
 ] as const;
 
 export const hero = {
@@ -90,7 +90,13 @@ export const offer = {
 
 export const faqSection = { title: 'Preguntas frecuentes' } as const;
 
-export const resultsSection = { title: 'Resultados' } as const;
+export const resultsSection = {
+  title: 'Resultados',
+  intro: 'Mismo encuadre, misma luz: arrastra para comparar.',
+  sliderLabel: 'Comparar antes y después',
+  before: 'Antes',
+  after: 'Después',
+} as const;
 
 export const testimonialsSection = {
   title: 'Lo que dicen los alumnos',
@@ -136,4 +142,17 @@ export const contact = {
 
 export const footer = {
   privacy: 'Aviso de privacidad',
+  rights: 'Todos los derechos reservados.',
+} as const;
+
+export const thanks = {
+  title: '¡Gracias!',
+  text: 'Recibí tus datos. Te escribo pronto por WhatsApp; si prefieres no esperar, escríbeme tú.',
+  back: 'Volver al inicio',
+} as const;
+
+export const notFound = {
+  title: 'Aquí no hay barra',
+  text: 'La página que buscas no existe o cambió de lugar.',
+  back: 'Volver al inicio',
 } as const;

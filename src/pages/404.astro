@@ -1,0 +1,24 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import Button from '../components/ui/Button.astro';
+import { notFound } from '../data/home';
+import { site } from '../data/site';
+---
+
+<SiteLayout title={`${notFound.title} · ${site.name}`} noindex>
+  <section class="mx-auto w-full max-w-content px-gutter py-section">
+    <p
+      class="stretch-display text-[clamp(6rem,30vw,12rem)] leading-none font-black text-steel-700"
+      aria-hidden="true"
+    >
+      404
+    </p>
+    <h1 class="stretch-display mt-4 text-h2 font-extrabold uppercase">
+      {notFound.title}
+    </h1>
+    <p class="mt-4 max-w-prose text-lede">{notFound.text}</p>
+    <Button variant="secondary" href="/" class="mt-8">
+      {notFound.back}
+    </Button>
+  </section>
+</SiteLayout>

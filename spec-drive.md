@@ -357,12 +357,12 @@ Cada tarea se cierra con el ciclo de §13 y su prueba e2e.
 - **T2.2 · ✅ Hero** — RF-02
 - **T2.3 · ✅ Servicios** — RF-04
 - **T2.4 · ✅ Contacto (UI del formulario + WhatsApp) + botón flotante** — RF-10, RF-12. **→ M3**
-- **T2.5 · Sobre el coach** — RF-03
-- **T2.6 · Resultados + `BeforeAfterSlider`** — RF-05
-- **T2.7 · Testimonios** — RF-06
-- **T2.8 · Cómo funciona + Oferta** — RF-07, RF-08
-- **T2.9 · FAQ** — RF-09
-- **T2.10 · Footer + `/privacidad` + `/gracias` + `404`** — RF-11, RF-13
+- **T2.5 · ✅ Sobre el coach** — RF-03
+- **T2.6 · ✅ Resultados + `BeforeAfterSlider`** — RF-05
+- **T2.7 · ✅ Testimonios** — RF-06
+- **T2.8 · ✅ Cómo funciona + Oferta** — RF-07, RF-08
+- **T2.9 · ✅ FAQ** — RF-09
+- **T2.10 · ✅ Footer + `/privacidad` + `/gracias` + `404`** — RF-11, RF-13
 
 ### Fase 3 — Integraciones y pulido (→ M4)
 - **T3.1 · Web3Forms** (envío real, fallback sin JS, estados, honeypot) — RF-10, ADR-06. **Listo cuando** un envío de prueba llega al email.

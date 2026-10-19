@@ -1,0 +1,29 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import { privacy } from '../data/privacy';
+import { site } from '../data/site';
+---
+
+<SiteLayout
+  title={`${privacy.title} · ${site.name}`}
+  description={`${privacy.title} de ${site.name}: qué datos recabamos, para qué y cómo ejercer tus derechos ARCO.`}
+>
+  <article class="mx-auto w-full max-w-content px-gutter py-section">
+    <h1 class="stretch-display text-h2 font-extrabold uppercase">
+      {privacy.title}
+    </h1>
+    <p class="stretch-label mt-3 text-label text-concrete-400 uppercase">
+      {privacy.updated}
+    </p>
+    <div class="mt-10 max-w-prose space-y-10">
+      {privacy.sections.map((section) => (
+        <section>
+          <h2 class="stretch-heading text-h3 font-bold">{section.heading}</h2>
+          {section.body.map((paragraph) => (
+            <p class="mt-3 text-concrete-400">{paragraph}</p>
+          ))}
+        </section>
+      ))}
+    </div>
+  </article>
+</SiteLayout>

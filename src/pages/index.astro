@@ -1,35 +1,43 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import Header from '../components/Header.astro';
-import WhatsAppButton from '../components/WhatsAppButton.astro';
-import ChalkFilter from '../components/ui/ChalkFilter.astro';
+import SiteLayout from '../layouts/SiteLayout.astro';
 import Hero from '../components/sections/Hero.astro';
+import About from '../components/sections/About.astro';
 import Services from '../components/sections/Services.astro';
+import Results from '../components/sections/Results.astro';
+import Testimonials from '../components/sections/Testimonials.astro';
+import HowItWorks from '../components/sections/HowItWorks.astro';
+import Offer from '../components/sections/Offer.astro';
+import Faq from '../components/sections/Faq.astro';
 import Contact from '../components/sections/Contact.astro';
 import heroImage from '../assets/placeholders/hero.jpg';
+import coachPhoto from '../assets/coach/cesar-augusto.png';
 import { site } from '../data/site';
 import { services } from '../data/services';
 import { results } from '../data/results';
-import { contact, hero, nav, servicesSection } from '../data/home';
-
-// Los enlaces a secciones sin contenido no se muestran (R-02).
-const links = nav.filter(
-  (link) => link.href !== '#resultados' || results.length > 0,
-);
-const sectionIds = new Set(['#servicios', '#contacto']);
-const navLinks = links.filter((link) => sectionIds.has(link.href));
+import { testimonials } from '../data/testimonials';
+import { faq } from '../data/faq';
+import {
+  about,
+  contact,
+  faqSection,
+  hero,
+  howItWorks,
+  offer,
+  resultsSection,
+  servicesSection,
+  testimonialsSection,
+} from '../data/home';
 ---
 
-<BaseLayout>
-  <ChalkFilter slot="header" />
-  <Header
-    slot="header"
-    brand={site.name}
-    links={navLinks}
-    cta={{ label: 'Contáctame', href: '#contacto' }}
-  />
+<SiteLayout>
   <Hero {...hero} image={heroImage} />
+  <About {...about} photo={coachPhoto} />
   <Services {...servicesSection} services={services} />
+  <Results {...resultsSection} results={results} />
+  <Testimonials {...testimonialsSection} testimonials={testimonials} />
+  <HowItWorks {...howItWorks} />
+  <Offer {...offer} />
+  <Faq {...faqSection} items={faq} />
   <Contact
     {...contact}
     social={site.social}
@@ -38,5 +46,4 @@ const navLinks = links.filter((link) => sectionIds.has(link.href));
     redirect={new URL('/gracias/', Astro.site).href}
     subject={`Nuevo contacto desde la web · ${site.name}`}
   />
-  <WhatsAppButton slot="footer" label={contact.whatsappCta} />
-</BaseLayout>
+</SiteLayout>

@@ -1,0 +1,60 @@
+---
+import Icon from './ui/Icon.astro';
+import Logo from './ui/Logo.astro';
+import type { SocialLink } from '../data/types';
+
+interface Props {
+  brand: string;
+  area: string;
+  social: SocialLink[];
+  privacy: string;
+  rights: string;
+}
+
+const { brand, area, social, privacy, rights } = Astro.props;
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-steel-700 pt-12 pb-[calc(6rem+env(safe-area-inset-bottom))]">
+  <div class="mx-auto flex w-full max-w-content flex-col gap-8 px-gutter md:flex-row md:items-end md:justify-between">
+    <div class="flex items-center gap-4">
+      <Logo class="h-12 w-auto text-chalk" />
+      <div>
+        <p
+          class="stretch-label text-label font-bold tracking-[0.08em] uppercase"
+          translate="no"
+        >
+          {brand}
+        </p>
+        <p class="stretch-label mt-1 text-label text-concrete-400 uppercase">
+          {area}
+        </p>
+      </div>
+    </div>
+    <ul class="flex gap-2">
+      {social.map((link) => (
+        <li>
+          <a
+            href={link.url}
+            target="_blank"
+            rel="noopener"
+            data-track="social"
+            data-network={link.network}
+            aria-label={`${brand} en ${link.network === 'instagram' ? 'Instagram' : 'TikTok'}`}
+            class="inline-flex size-11 items-center justify-center border border-steel-700 transition-colors duration-fast hover:border-chalk"
+          >
+            <Icon name={link.network} class="size-5" />
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+  <div class="mx-auto mt-10 flex w-full max-w-content flex-col gap-2 px-gutter text-label text-concrete-400 sm:flex-row sm:justify-between">
+    <p>
+      © {year} {brand}. {rights}
+    </p>
+    <a href="/privacidad/" class="underline hover:text-chalk">
+      {privacy}
+    </a>
+  </div>
+</footer>

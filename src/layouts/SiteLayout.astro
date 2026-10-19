@@ -1,0 +1,41 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import WhatsAppButton from '../components/WhatsAppButton.astro';
+import ChalkFilter from '../components/ui/ChalkFilter.astro';
+import { site } from '../data/site';
+import { contact, footer, nav } from '../data/home';
+import { results } from '../data/results';
+
+interface Props {
+  title?: string;
+  description?: string;
+  noindex?: boolean;
+}
+
+// Los enlaces a secciones sin contenido no se muestran (R-02).
+const links = nav.filter(
+  (link) => link.href !== '/#resultados' || results.length > 0,
+);
+---
+
+<BaseLayout {...Astro.props}>
+  <ChalkFilter slot="header" />
+  <Header
+    slot="header"
+    brand={site.name}
+    links={links}
+    cta={{ label: 'Contáctame', href: '/#contacto' }}
+  />
+  <slot />
+  <Footer
+    slot="footer"
+    brand={site.name}
+    area={site.area}
+    social={site.social}
+    privacy={footer.privacy}
+    rights={footer.rights}
+  />
+  <WhatsAppButton slot="footer" label={contact.whatsappCta} />
+</BaseLayout>
