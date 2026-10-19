@@ -1,8 +1,12 @@
 # CLAUDE.md
 
-Landing page de conversión para un coach de calistenia. Astro (estático) + Tailwind v4 + TypeScript, desplegada en Vercel.
+Landing page de conversión para **Control Gravedad**, la escuela de calistenia del coach **Cesar Augusto** (clases presenciales en Morelia, Michoacán, y online). Astro (estático) + Tailwind v4 + TypeScript, desplegada en **Vercel Hobby** (gratuito) en `controlgravedad.vercel.app`. Reemplaza al sitio actual de `main`, publicado en `*.netlify.app`.
 
 **La fuente de verdad es [`spec-drive.md`](spec-drive.md).** Antes de implementar, lee la tarea (`Tx.y`) y los requisitos (`RF-xx`/`RNF-xx`) que cubre. Si algo no está en el spec o lo contradice, pregunta antes de improvisar, y refleja cualquier cambio de alcance en el spec (incluido su historial).
+
+## ⛔ Primero, al iniciar cualquier sesión de desarrollo
+
+Si la tarea **T0.0** del spec no está marcada como cerrada, **antes de hacer cualquier otra cosa pide al usuario la información de la marca tomada del Instagram de Control Gravedad**: costos, precios, horarios, restricciones, información general de la marca, etc. El checklist completo está en el spec, §17.1. No avances con otras tareas hasta recibirla (o hasta que el usuario diga explícitamente que se omita).
 
 ## Estado
 
@@ -25,6 +29,7 @@ npm run format         # Prettier
 
 ## Reglas del proyecto
 
+- **Portable (ADR-11):** nada específico de Vercel (sin adaptador, funciones ni paquetes `@vercel/*`); lo único propio de Vercel es `vercel.json`.
 - **Sin React ni librerías de UI/animación** (shadcn/ui, Framer Motion, AOS). La interactividad va con `<script>` de Astro, elementos nativos, CSS o WAAPI (ADR-04/05).
 - **Mejora progresiva:** sin JS, todo el contenido se ve y los CTAs y el formulario funcionan.
 - **Contenido fuera de los componentes:** todo texto, precio, imagen o enlace vive en `src/data/*.ts`. Los componentes solo reciben props.
@@ -60,3 +65,4 @@ Jerarquía ante conflictos: `spec-drive.md` > `DESIGN.md` > Impeccable > Emil.
 
 - Commits pequeños, uno por tarea, con el mensaje en español y el ID de la tarea: `feat(T2.2): hero con CTA a WhatsApp`.
 - No hacer push ni merge a `main` sin confirmación del usuario.
+- ⚠️ `main` está conectado a Netlify: antes de fusionar en `main` hay que desactivar los builds de Netlify (spec §11.1).

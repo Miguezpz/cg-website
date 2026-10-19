@@ -1,14 +1,21 @@
-# Spec: Landing Page — Coach de Calistenia
+# Spec: Landing Page — Control Gravedad (Coach Cesar Augusto)
 
 > Documento de especificación (spec-driven development). Es la **fuente de verdad** del proyecto: define **qué** se construye (Parte A), **cómo** (Parte B), **en qué orden** (Parte C) y **qué falta** (Parte D). Cualquier cambio de alcance se refleja primero aquí y se anota en el historial.
 
 | Campo | Valor |
 |---|---|
+| Marca / escuela | **Control Gravedad** |
+| Coach | **Cesar Augusto** |
+| Modalidad | **Presencial en Morelia, Michoacán** y **online** |
 | Branch | `nuevo-sitio` |
-| Versión | v0.2 (borrador) |
+| Versión | v0.3 (borrador) |
 | Punto de partida | Proyecto desde cero. No se reutiliza código, estilos ni estructura del branch `main` |
 | Idioma del sitio | Español (`es-MX`) |
-| Hosting | Vercel |
+| Hosting | **Vercel, plan Hobby (gratuito)**, en un subdominio `*.vercel.app` (sin dominio propio). Reemplaza al sitio actual en `*.netlify.app` (ver §11.1) |
+
+> ## ⛔ Antes de cualquier desarrollo: T0.0
+> El usuario debe compartir la **información de la marca tomada del Instagram de Control Gravedad** (costos, precios, horarios, restricciones, información general, etc.; checklist completo en §17.1).
+> **Claude debe pedir esta información al inicio de la siguiente sesión de desarrollo**, antes de ejecutar cualquier otra tarea.
 
 **Convención de IDs:** `RF-xx` requisito funcional · `RNF-xx` requisito no funcional · `ADR-xx` decisión técnica · `Tx.y` tarea · `M#` hito · `D-xx` decisión abierta · `R-xx` riesgo. Las tareas citan los requisitos que cubren, y cada requisito dice cómo se verifica.
 
@@ -18,7 +25,7 @@
 
 ## 1. Objetivo
 
-Construir una **landing page de conversión** que funcione como embudo de ventas digital: el visitante conoce la **autoridad** del coach, ve **resultados reales**, resuelve sus **objeciones** y termina **contactándolo** para contratar clases.
+Construir una **landing page de conversión** para **Control Gravedad**, la escuela de calistenia del coach **Cesar Augusto**, que funcione como embudo de ventas digital: el visitante conoce la **autoridad** del coach, ve **resultados reales**, resuelve sus **objeciones** y termina **contactándolo** para contratar clases.
 
 ### Métricas
 
@@ -28,7 +35,7 @@ Construir una **landing page de conversión** que funcione como embudo de ventas
 | **Conversión principal** | Envío exitoso del formulario (`form_submit`) | GA4 |
 | Secundaria | Clic a Instagram / TikTok (`social_click`) | GA4 |
 | Secundaria | Profundidad de scroll (¿llegan a Resultados / FAQ?) | GA4 (medición mejorada) |
-| Salud | Core Web Vitals reales (LCP, INP, CLS) | Vercel Speed Insights / CrUX |
+| Salud | Core Web Vitals reales (LCP, INP, CLS) | PageSpeed Insights / CrUX (Vercel Speed Insights solo si cabe en los límites del plan Hobby) |
 
 **Meta inicial:** el primer mes se mide la línea base de conversión (conversiones ÷ visitantes únicos). Las metas numéricas se fijan después con datos reales.
 
@@ -77,7 +84,7 @@ Orden de secciones = orden del embudo: **atención → autoridad → oferta → 
 - Foto profesional, historia breve (≤ 120 palabras), al menos 3 credenciales (certificaciones, años, logros).
 
 ### RF-04 · Servicios (`#servicios`)
-- Tarjetas: **Clases presenciales**, **Asesoría online**, **Planes de entrenamiento**.
+- Tarjetas: **Clases presenciales (Morelia)**, **Asesoría online**, **Planes de entrenamiento**. El catálogo final se ajusta a lo que entregue T0.0.
 - Cada tarjeta: nombre, para quién es, qué incluye (3–5 puntos), precio o "desde $X" (D-01) y CTA.
 
 **Aceptación:** cada CTA abre WhatsApp con un mensaje prellenado **distinto** que nombra el servicio (ver §9.1).
@@ -113,7 +120,7 @@ Orden de secciones = orden del embudo: **atención → autoridad → oferta → 
 **Aceptación:** un envío real llega al email del coach; la confirmación aparece sin recargar; con JS desactivado, el formulario se envía igual (POST nativo) y redirige a una página de gracias; los errores de validación se anuncian a lectores de pantalla (`aria-live`).
 
 ### RF-11 · Footer
-- Nombre, redes, zona de servicio, © año actual (calculado en build) y enlace a `/privacidad`.
+- Nombre, redes, zona de servicio ("Morelia, Michoacán · Online"), © año actual (calculado en build) y enlace a `/privacidad`.
 
 ### RF-12 · Botón flotante de WhatsApp
 - Fijo abajo a la derecha, con `aria-label`, y respeta `env(safe-area-inset-bottom)` en iOS.
@@ -129,14 +136,14 @@ Orden de secciones = orden del embudo: **atención → autoridad → oferta → 
 | ID | Requisito | Cómo se verifica |
 |---|---|---|
 | RNF-01 | Lighthouse móvil **≥ 95** en Performance, Accessibility, Best Practices y SEO | Lighthouse CI en cada PR (T4.2) |
-| RNF-02 | LCP < 2.5 s · CLS < 0.1 · INP < 200 ms (móvil, 4G simulado) | Lighthouse CI + Speed Insights en producción |
+| RNF-02 | LCP < 2.5 s · CLS < 0.1 · INP < 200 ms (móvil, 4G simulado) | Lighthouse CI + PageSpeed Insights en producción |
 | RNF-03 | JS **propio** < 20 KB gzip. Terceros (GA4) cargados de forma diferida y fuera del camino crítico | Revisión del reporte de build |
 | RNF-04 | Imágenes vía `astro:assets` (AVIF/WebP, `srcset`, `width`/`height` explícitos, lazy salvo el Hero) | Lighthouse + revisión de código |
 | RNF-05 | Máx. 2 familias tipográficas autoalojadas (Fontsource), subset latino, `font-display: swap`, la del Hero precargada | Pestaña Network |
 | RNF-06 | WCAG 2.2 AA: contraste ≥ 4.5:1, navegable con teclado, foco visible, un solo `<h1>`, landmarks, objetivos táctiles ≥ 44 px | `web-design-guidelines` + axe en e2e (T4.1) |
 | RNF-07 | `prefers-reduced-motion` desactiva animaciones no esenciales | e2e con `reducedMotion: 'reduce'` |
 | RNF-08 | Mejora progresiva: sin JS, todo el contenido se ve y los CTAs y el formulario funcionan | e2e con `javaScriptEnabled: false` |
-| RNF-09 | SEO: `title`/`description` únicos con keyword local, canónica, OG/Twitter 1200×630, `sitemap.xml`, `robots.txt`, JSON-LD | Rich Results Test + Lighthouse SEO |
+| RNF-09 | SEO: `title`/`description` únicos con marca + keyword local (ej. "Control Gravedad · Clases de calistenia en Morelia y online con Cesar Augusto"), canónica, OG/Twitter 1200×630, `sitemap.xml`, `robots.txt`, JSON-LD | Rich Results Test + Lighthouse SEO |
 | RNF-10 | Seguridad: cabeceras CSP, `X-Content-Type-Options`, `Referrer-Policy` y `Permissions-Policy` vía `vercel.json`; sin secretos en el repo | securityheaders.com sobre la URL de preview |
 | RNF-11 | Compatibilidad: últimas 2 versiones de Chrome, Safari (incl. iOS), Firefox y Edge; breakpoints 375 / 768 / 1280 px | e2e en Chromium + WebKit; dispositivo real en T4.4 |
 | RNF-12 | Privacidad: el aviso declara la analítica; no se envían datos del formulario a GA4 (sin PII en eventos) | Revisión de `analytics.ts` |
@@ -155,7 +162,8 @@ Orden de secciones = orden del embudo: **atención → autoridad → oferta → 
 | ADR-04 | **Sin React ni librerías de UI/animación** (shadcn/ui, Framer Motion, AOS) | shadcn/ui + Framer Motion | Peso innecesario; las animaciones se hacen con CSS, `@starting-style`, IntersectionObserver o WAAPI |
 | ADR-05 | Interactividad con `<script>` de Astro (TS, empaquetado y diferido) o elementos nativos (`<details>`, `<input type=range>`) | Islands de frameworks | Menos JS y mejora progresiva |
 | ADR-06 | Formulario con **Web3Forms** (POST directo, plan gratuito) | Endpoint propio en Vercel + Resend | Evita servidor en v1. **Plan de escape:** si hay spam o se necesita guardar leads, migrar a una Astro Action con `@astrojs/vercel` + Resend + Turnstile |
-| ADR-07 | **GA4** para eventos de conversión, cargado diferido; **Vercel Speed Insights** para Web Vitals reales | Vercel Web Analytics | Los eventos personalizados de Vercel Analytics requieren plan de pago; GA4 es gratis |
+| ADR-07 | **GA4** para eventos de conversión, cargado diferido; Web Vitals reales vía PageSpeed Insights/CrUX | Vercel Web Analytics / Speed Insights | Los eventos personalizados de Vercel Analytics no están en el plan Hobby; GA4 es gratis y no depende del hosting |
+| ADR-11 | **Portabilidad:** cero dependencias específicas de Vercel (sin adaptador, sin funciones, sin `@vercel/*`). Lo único propio de Vercel es `vercel.json` | Usar funciones o servicios de Vercel | Permite mudarse a Cloudflare Pages o Netlify en minutos si el plan Hobby deja de servir (R-05) |
 | ADR-08 | Contenido en **`src/data/*.ts` tipado** (un archivo por dominio) | Content Collections o CMS | Una sola página con poco contenido; los tipos bastan y es fácil de editar |
 | ADR-09 | Imágenes en `src/assets/` procesadas por `astro:assets` | `public/` sin optimizar | Genera AVIF/WebP, `srcset` y dimensiones automáticamente |
 | ADR-10 | Pruebas: **@playwright/test** (e2e + axe) y **Lighthouse CI** en GitHub Actions | Solo pruebas manuales | Hace verificables los RNF y protege contra regresiones |
@@ -230,7 +238,7 @@ type FaqItem   = { q: string; a: string };
 - GA4 se carga después de `load` o en la primera interacción para cumplir RNF-01 y RNF-03.
 
 ### 9.4 SEO y datos estructurados
-- JSON-LD: `Person` (el coach) + `Service` por servicio con `areaServed` (ciudad) + `FAQPage`. Se usa `LocalBusiness` solo si hay una dirección física pública (D-06).
+- JSON-LD: `Person` (el coach) + `Service` por servicio con `areaServed` (presencial: Morelia, Michoacán; online: México) + `FAQPage`. Se usa `LocalBusiness` solo si hay una dirección física pública (D-06).
 - `site` definido en `astro.config.mjs` (necesario para la canónica y el sitemap).
 
 ## 10. Diseño visual
@@ -245,13 +253,24 @@ type FaqItem   = { q: string; a: string };
 |---|---|---|---|
 | Local | `npm run dev` | `localhost:4321` | — |
 | Preview | Cada push y PR | `*.vercel.app` | No (Vercel añade `noindex` en previews) |
-| Producción | Branch de producción (D-05) | Dominio propio | Sí |
+| Producción | Branch de producción (D-05) | `https://controlgravedad.vercel.app` (nombrar así el proyecto en Vercel si está disponible) | Sí |
 
 - **Preset:** Astro · Build `npm run build` · Output `dist` · versión de Node fijada en `package.json` (`engines`). No requiere adaptador mientras el sitio sea estático.
 - **Variables de entorno** (`.env.example`): `PUBLIC_SITE_URL`, `PUBLIC_WHATSAPP_NUMBER`, `PUBLIC_WEB3FORMS_KEY`, `PUBLIC_GA_ID`. Todas son públicas por diseño (se incrustan en el build); no hay secretos.
-- **`vercel.json`:** cabeceras de seguridad (RNF-10), caché larga para `/_astro/*` y redirección `www` → dominio raíz.
+- **`vercel.json`:** cabeceras de seguridad (RNF-10) y caché larga para `/_astro/*`.
+- **Dominio propio:** no hay en v1. Se puede añadir después sin costo de hosting (Hobby lo permite); solo se paga el dominio (D-09).
 - **Despliegue temprano:** el proyecto se conecta a Vercel en la Fase 0 para tener una URL de preview desde el primer día.
-- ⚠️ **Plan de Vercel:** el plan *Hobby* es solo para uso personal no comercial. Una landing que vende servicios es uso comercial, así que se necesita **Vercel Pro** (verificar el precio vigente) o elegir otro hosting (D-04).
+- **Plan:** Vercel **Hobby** (gratuito), decisión del usuario (D-04). Incluye dominio propio con HTTPS, previews por branch y CDN, que es todo lo que necesita un sitio estático. Los términos de Hobby limitan el uso a fines no comerciales; es un riesgo aceptado y mitigado (R-05, ADR-11).
+
+### 11.1 Migración desde Netlify
+
+El sitio actual (branch `main`) está publicado en **Netlify** en un subdominio `*.netlify.app` (sin dominio propio) y conectado al repositorio. Como no hay DNS que migrar, el cambio consiste en **redirigir la URL vieja a la nueva**:
+
+1. **Antes de fusionar `nuevo-sitio` → `main`**, desactivar los builds automáticos en Netlify (*Site configuration → Build & deploy → Stop builds*). Si no, Netlify intentará desplegar el nuevo proyecto Astro sobre el sitio en producción.
+2. Verificar la nueva landing en producción en `https://controlgravedad.vercel.app`.
+3. Convertir el sitio de Netlify en una redirección: hacer un *deploy manual* (arrastrar una carpeta en Netlify) que solo contenga un archivo `_redirects` con `/*  https://controlgravedad.vercel.app/:splat  301!`. Así los enlaces viejos ya compartidos siguen funcionando.
+4. Actualizar el enlace de la bio de Instagram, TikTok y Google Business (si existe) a la nueva URL.
+5. Dar de alta la nueva URL en Search Console y enviar el sitemap.
 
 ## 12. Calidad y CI
 
@@ -290,6 +309,7 @@ type FaqItem   = { q: string; a: string };
 
 | Hito | Resultado verificable | Incluye |
 |---|---|---|
+| **M0 · Información de la marca recibida** | El usuario compartió la información de Instagram (§17.1) y quedó volcada en el spec | T0.0 |
 | **M1 · Esqueleto en línea** | URL de preview en Vercel con CI en verde | Fase 0 |
 | **M2 · Sistema de diseño** | `PRODUCT.md`, `DESIGN.md`, layout base y componentes UI en preview | Fase 1 |
 | **M3 · Landing mínima que convierte** | Header, Hero, Servicios, Contacto y WhatsApp flotante funcionando. Ya podría publicarse | T2.1–T2.4 |
@@ -300,13 +320,14 @@ type FaqItem   = { q: string; a: string };
 
 Formato: **ID · tarea** — *depende de* · *cubre* · **listo cuando**.
 
-### Fase 0 — Fundaciones (→ M1)
-- **T0.1 · Limpiar el legado:** eliminar `index.html`, `script.js`, `styles.css`, `assets/` y `.vscode/` (si no se usa). **Listo cuando** solo quedan `.claude/`, `CLAUDE.md` y `spec-drive.md`.
+### Fase 0 — Fundaciones (→ M0, M1)
+- **T0.0 · ⛔ Recibir la información de la marca (BLOQUEANTE, va antes de todo).** Al iniciar la siguiente sesión de desarrollo, **Claude pregunta al usuario** por la información del Instagram de Control Gravedad (checklist en §17.1). Con lo recibido: actualizar §2, RF-03, RF-04, RF-08, RF-09, §17 y §18, y dejar los huecos que falten como `[[PENDIENTE]]`. **Listo cuando** el usuario confirma que el spec refleja la marca. **→ M0**
+- **T0.1 · Limpiar el legado** — *dep.* T0.0: eliminar `index.html`, `script.js`, `styles.css`, `assets/` y `.vscode/` (si no se usa). **Listo cuando** solo quedan `.claude/`, `CLAUDE.md` y `spec-drive.md`.
 - **T0.2 · Inicializar Astro** (plantilla mínima, TS estricto, `engines.node`) — *dep.* T0.1. **Listo cuando** `npm run dev` y `npm run build` funcionan.
 - **T0.3 · Tailwind v4 + `@astrojs/sitemap` + Prettier** — *dep.* T0.2. **Listo cuando** una clase de Tailwind se refleja en el build.
 - **T0.4 · Configuración del repo:** `.gitignore` (incluye `.playwright-cli/`, `.env`, `dist/`), `.env.example` y scripts de npm (`check`, `test:e2e`, `check:content`, `format`). **Listo cuando** `npm run check` pasa.
 - **T0.5 · Playwright + axe + Lighthouse CI + GitHub Actions** con una prueba humo — *dep.* T0.3. **Listo cuando** CI está en verde en GitHub.
-- **T0.6 · Conectar Vercel** (preview por branch, variables de entorno, `vercel.json` con cabeceras) — *dep.* T0.5, D-04. **Listo cuando** existe la URL de preview y securityheaders.com da A o superior. **→ M1**
+- **T0.6 · Conectar Vercel Hobby** (importar el repo con `nuevo-sitio` como branch de preview, variables de entorno, `vercel.json` con cabeceras) — *dep.* T0.5. **Listo cuando** existe la URL de preview y securityheaders.com da A o superior. **→ M1**
 
 ### Fase 1 — Contexto y sistema de diseño (→ M2)
 - **T1.1 · `impeccable init`** usando §1–2 de este spec → `PRODUCT.md`. **Listo cuando** el usuario aprueba `PRODUCT.md`.
@@ -344,7 +365,8 @@ Cada tarea se cierra con el ciclo de §13 y su prueba e2e.
 - **T4.4 · Pruebas en dispositivos reales** (iPhone con Safari y Android con Chrome): formulario, WhatsApp y slider.
 - **T4.5 · Cargar contenido y fotos reales** — §17.
 - **T4.6 · `check:content` en verde** (sin `[[PENDIENTE]]`).
-- **T4.7 · Producción:** dominio + DNS, `PUBLIC_SITE_URL` definitivo, merge según D-05, GA4 verificado en producción y sitemap enviado a Search Console. **→ M5**
+- **T4.7 · Producción en Vercel:** desactivar los builds de Netlify (§11.1 paso 1), merge según D-05, `PUBLIC_SITE_URL=https://controlgravedad.vercel.app` y GA4 verificado en producción.
+- **T4.8 · Retiro del sitio de Netlify** (§11.1 pasos 2–5) — *dep.* T4.7. **Listo cuando** la URL `*.netlify.app` redirige (301) a la nueva, las bios de las redes apuntan a la nueva URL y el sitemap está enviado a Search Console. **→ M5**
 
 ## 16. Definición de "terminado"
 
@@ -358,12 +380,34 @@ Cada tarea se cierra con el ciclo de §13 y su prueba e2e.
 
 ## 17. Contenido y assets del cliente
 
-Leyenda: 🔴 bloquea el inicio · 🟠 bloquea el diseño (T1.2) · 🟢 bloquea solo el lanzamiento (T4.5).
+### 17.1 ⛔ Información de la marca desde Instagram (T0.0, bloqueante)
+
+**Claude lo pide al inicio de la siguiente sesión.** El usuario puede pegarlo como texto o compartir capturas de pantalla.
+
+- [ ] **Información general de la marca:** descripción o bio, misión o filosofía, a quién va dirigida y el tono de comunicación (formal, cercano, motivacional…).
+- [ ] **Servicios:** lista completa de lo que ofrece (clases grupales o individuales, presencial, online, planes, retos, talleres…).
+- [ ] **Costos y precios:** por clase, paquetes y mensualidades, por modalidad. Promociones vigentes y métodos de pago.
+- [ ] **Horarios:** días y horas de las clases presenciales; disponibilidad para online.
+- [ ] **Ubicación(es) en Morelia:** parque, gimnasio o estudio, y si se puede publicar la dirección (D-06).
+- [ ] **Modalidad online:** cómo funciona (app, videollamada, videos, seguimiento por WhatsApp), frecuencia y qué recibe el alumno.
+- [ ] **Restricciones y políticas:** edad mínima, condiciones de salud, nivel requerido, cupo por grupo, cancelaciones o reposiciones, reglamento.
+- [ ] **Sobre el coach:** historia, años de experiencia, certificaciones, logros o competencias.
+- [ ] **Prueba social:** testimonios, publicaciones de antes y después (con permiso), número aproximado de alumnos.
+- [ ] **Oferta de entrada:** si ya existe una clase de prueba, valoración gratuita o similar (D-02).
+- [ ] **Identidad visual:** logo, colores y tipografías que ya usa en Instagram; publicaciones que mejor la representan.
+- [ ] **Contacto y redes:** usuario de Instagram, TikTok (si existe), número de WhatsApp y email.
+- [ ] **Preguntas frecuentes** que le hacen por mensaje directo.
+- [ ] **Otros:** cualquier dato de la marca que el usuario considere relevante.
+
+### 17.2 Assets y datos restantes
+
+Leyenda: 🔴 bloquea el inicio · 🟠 bloquea el diseño (T1.2) · 🟢 bloquea solo el lanzamiento (T4.5). Varios de estos se cubren con §17.1.
 
 | | Elemento | Especificación |
 |---|---|---|
-| 🔴 | Nombre del coach / marca | Para `PRODUCT.md` y el SEO |
-| 🔴 | Ciudad / zona de servicio | Para la keyword local y `areaServed` |
+| ✅ | Nombre del coach / marca | **Cesar Augusto** · escuela **Control Gravedad** (confirmar si es "César" con acento) |
+| ✅ | Ciudad / zona de servicio | **Morelia, Michoacán (presencial) + online** |
+| 🔴 | Información de la marca desde Instagram | §17.1 (T0.0) |
 | 🟠 | Foto o video del Hero | Foto ≥ 2400×1600 px (horizontal) **y** ≥ 1080×1920 px (vertical). Video: 10–20 s, sin audio, 1080p |
 | 🟠 | Fotos profesionales del coach | ≥ 1600 px por el lado mayor, buena luz y fondo limpio |
 | 🟠 | Preferencias de estilo / color | Referencias que le gusten o colores de marca existentes |
@@ -377,7 +421,7 @@ Leyenda: 🔴 bloquea el inicio · 🟠 bloquea el diseño (T1.2) · 🟢 bloque
 | 🟢 | Testimonios | Nombre, foto (opcional), texto y autorización de uso |
 | 🟢 | Oferta de entrada | Ver D-02 |
 | 🟢 | Datos para el aviso de privacidad | Nombre del responsable y email de contacto ARCO |
-| 🟢 | Dominio y cuenta de GA4 | ¿Ya existen? ¿Quién los administra? |
+| 🟢 | Cuenta de GA4 | ¿Ya existe? ¿Quién la administra? |
 
 ## 18. Decisiones abiertas
 
@@ -386,10 +430,12 @@ Leyenda: 🔴 bloquea el inicio · 🟠 bloquea el diseño (T1.2) · 🟢 bloque
 | D-01 | ¿Mostrar precios? | "Desde $X MXN" | T2.3 (puede ir con valor provisional) |
 | D-02 | ¿Cuál es la oferta de entrada? | "Primera clase de valoración gratis" | T2.8 |
 | D-03 | ¿Hero con video o imagen? | Imagen; video solo en escritorio si hay buen material | T2.2 |
-| D-04 | ¿Vercel Pro o hosting gratuito con uso comercial (Netlify / Cloudflare Pages)? | Vercel Pro (decisión del usuario) | T0.6 |
-| D-05 | Branch de producción | Merge de `nuevo-sitio` → `main` al cerrar M4; `main` es producción | T4.7 |
+| D-04 | ~~¿Vercel Pro u otro hosting?~~ | ✅ **Resuelta: Vercel Hobby (gratuito)** | — |
+| D-05 | Branch de producción | Merge de `nuevo-sitio` → `main` al cerrar M4; `main` es producción en Vercel | T4.7 |
 | D-06 | ¿Hay dirección física pública (estudio o gimnasio)? | No → `Person` + `Service` con `areaServed` | T3.3 |
-| D-07 | ¿El sitio actual de `main` está publicado en algún dominio? | Por confirmar: afecta la migración de DNS y las redirecciones | T4.7 |
+| D-07 | ~~¿Dónde está publicado el sitio actual?~~ | ✅ **Resuelta: en Netlify**; se migra a Vercel (§11.1) | — |
+| D-08 | ~~¿El sitio de Netlify usa dominio propio?~~ | ✅ **Resuelta: no, usa `*.netlify.app`**. La migración es por redirección 301 (§11.1) | — |
+| D-09 | ¿Comprar un dominio propio (ej. `controlgravedad.mx`)? | Opcional, después de v1. Mejora la confianza y el SEO; en Vercel Hobby no cuesta conectarlo | — |
 
 ## 19. Riesgos
 
@@ -399,7 +445,9 @@ Leyenda: 🔴 bloquea el inicio · 🟠 bloquea el diseño (T1.2) · 🟢 bloque
 | R-02 | Fotos de antes/después de baja calidad o sin consentimiento | Pierde credibilidad o tiene riesgo legal | Especificación de §17 + consentimiento escrito; si faltan, la sección se oculta |
 | R-03 | GA4 baja la puntuación de Lighthouse | Incumple RNF-01 | Carga diferida (§9.3) |
 | R-04 | Spam en el formulario | Ruido en el email del coach | Honeypot; plan de escape de ADR-06 |
-| R-05 | Uso comercial en Vercel Hobby | Incumple los términos de servicio | D-04 |
+| R-05 | Uso comercial en Vercel Hobby (sus términos lo restringen a uso no comercial) | Vercel podría pausar el proyecto | **Riesgo aceptado por el usuario.** Mitigación: ADR-11 (sitio 100% portable). Si ocurre, se pasa a Vercel Pro o a Cloudflare Pages/Netlify (gratis, permiten uso comercial) sin cambiar código |
+| R-07 | Enlaces viejos a `*.netlify.app` (bio de Instagram, mensajes) dejan de llevar al sitio | Se pierden visitas | Redirección 301 en Netlify + actualizar las bios (§11.1 pasos 3–4) |
+| R-06 | Netlify despliega el proyecto nuevo al fusionar en `main` | Sitio en producción roto o sobrescrito durante la migración | §11.1 paso 1 antes del merge (T4.7) |
 
 ---
 
@@ -410,3 +458,5 @@ Leyenda: 🔴 bloquea el inicio · 🟠 bloquea el diseño (T1.2) · 🟢 bloque
 | v0.1 | 2026-10-18 | Borrador inicial |
 | v0.1.1 | 2026-10-18 | Skills de Claude Code (§13) |
 | v0.2 | 2026-10-18 | Reestructura en Partes A–D; IDs y aceptación por requisito; ADRs; arquitectura y modelo de contenido; estrategia de pruebas y CI; hitos y tareas con dependencias; especificación de assets; decisiones abiertas y riesgos |
+| v0.3 | 2026-10-18 | Marca (Control Gravedad / Cesar Augusto); Vercel Hobby (D-04); migración desde Netlify (§11.1, T4.8, R-06); ADR-11 de portabilidad; D-08 |
+| v0.4 | 2026-10-18 | Morelia + online; sin dominio propio (D-08 resuelta, D-09); migración por redirección 301; **T0.0 bloqueante**: información de Instagram (§17.1) que Claude pide al iniciar la siguiente sesión |
