@@ -374,7 +374,7 @@ Cada tarea se cierra con el ciclo de §13 y su prueba e2e.
 ### Fase 4 — QA y lanzamiento (→ M5)
 - **T4.1 · ✅ Completar la suite e2e** (sin JS, reduced motion, axe, WebKit) — RNF-06–08, RNF-11.
 - **T4.2 · ✅ Lighthouse CI con aserciones ≥ 95** — RNF-01, RNF-02. *(Bloqueante en CI: 4 categorías ≥ 95, LCP < 2.5 s, CLS < 0.1, TBT < 200 ms en `/` y `/privacidad`. Local: 100/100/100/100, LCP 1.7 s, CLS 0. JS propio ≈ 2.3 KB gzip, RNF-03.)*
-- **T4.3 · Auditoría final con `web-design-guidelines`** y corrección de hallazgos.
+- **T4.3 · ✅ Auditoría final con `web-design-guidelines`** y corrección de hallazgos. *(2026-10-19: sin hallazgos que corregir; se aceptan como decisiones conscientes el `outline-none` del `<main>` (solo recibe foco programático del skip link), la voz en primera persona del coach y los precios como texto en `src/data/services.ts` en lugar de `Intl.NumberFormat`.)*
 - **T4.4 · Pruebas en dispositivos reales** (iPhone con Safari y Android con Chrome): formulario, WhatsApp y slider.
 - **T4.5 · Cargar contenido y fotos reales** — §17.
 - **T4.6 · `check:content` en verde** (sin `[[PENDIENTE]]`).
