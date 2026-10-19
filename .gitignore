@@ -30,3 +30,7 @@ playwright-report/
 
 # lighthouse ci
 .lighthouseci/
+
+# impeccable (bocetos y capturas locales)
+.impeccable/mocks/
+.impeccable/review/

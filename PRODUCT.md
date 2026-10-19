@@ -48,8 +48,9 @@ Un método propio, **Carga & Descarga**, que forma **deportistas hábiles y cons
 
 - **Nombre:** Control Gravedad (escuela) · César Augusto (coach). "Chesare Mozart" es su nombre en redes y solo aparece como referencia a ellas.
 - **Lema:** "Formamos deportistas hábiles y conscientes." Otras frases propias: "Desafía tu ser gravitacional" y "Desafía la gravedad con nosotros".
-- **Voz:** motivacional y cercana, en español de México, con humor en redes. En el sitio se traduce a un registro más **elegante**.
-- **Tipografía:** el coach la quiere elegante, no moderna ni futurista (restricción vinculante).
+- **Voz:** motivacional y cercana, en español de México, con humor en redes.
+- **Tipografía:** el coach pidió letra elegante; el usuario levantó esa restricción en T1.2 (2026-10-19) al elegir la dirección «Gis y acero». También se levantaron "evitar plantilla genérica" y "evitar lo infantil".
+- **Logo:** monograma CG blanco en un círculo con "CONTROL GRAVEDAD". Solo existe en 150 px; falta la versión vectorial.
 - **Paleta:** la está definiendo un diseñador externo. Hasta entonces se usa una provisional, que debe poder reemplazarse cambiando solo los tokens (spec D-10).
 - `#25D366` queda reservado para WhatsApp.
 
