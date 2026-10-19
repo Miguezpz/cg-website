@@ -136,7 +136,13 @@ export const contact = {
     success: '¡Listo! Te escribo pronto por WhatsApp.',
     error:
       'No se pudo enviar. Inténtalo de nuevo o escríbeme directo por WhatsApp.',
-    required: 'Obligatorio',
+    errors: {
+      required: 'Este campo es obligatorio.',
+      phone: 'Escribe un número de al menos 10 dígitos.',
+      goal: 'Elige tu objetivo.',
+      privacy: 'Acepta el aviso de privacidad para poder enviar.',
+    },
+    errorCta: 'Escribir por WhatsApp',
   },
 } as const;
 

@@ -16,7 +16,8 @@ interface FormCopy {
   sending: string;
   success: string;
   error: string;
-  required: string;
+  errors: { required: string; phone: string; goal: string; privacy: string };
+  errorCta: string;
 }
 
 interface Props {
@@ -46,6 +47,7 @@ const {
 const field =
   'block min-h-12 w-full rounded-input border border-steel-700 bg-steel-950 px-4 py-3 text-chalk placeholder:text-concrete-400 transition-colors duration-fast hover:border-concrete-400 user-invalid:border-error-on-dark';
 const label = 'stretch-label mb-2 block text-label font-semibold uppercase';
+const errorText = 'mt-2 text-label text-error-on-dark';
 ---
 
 <section
@@ -92,7 +94,6 @@ const label = 'stretch-label mb-2 block text-label font-semibold uppercase';
       method="POST"
       action={formAction}
       data-contact-form
-      novalidate
       class="border border-steel-700 bg-steel-900 p-6 sm:p-8"
       aria-labelledby="form-title"
     >
@@ -124,8 +125,12 @@ const label = 'stretch-label mb-2 block text-label font-semibold uppercase';
             autocomplete="name"
             required
             placeholder={form.name.placeholder}
+            aria-describedby="f-name-error"
             class={field}
           />
+          <p id="f-name-error" class={errorText} data-error-for="name" hidden>
+            {form.errors.required}
+          </p>
         </div>
         <div>
           <label for="f-phone" class={label}>
@@ -140,14 +145,24 @@ const label = 'stretch-label mb-2 block text-label font-semibold uppercase';
             required
             pattern="[0-9 +()-]{10,}"
             placeholder={form.phone.placeholder}
+            aria-describedby="f-phone-error"
             class={field}
           />
+          <p id="f-phone-error" class={errorText} data-error-for="phone" hidden>
+            {form.errors.phone}
+          </p>
         </div>
         <div>
           <label for="f-goal" class={label}>
             {form.goal.label} <span aria-hidden="true">*</span>
           </label>
-          <select id="f-goal" name="goal" required class={field}>
+          <select
+            id="f-goal"
+            name="goal"
+            required
+            aria-describedby="f-goal-error"
+            class={field}
+          >
             <option value="" disabled selected>
               {form.goal.placeholder}
             </option>
@@ -155,6 +170,9 @@ const label = 'stretch-label mb-2 block text-label font-semibold uppercase';
               <option>{option}</option>
             ))}
           </select>
+          <p id="f-goal-error" class={errorText} data-error-for="goal" hidden>
+            {form.errors.goal}
+          </p>
         </div>
         <div>
           <label for="f-message" class={label}>
@@ -174,6 +192,7 @@ const label = 'stretch-label mb-2 block text-label font-semibold uppercase';
             type="checkbox"
             name="privacy"
             required
+            aria-describedby="f-privacy-error"
             class="mt-0.5 size-5 shrink-0 accent-signal"
           />
           <span class="text-concrete-400">
@@ -187,20 +206,117 @@ const label = 'stretch-label mb-2 block text-label font-semibold uppercase';
             {form.privacy.after}
           </span>
         </label>
+        <p
+          id="f-privacy-error"
+          class:list={[errorText, '-mt-3']}
+          data-error-for="privacy"
+          hidden
+        >
+          {form.errors.privacy}
+        </p>
       </div>
 
       <Button type="submit" class="mt-8 w-full" data-submit>
-        {form.submit}
+        <span data-submit-label>{form.submit}</span>
       </Button>
-      <p
-        data-form-status
-        role="status"
-        aria-live="polite"
-        class="mt-4 min-h-6 text-body"
-        data-sending={form.sending}
-        data-success={form.success}
-        data-error={form.error}
-      ></p>
+      <div class="mt-4 min-h-6" aria-live="polite" role="status">
+        <p data-form-message hidden></p>
+        <a
+          data-form-fallback
+          hidden
+          {...waAttrs({ source: 'contact' })}
+          class="mt-2 inline-flex min-h-11 items-center gap-2 font-semibold text-chalk underline hover:text-signal"
+        >
+          <Icon name="whatsapp" class="size-5" />
+          {form.errorCta}
+        </a>
+      </div>
+      <template data-copy>
+        <span data-key="submit">{form.submit}</span>
+        <span data-key="sending">{form.sending}</span>
+        <span data-key="success">{form.success}</span>
+        <span data-key="error">{form.error}</span>
+      </template>
     </form>
   </div>
 </section>
+
+<script>
+  import { track } from '../../lib/analytics';
+
+  const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
+  if (form) {
+    // Con JS validamos nosotros; sin JS, el navegador valida y el POST es nativo.
+    form.noValidate = true;
+    const copy = Object.fromEntries(
+      [
+        ...(form.querySelector<HTMLTemplateElement>('[data-copy]')?.content
+          .children ?? []),
+      ].map((el) => [(el as HTMLElement).dataset.key, el.textContent ?? '']),
+    );
+    const submit = form.querySelector<HTMLButtonElement>('[type="submit"]')!;
+    const label = submit.querySelector<HTMLElement>('[data-submit-label]')!;
+    const message = form.querySelector<HTMLElement>('[data-form-message]')!;
+    const fallback = form.querySelector<HTMLElement>('[data-form-fallback]')!;
+    const fields = ['name', 'phone', 'goal', 'privacy'].map(
+      (name) => form.elements.namedItem(name) as HTMLInputElement,
+    );
+
+    const showError = (field: HTMLInputElement, invalid: boolean) => {
+      field.setAttribute('aria-invalid', String(invalid));
+      const error = form.querySelector<HTMLElement>(
+        `[data-error-for="${field.name}"]`,
+      );
+      if (error) error.hidden = !invalid;
+    };
+
+    const setStatus = (state: 'idle' | 'sending' | 'success' | 'error') => {
+      submit.disabled = state === 'sending';
+      label.textContent = state === 'sending' ? copy.sending : copy.submit;
+      message.hidden = state === 'idle' || state === 'sending';
+      message.textContent = state === 'success' ? copy.success : copy.error;
+      message.className =
+        state === 'error' ? 'text-error-on-dark' : 'font-semibold text-chalk';
+      fallback.hidden = state !== 'error';
+    };
+
+    for (const field of fields) {
+      field.addEventListener('change', () => {
+        if (field.getAttribute('aria-invalid') === 'true') {
+          showError(field, !field.checkValidity());
+        }
+      });
+    }
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const invalid = fields.filter((field) => !field.checkValidity());
+      fields.forEach((field) => showError(field, invalid.includes(field)));
+      if (invalid.length) {
+        invalid[0].focus();
+        return;
+      }
+
+      setStatus('sending');
+      const data = new FormData(form);
+      data.delete('redirect');
+      try {
+        const response = await fetch(form.action, {
+          method: 'POST',
+          headers: { Accept: 'application/json' },
+          body: data,
+        });
+        const result = (await response.json().catch(() => ({}))) as {
+          success?: boolean;
+        };
+        if (!response.ok || !result.success) throw new Error('send failed');
+        // Sin PII: solo el objetivo elegido (RNF-12).
+        track('form_submit', { goal: String(data.get('goal') ?? '') });
+        form.reset();
+        setStatus('success');
+      } catch {
+        setStatus('error');
+      }
+    });
+  }
+</script>
