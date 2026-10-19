@@ -1,0 +1,79 @@
+---
+// Trazos de gis: manos sobre la barra, subrayado o marcas de conteo.
+interface Props {
+  variant: 'hands' | 'underline' | 'tally';
+  count?: number;
+  class?: string;
+}
+const { variant, count = 5, class: className } = Astro.props;
+
+// Marcas de conteo agrupadas de 5 en 5 (cuatro verticales y una cruzada).
+const tally = Array.from({ length: count }, (_, i) => {
+  const group = Math.floor(i / 5);
+  const pos = i % 5;
+  const x0 = group * 70 + 8;
+  if (pos === 4) return `M${x0 - 6} 46 L${x0 + 52} 12`;
+  const x = x0 + pos * 12;
+  return `M${x} 8 Q${x + 2} 30 ${x - 1} 52`;
+});
+const tallyWidth = Math.ceil(count / 5) * 70;
+---
+
+{variant === 'hands' && (
+  <svg
+    viewBox="0 0 400 60"
+    class={className}
+    aria-hidden="true"
+    focusable="false"
+    preserveAspectRatio="none"
+  >
+    <g fill="currentColor" filter="url(#chalk)">
+      <path
+        opacity="0.55"
+        d="M84 18c14-9 46-10 60-1 8 6 6 18-6 23-17 7-43 7-56-1-10-6-8-15 2-21z"
+      />
+      <path
+        opacity="0.5"
+        d="M252 20c16-10 44-9 58 0 9 6 7 17-5 22-18 8-42 6-55-1-9-6-8-15 2-21z"
+      />
+    </g>
+  </svg>
+)}
+{variant === 'underline' && (
+  <svg
+    viewBox="0 0 300 20"
+    class={className}
+    aria-hidden="true"
+    focusable="false"
+    preserveAspectRatio="none"
+  >
+    <path
+      d="M4 13 C60 6 140 15 210 9 S280 8 296 11"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="5"
+      stroke-linecap="round"
+      filter="url(#chalk)"
+    />
+  </svg>
+)}
+{variant === 'tally' && (
+  <svg
+    viewBox={`0 0 ${tallyWidth} 60`}
+    class={className}
+    aria-hidden="true"
+    focusable="false"
+  >
+    <g
+      fill="none"
+      stroke="currentColor"
+      stroke-width="5"
+      stroke-linecap="round"
+      filter="url(#chalk)"
+    >
+      {tally.map((d, i) => (
+        <path d={d} pathLength="1" class="chalk-stroke" style={`--i:${i}`} />
+      ))}
+    </g>
+  </svg>
+)}
