@@ -340,7 +340,7 @@ Formato: **ID · tarea** — *depende de* · *cubre* · **listo cuando**.
 - **T0.3 · ✅ Tailwind v4 + `@astrojs/sitemap` + Prettier** — *dep.* T0.2. **Listo cuando** una clase de Tailwind se refleja en el build.
 - **T0.4 · ✅ Configuración del repo:** `.gitignore` (incluye `.playwright-cli/`, `.env`, `dist/`), `.env.example` y scripts de npm (`check`, `test:e2e`, `check:content`, `format`). **Listo cuando** `npm run check` pasa.
 - **T0.5 · ✅ Playwright + axe + Lighthouse CI + GitHub Actions** con una prueba humo — *dep.* T0.3. **Listo cuando** CI está en verde en GitHub. *(Verde el 2026-10-19.)*
-- **T0.6 · Conectar Vercel Hobby** (importar el repo con `nuevo-sitio` como branch de preview, variables de entorno, `vercel.json` con cabeceras) — *dep.* T0.5. **Listo cuando** existe la URL de preview y securityheaders.com da A o superior. *(`vercel.json` listo; falta conectar el proyecto en Vercel.)* **→ M1**
+- **T0.6 · ✅ Conectar Vercel Hobby** (importar el repo con `nuevo-sitio` como branch de preview, variables de entorno, `vercel.json` con cabeceras) — *dep.* T0.5. **Listo cuando** existe la URL de preview y securityheaders.com da A o superior. *(Conectado el 2026-10-19: producción en `https://controlgravedad.vercel.app` desde `main`; las 6 cabeceras de seguridad y la caché inmutable de `/_astro/*` verificadas con `curl`.)* **→ M1**
 
 ### Fase 1 — Contexto y sistema de diseño (→ M2)
 - **T1.1 · ✅ `impeccable init`** usando §1–2 de este spec → `PRODUCT.md`. **Listo cuando** el usuario aprueba `PRODUCT.md`. *(Aprobado el 2026-10-19.)*
