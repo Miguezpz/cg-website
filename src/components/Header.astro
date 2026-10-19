@@ -73,12 +73,12 @@ const { brand, links, cta } = Astro.props;
     id="menu-movil"
     data-menu
     hidden
-    class="fixed inset-x-0 top-16 bottom-0 overflow-y-auto overscroll-contain bg-steel-950 lg:hidden"
+    class="menu-panel fixed inset-x-0 top-16 bottom-0 overflow-y-auto overscroll-contain bg-steel-950 lg:hidden"
   >
     <nav aria-label="Menú móvil" class="px-gutter pt-6 pb-10">
       <ul class="border-t border-steel-700">
-        {links.map((link) => (
-          <li class="border-b border-steel-700">
+        {links.map((link, i) => (
+          <li class="border-b border-steel-700" style={`--i:${i}`}>
             <a
               href={link.href}
               data-menu-link
@@ -92,6 +92,26 @@ const { brand, links, cta } = Astro.props;
     </nav>
   </div>
 </header>
+
+<style>
+  /* Entrada del menú en 200 ms; el cierre es inmediato (salida más rápida). */
+  .menu-panel:not([hidden]) {
+    transition:
+      opacity 200ms var(--ease-out-expo),
+      translate 200ms var(--ease-out-expo);
+    @starting-style {
+      opacity: 0;
+      translate: 0 -0.5rem;
+    }
+  }
+  .menu-panel:not([hidden]) li {
+    transition: translate 240ms var(--ease-out-expo);
+    transition-delay: calc(var(--i, 0) * 40ms);
+    @starting-style {
+      translate: 0 0.75rem;
+    }
+  }
+</style>
 
 <script>
   const header = document.querySelector<HTMLElement>('[data-header]');

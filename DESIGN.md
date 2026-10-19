@@ -56,7 +56,7 @@ Las cifras de precios usan `tabular-nums`.
 
 ## Componentes
 
-- **Botón primario:** fondo `signal`, texto `steel-950`, `text-label`, alto mínimo 52 px, ícono de WhatsApp a la izquierda. Hover: `signal-strong`. Active: baja 1 px. Foco: contorno `signal` de 2 px con separación de 3 px. Disabled: 50 % de opacidad y `cursor: not-allowed`.
+- **Botón primario:** fondo `signal`, texto `steel-950`, `text-label`, alto mínimo 52 px, ícono de WhatsApp a la izquierda. Hover: `signal-strong`. Active: `scale(0.97)` en 160 ms. Foco: contorno `signal` de 2 px con separación de 3 px. Disabled: 50 % de opacidad y `cursor: not-allowed`.
 - **Botón secundario:** sin relleno, canto de 2 px en `chalk`, texto `chalk`. Hover: relleno `chalk` y texto `steel-950`.
 - **Botón flotante de WhatsApp:** círculo de 56 px en `whatsapp`, abajo a la derecha, respetando `safe-area-inset-bottom`.
 - **Enlace:** subrayado de 1 px separado 0.2em; hover en `chalk`.
@@ -71,7 +71,9 @@ Las cifras de precios usan `tabular-nums`.
 ## Movimiento
 
 - **Un solo momento propio:** las marcas de gis del calendario Carga & Descarga se dibujan (`stroke-dashoffset`) al entrar en pantalla, con `ease-out-expo` y `duration-draw` (900 ms) en secuencia. El estado por defecto es **ya dibujado**: sin JS o con `prefers-reduced-motion` se ve completo.
-- Microinteracciones de 160 ms (`duration-fast`) en hover y presión. No hay entradas idénticas en cada sección.
+- Microinteracciones de 160 ms (`duration-fast`) en hover y presión (`scale(0.97)` al presionar). El hover solo se aplica con puntero fino (Tailwind v4 lo limita a `@media (hover: hover)`).
+- **Menú móvil:** entra en 200 ms (opacidad + 0.5 rem) con `@starting-style` y los enlaces escalonados 40 ms; se cierra al instante. **Botón flotante:** aparece en 200 ms y se oculta en 150 ms.
+- No hay entradas idénticas en cada sección ni revelados genéricos al hacer scroll; la imagen del Hero (LCP) nunca se anima.
 
 ## Superficies del navegador
 
