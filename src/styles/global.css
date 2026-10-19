@@ -1,1 +1,155 @@
 @import 'tailwindcss';
+
+/* Archivo variable (wght 100–900, wdth 62–125), solo subset latino (RNF-05). */
+@font-face {
+  font-family: 'Archivo Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  font-stretch: 62% 125%;
+  src: url('@fontsource-variable/archivo/files/archivo-latin-wdth-normal.woff2')
+    format('woff2-variations');
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212,
+    U+2215, U+FEFF, U+FFFD;
+}
+
+/*
+ * Tokens de DESIGN.md («Gis y acero»). La paleta es provisional (spec D-10):
+ * cambiarla es editar solo este bloque.
+ */
+@theme {
+  /* Solo existen los colores de la marca. */
+  --color-*: initial;
+  --color-steel-950: #0e0f10;
+  --color-steel-900: #17191b;
+  --color-steel-700: #2c2f33;
+  --color-concrete-400: #9a9c9e;
+  --color-concrete-600: #4a4d50;
+  --color-concrete-100: #d9d8d4;
+  --color-chalk: #f3f2ee;
+  --color-signal: #ffcc00;
+  --color-signal-strong: #e6b800;
+  --color-whatsapp: #25d366;
+  --color-error-on-dark: #ff7a66;
+  --color-error-on-light: #b42318;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+
+  --font-*: initial;
+  --font-sans:
+    'Archivo Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
+    Roboto, sans-serif;
+
+  /* Escala tipográfica (móvil → escritorio). */
+  --text-display: clamp(3.5rem, 15vw, 6rem);
+  --text-display--line-height: 0.88;
+  --text-display--letter-spacing: -0.01em;
+  --text-h2: clamp(2.5rem, 9vw, 4.5rem);
+  --text-h2--line-height: 0.92;
+  --text-h3: 1.5rem;
+  --text-h3--line-height: 1.15;
+  --text-lede: clamp(1.1875rem, 2.4vw, 1.375rem);
+  --text-lede--line-height: 1.4;
+  --text-body: 1.0625rem;
+  --text-body--line-height: 1.55;
+  --text-label: 0.875rem;
+  --text-label--line-height: 1.2;
+  --text-label--letter-spacing: 0.04em;
+
+  /* Ancho de Archivo: extracondensado para titulares, normal para texto. */
+  --font-stretch-display: 62%;
+  --font-stretch-heading: 75%;
+  --font-stretch-label: 87.5%;
+  --font-stretch-body: 100%;
+
+  --radius-*: initial;
+  --radius-none: 0;
+  --radius-input: 2px;
+
+  --spacing-gutter: 1rem;
+  --spacing-section: clamp(4.5rem, 12vw, 8rem);
+  --container-content: 72rem;
+  --container-prose: 65ch;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 160ms;
+  --duration-draw: 900ms;
+
+  --tap-min: 44px;
+}
+
+@utility stretch-display {
+  font-stretch: var(--font-stretch-display);
+}
+@utility stretch-heading {
+  font-stretch: var(--font-stretch-heading);
+}
+@utility stretch-label {
+  font-stretch: var(--font-stretch-label);
+}
+@utility stretch-body {
+  font-stretch: var(--font-stretch-body);
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+    background-color: var(--color-steel-950);
+    color: var(--color-chalk);
+    font-family: var(--font-sans);
+    font-size: 100%;
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    scrollbar-color: var(--color-steel-700) var(--color-steel-950);
+  }
+
+  body {
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    font-stretch: var(--font-stretch-body);
+  }
+
+  ::selection {
+    background-color: var(--color-signal);
+    color: var(--color-steel-950);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-signal);
+    outline-offset: 3px;
+  }
+
+  a {
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: 1px;
+  }
+
+  input,
+  textarea,
+  select {
+    caret-color: var(--color-signal);
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}

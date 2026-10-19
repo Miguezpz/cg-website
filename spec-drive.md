@@ -8,7 +8,7 @@
 | Coach | **César Augusto** (en redes: "Chesare Mozart") |
 | Modalidad | **Presencial en Morelia, Michoacán** y **online** |
 | Branch | `nuevo-sitio` |
-| Versión | v0.5 (borrador) |
+| Versión | v0.6 (borrador) |
 | Punto de partida | Proyecto desde cero. No se reutiliza código, estilos ni estructura del branch `main` |
 | Idioma del sitio | Español (`es-MX`) |
 | Hosting | **Vercel, plan Hobby (gratuito)**, en un subdominio `*.vercel.app` (sin dominio propio). Reemplaza al sitio actual en `*.netlify.app` (ver §11.1) |
@@ -256,7 +256,7 @@ type FaqItem   = { q: string; a: string };
 
 - La dirección visual la define **Impeccable** en modo *Persuade* y queda en `DESIGN.md` (tokens, tipografía, espaciado, componentes, movimiento). `PRODUCT.md` guarda el contexto de negocio (§1–2 de este spec).
 - Punto de partida (puede cambiar en T1.2): estilo oscuro, enérgico y deportivo; fotos protagonistas; un solo color de acento; `#25D366` reservado para WhatsApp.
-- **Tipografía:** el coach la quiere **elegante**, no moderna ni futurista (descarta display condensadas, geométricas tipo *tech* o de estilo "gamer"). Se eligen en T1.2 respetando RNF-05.
+- **Dirección elegida en T1.2: «Gis y acero»** (acero negro mate, magnesia, concreto y un acento amarillo de seguridad; Archivo Variable condensada para titulares). Detalle en `DESIGN.md`. El coach había pedido tipografía elegante; el usuario levantó esa restricción al elegir esta dirección (2026-10-19).
 - **Paleta provisional (D-10):** un diseñador está definiendo la paleta oficial de la marca. Mientras llega, T1.2 propone una paleta provisional y la página se construye con ella. Por eso ningún componente usa colores sueltos: cambiar la paleta debe ser editar solo los tokens de `DESIGN.md` y `@theme`.
 - Los tokens de `DESIGN.md` se trasladan 1:1 a `@theme` en `global.css`. Ningún componente usa colores sueltos.
 
@@ -344,8 +344,8 @@ Formato: **ID · tarea** — *depende de* · *cubre* · **listo cuando**.
 
 ### Fase 1 — Contexto y sistema de diseño (→ M2)
 - **T1.1 · ✅ `impeccable init`** usando §1–2 de este spec → `PRODUCT.md`. **Listo cuando** el usuario aprueba `PRODUCT.md`. *(Aprobado el 2026-10-19.)*
-- **T1.2 · `impeccable shape`** de la landing → dirección visual + `DESIGN.md` — *dep.* T1.1 y, si es posible, fotos reales (§17 🟠). **Listo cuando** el usuario aprueba la dirección visual.
-- **T1.3 · Tokens en `global.css` + fuentes Fontsource** — *dep.* T1.2 · RNF-05.
+- **T1.2 · ✅ `impeccable shape`** de la landing → dirección visual + `DESIGN.md` — *dep.* T1.1 y, si es posible, fotos reales (§17 🟠). **Listo cuando** el usuario aprueba la dirección visual. *(Elegida «Gis y acero» el 2026-10-19, sin fotos reales.)*
+- **T1.3 · ✅ Tokens en `global.css` + fuentes Fontsource** — *dep.* T1.2 · RNF-05.
 - **T1.4 · `BaseLayout`** (meta SEO, OG, canónica, `lang="es-MX"`, *skip link*) — RNF-09.
 - **T1.5 · Componentes UI** (`Button` primario/secundario/WhatsApp, `Card`, `Badge`, `SectionHeading`, `Container`) con estados hover, active, focus y disabled — RNF-06.
 - **T1.6 · Modelo de contenido** (`src/data/types.ts` + datos provisionales con `[[PENDIENTE]]`) — §8.
@@ -462,7 +462,8 @@ Cada tarea se cierra con el ciclo de §13 y su prueba e2e.
 - [ ] [[PENDIENTE]] Prueba social: testimonios, antes y después, número de alumnos.
 - [ ] [[PENDIENTE]] Logo.
 - [ ] [[PENDIENTE]] Paleta oficial: la define un diseñador externo (D-10); mientras tanto se usa una provisional.
-- [x] Tipografía: elegante, no moderna ni futurista (§10).
+- [x] Tipografía: restricción de "elegante" levantada por el usuario en T1.2; se usa Archivo (§10, `DESIGN.md`).
+- [ ] [[PENDIENTE]] Logo en SVG o alta resolución (el actual mide 150 px).
 - [ ] [[PENDIENTE]] Preguntas frecuentes que recibe por DM.
 
 ### 17.2 Assets y datos restantes
@@ -528,3 +529,4 @@ Leyenda: 🔴 bloquea el inicio · 🟠 bloquea el diseño (T1.2) · 🟢 bloque
 | v0.3 | 2026-10-18 | Marca (Control Gravedad / Cesar Augusto); Vercel Hobby (D-04); migración desde Netlify (§11.1, T4.8, R-06); ADR-11 de portabilidad; D-08 |
 | v0.4 | 2026-10-18 | Morelia + online; sin dominio propio (D-08 resuelta, D-09); migración por redirección 301; **T0.0 bloqueante**: información de Instagram (§17.1) que Claude pide al iniciar la siguiente sesión |
 | v0.5 | 2026-10-19 | **T0.0 cerrada:** información de la marca (§17.1.1) volcada en §2, RF-03/04/07/08/09, §8 y §18; D-01 y D-02 resueltas; D-10 (paleta provisional); tipografía elegante (§10); sin dominio propio en §3, M5 y §16 |
+| v0.6 | 2026-10-19 | T1.1 (`PRODUCT.md`), T1.2 (dirección «Gis y acero», `DESIGN.md`) y T1.3 (tokens + Archivo); restricción de tipografía elegante levantada por el usuario; nombre del coach: César Augusto |

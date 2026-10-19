@@ -30,7 +30,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: `npm run build && npm run preview -- --port ${PORT}`,
+    command: `npm run build && npm run preview -- --port ${PORT} --ignore-lock`,
     port: PORT,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
