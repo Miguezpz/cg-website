@@ -8,7 +8,7 @@
 | Coach | **César Augusto** (en redes: "Chesare Mozart") |
 | Modalidad | **Presencial en Morelia, Michoacán** y **online** |
 | Branch | `nuevo-sitio` |
-| Versión | v0.6 (borrador) |
+| Versión | v0.7 (borrador) |
 | Punto de partida | Proyecto desde cero. No se reutiliza código, estilos ni estructura del branch `main` |
 | Idioma del sitio | Español (`es-MX`) |
 | Hosting | **Vercel, plan Hobby (gratuito)**, en un subdominio `*.vercel.app` (sin dominio propio). Reemplaza al sitio actual en `*.netlify.app` (ver §11.1) |
@@ -378,7 +378,7 @@ Cada tarea se cierra con el ciclo de §13 y su prueba e2e.
 - **T4.4 · Pruebas en dispositivos reales** (iPhone con Safari y Android con Chrome): formulario, WhatsApp y slider.
 - **T4.5 · Cargar contenido y fotos reales** — §17.
 - **T4.6 · `check:content` en verde** (sin `[[PENDIENTE]]`).
-- **T4.7 · Producción en Vercel:** ~~desactivar los builds de Netlify (§11.1 paso 1)~~ (hecho), pasar `nuevo-sitio` → `main` según D-05, `PUBLIC_SITE_URL=https://controlgravedad.vercel.app` y GA4 verificado en producción.
+- **T4.7 · Producción en Vercel:** ~~desactivar los builds de Netlify (§11.1 paso 1)~~ (hecho), pasar `nuevo-sitio` → `main` según D-05, `PUBLIC_SITE_URL=https://controlgravedad.vercel.app` y GA4 verificado en producción. *(Publicación anticipada el 2026-10-19 a petición del usuario, con contenido provisional visible. Pendiente para cerrarla: T4.6, `PUBLIC_GA_ID` y la key de Web3Forms.)*
 - **T4.8 · Retiro del sitio de Netlify** (§11.1 pasos 2–5) — *dep.* T4.7. **Listo cuando** la URL `*.netlify.app` redirige (301) a la nueva, las bios de las redes apuntan a la nueva URL y el sitemap está enviado a Search Console. **→ M5**
 
 ## 16. Definición de "terminado"
@@ -531,3 +531,4 @@ Leyenda: 🔴 bloquea el inicio · 🟠 bloquea el diseño (T1.2) · 🟢 bloque
 | v0.5 | 2026-10-19 | **T0.0 cerrada:** información de la marca (§17.1.1) volcada en §2, RF-03/04/07/08/09, §8 y §18; D-01 y D-02 resueltas; D-10 (paleta provisional); tipografía elegante (§10); sin dominio propio en §3, M5 y §16 |
 | v0.6 | 2026-10-19 | T1.1 (`PRODUCT.md`), T1.2 (dirección «Gis y acero», `DESIGN.md`) y T1.3 (tokens + Archivo); restricción de tipografía elegante levantada por el usuario; nombre del coach: César Augusto |
 | v0.6.1 | 2026-10-19 | D-05 resuelta: `main` adelantada a `nuevo-sitio` (builds de Netlify ya desactivados); el desarrollo sigue en `nuevo-sitio` |
+| v0.7 | 2026-10-19 | Fases 2–3 y T4.1–T4.3 completas; `main` publicada en producción con contenido provisional (a petición del usuario); pendientes: contenido real (T4.5), Web3Forms, GA4 y pruebas en dispositivos (T4.4) |
