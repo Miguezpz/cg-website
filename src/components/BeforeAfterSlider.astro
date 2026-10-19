@@ -1,0 +1,91 @@
+---
+import type { Result } from '../data/types';
+import { Image } from 'astro:assets';
+
+interface Props {
+  result: Result;
+  label: string;
+  beforeLabel: string;
+  afterLabel: string;
+}
+
+const { result, label, beforeLabel, afterLabel } = Astro.props;
+const imageProps = {
+  widths: [400, 800],
+  sizes: '(min-width: 48rem) 40vw, 100vw',
+  class: 'aspect-[4/5] w-full object-cover',
+};
+---
+
+<!-- Sin JS: las dos fotos lado a lado. Con JS: comparador con <input type="range">. -->
+<div
+  data-compare
+  class="group/compare relative grid grid-cols-2 gap-1 outline-offset-4 outline-signal data-enhanced:block data-enhanced:gap-0 has-[[data-compare-range]:focus-visible]:outline-2"
+>
+  <figure class="relative">
+    <Image src={result.before} alt={result.alt.before} {...imageProps} />
+    <figcaption class="stretch-label absolute top-3 left-3 bg-steel-950 px-2 py-1 text-label font-semibold uppercase">
+      {beforeLabel}
+    </figcaption>
+  </figure>
+  <figure
+    data-compare-after
+    class="relative group-data-enhanced/compare:absolute group-data-enhanced/compare:inset-0 group-data-enhanced/compare:[clip-path:inset(0_0_0_var(--pos,50%))]"
+  >
+    <Image src={result.after} alt={result.alt.after} {...imageProps} />
+    <figcaption class="stretch-label absolute top-3 right-3 bg-steel-950 px-2 py-1 text-label font-semibold uppercase">
+      {afterLabel}
+    </figcaption>
+  </figure>
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute inset-y-0 left-[var(--pos,50%)] hidden w-1 -translate-x-1/2 bg-chalk group-data-enhanced/compare:block"
+  >
+    <span class="absolute top-1/2 left-1/2 flex size-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-chalk text-steel-950">
+      <svg
+        viewBox="0 0 24 24"
+        class="size-5"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="square"
+      >
+        <path d="M9 6l-6 6 6 6M15 6l6 6-6 6"></path>
+      </svg>
+    </span>
+  </div>
+  <input
+    type="range"
+    min="0"
+    max="100"
+    value="50"
+    hidden
+    data-compare-range
+    aria-label={`${label}: ${result.name}`}
+    aria-valuetext={`Mostrando 50% ${beforeLabel.toLowerCase()}`}
+    class="absolute inset-0 h-full w-full cursor-ew-resize appearance-none bg-transparent opacity-0 [&::-moz-range-thumb]:size-11 [&::-moz-range-thumb]:opacity-0 [&::-webkit-slider-thumb]:size-11 [&::-webkit-slider-thumb]:appearance-none"
+  />
+</div>
+
+<script>
+  for (const root of document.querySelectorAll<HTMLElement>('[data-compare]')) {
+    const range = root.querySelector<HTMLInputElement>('[data-compare-range]');
+    if (!range) continue;
+    const before =
+      root
+        .querySelector('figure figcaption')
+        ?.textContent?.trim()
+        .toLowerCase() ?? 'antes';
+    const update = () => {
+      root.style.setProperty('--pos', `${range.value}%`);
+      range.setAttribute(
+        'aria-valuetext',
+        `Mostrando ${range.value}% ${before}`,
+      );
+    };
+    range.hidden = false;
+    root.toggleAttribute('data-enhanced', true);
+    range.addEventListener('input', update);
+    update();
+  }
+</script>
