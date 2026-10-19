@@ -26,6 +26,7 @@ export const services: Service[] = [
         detail: '5 clases por semana · 30 días',
       },
     ],
+    cta: 'Quiero entrenar en Morelia',
     waInterest: 'las clases presenciales en Morelia',
   },
   {
@@ -42,6 +43,7 @@ export const services: Service[] = [
     plans: [
       { name: 'Rutina personalizada', price: '$860', detail: '4 semanas' },
     ],
+    cta: 'Quiero mi rutina',
     waInterest: 'la rutina personalizada',
   },
   {
@@ -52,6 +54,7 @@ export const services: Service[] = [
     plans: [
       { name: 'Taller', price: '[[PENDIENTE]]', detail: '[[PENDIENTE]]' },
     ],
+    cta: 'Quiero info de talleres',
     waInterest: 'los talleres',
   },
 ];

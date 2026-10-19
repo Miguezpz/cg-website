@@ -1,0 +1,78 @@
+---
+import type { Service } from '../../data/types';
+import Button from '../ui/Button.astro';
+import SectionHeading from '../ui/SectionHeading.astro';
+import { waAttrs } from '../../lib/whatsapp';
+
+interface Props {
+  title: string;
+  intro: string;
+  services: Service[];
+}
+
+const { title, intro, services } = Astro.props;
+---
+
+<section id="servicios" aria-labelledby="servicios-title" class="py-section">
+  <div class="mx-auto w-full max-w-content px-gutter">
+    <SectionHeading id="servicios-title">{title}</SectionHeading>
+    <p class="mt-4 max-w-prose text-concrete-400">{intro}</p>
+
+    <div class="mt-12 space-y-16 lg:space-y-20">
+      {services.map((service) => (
+        <article
+          aria-labelledby={`servicio-${service.id}`}
+          class="grid gap-8 border-t-[6px] border-steel-700 pt-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:gap-16"
+        >
+          <div>
+            <h3
+              id={`servicio-${service.id}`}
+              class="stretch-display text-[2.25rem] leading-[0.95] font-extrabold uppercase lg:text-5xl"
+            >
+              {service.name}
+            </h3>
+            <p class="mt-4 max-w-prose text-lede">{service.audience}</p>
+            <ul class="mt-6 space-y-3">
+              {service.includes.map((item) => (
+                <li class="flex gap-3 text-concrete-400">
+                  <span
+                    class="mt-[0.7em] h-0.5 w-4 shrink-0 bg-chalk"
+                    aria-hidden="true"
+                  />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div class="flex flex-col">
+            <dl class="border-t border-steel-700">
+              {service.plans.map((plan) => (
+                <div class="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-4 border-b border-steel-700 py-4">
+                  <dt>
+                    <span class="stretch-heading block text-h3 font-bold">
+                      {plan.name}
+                    </span>
+                    <span class="stretch-label mt-1 block text-label text-concrete-400 uppercase">
+                      {plan.detail}
+                    </span>
+                  </dt>
+                  <dd class="stretch-display text-[2.5rem] leading-none font-black tabular-nums">
+                    {plan.price}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+            <Button
+              icon="whatsapp"
+              class="mt-6 self-start"
+              {...waAttrs({ service, source: 'services' })}
+            >
+              {service.cta}
+            </Button>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
