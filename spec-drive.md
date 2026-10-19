@@ -367,7 +367,7 @@ Cada tarea se cierra con el ciclo de §13 y su prueba e2e.
 ### Fase 3 — Integraciones y pulido (→ M4)
 - **T3.1 · Web3Forms** (envío real, fallback sin JS, estados, honeypot) — RF-10, ADR-06. **Listo cuando** un envío de prueba llega al email. *(Estados, validación accesible, honeypot, fallback sin JS y `form_submit` hechos y probados con la API simulada. [[PENDIENTE]] `PUBLIC_WEB3FORMS_KEY` en Vercel y envío de prueba real; el usuario lo dejó para después.)*
 - **T3.2 · GA4 diferido + eventos** — §9.3, RNF-03, RNF-12. **Listo cuando** los eventos aparecen en DebugView.
-- **T3.3 · JSON-LD** (`Person`, `Service`, `FAQPage`) — §9.4. **Listo cuando** Rich Results Test no reporta errores.
+- **T3.3 · ✅ JSON-LD** (`Person`, `Service`, `FAQPage`) — §9.4. **Listo cuando** Rich Results Test no reporta errores. *(Grafo con `SportsOrganization`, `Person`, `Service` con `Offer` en MXN y `FAQPage`; lo provisional se excluye. Validado por e2e; falta pasar Rich Results Test sobre producción cuando se publique.)*
 - **T3.4 · Animaciones** (revelado al scroll, microinteracciones) con `emil-design-eng` — RNF-07.
 - **T3.5 · `impeccable critique` + `polish`** sobre la landing completa. **→ M4**
 

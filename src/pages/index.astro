@@ -9,6 +9,9 @@ import HowItWorks from '../components/sections/HowItWorks.astro';
 import Offer from '../components/sections/Offer.astro';
 import Faq from '../components/sections/Faq.astro';
 import Contact from '../components/sections/Contact.astro';
+import JsonLd from '../components/JsonLd.astro';
+import { getImage } from 'astro:assets';
+import { buildStructuredData } from '../lib/structured-data';
 import heroImage from '../assets/placeholders/hero.jpg';
 import coachPhoto from '../assets/coach/cesar-augusto.png';
 import { site } from '../data/site';
@@ -27,9 +30,23 @@ import {
   servicesSection,
   testimonialsSection,
 } from '../data/home';
+
+const coachImage = await getImage({
+  src: coachPhoto,
+  format: 'jpg',
+  width: 537,
+});
+const structuredData = buildStructuredData({
+  site,
+  siteUrl: new URL('/', Astro.site),
+  services,
+  faq,
+  coachImage: coachImage.src,
+});
 ---
 
 <SiteLayout>
+  <JsonLd slot="head" data={structuredData} />
   <Hero {...hero} image={heroImage} />
   <About {...about} photo={coachPhoto} />
   <Services {...servicesSection} services={services} />
