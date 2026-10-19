@@ -1,0 +1,132 @@
+---
+import ChalkMark from '../ui/ChalkMark.astro';
+import SectionHeading from '../ui/SectionHeading.astro';
+
+interface Props {
+  title: string;
+  steps: readonly { title: string; text: string }[];
+  method: {
+    title: string;
+    text: string;
+    weeks: readonly { kind: string; label: string; text: string }[];
+    cycle: readonly ('carga' | 'descarga')[];
+  };
+}
+
+const { title, steps, method } = Astro.props;
+const weekLabel = Object.fromEntries(
+  method.weeks.map((w) => [w.kind, w.label]),
+);
+---
+
+<section
+  id="como-funciona"
+  aria-labelledby="como-funciona-title"
+  class="border-t-[6px] border-steel-700 py-section"
+>
+  <div class="mx-auto w-full max-w-content px-gutter">
+    <SectionHeading id="como-funciona-title">{title}</SectionHeading>
+
+    <ol class="mt-10 grid gap-8 md:grid-cols-3 md:gap-6">
+      {steps.map((step, i) => (
+        <li class="border-t border-steel-700 pt-5">
+          <span
+            class="stretch-display block text-[3.5rem] leading-none font-black text-concrete-400 tabular-nums"
+            aria-hidden="true"
+          >
+            {i + 1}
+          </span>
+          <h3 class="stretch-heading mt-3 text-h3 font-bold">{step.title}</h3>
+          <p class="mt-2 max-w-[34ch] text-concrete-400">{step.text}</p>
+        </li>
+      ))}
+    </ol>
+
+    <!-- Carga & Descarga: el ciclo de 4 semanas marcado con gis sobre la barra. -->
+    <div class="mt-20" data-method>
+      <h3 class="stretch-display text-h2 font-extrabold uppercase">
+        {method.title}
+      </h3>
+      <p class="mt-3 max-w-prose text-lede">{method.text}</p>
+
+      <ol
+        class="relative mt-10 grid grid-cols-4 gap-2 sm:gap-4"
+        aria-label="Ciclo de cuatro semanas"
+      >
+        {method.cycle.map((kind, i) => (
+          <li class="flex flex-col">
+            <ChalkMark
+              variant="tally"
+              count={kind === 'carga' ? 5 : 2}
+              class="h-10 w-auto self-start text-chalk sm:h-14"
+            />
+            <span
+              class="mt-3 h-1.5 bg-steel-700 data-[kind=carga]:bg-chalk"
+              data-kind={kind}
+              aria-hidden="true"
+            />
+            <span class="stretch-label mt-3 text-label font-semibold uppercase">
+              <span class="sr-only">Semana {i + 1}: </span>
+              <span aria-hidden="true" class="block text-concrete-400">
+                S{i + 1}
+              </span>
+              <span class="block">
+                {kind === 'carga' ? 'Carga' : 'Descarga'}
+              </span>
+            </span>
+          </li>
+        ))}
+      </ol>
+
+      <dl class="mt-10 grid gap-6 md:grid-cols-2">
+        {method.weeks.map((week) => (
+          <div class="border-t border-steel-700 pt-4">
+            <dt class="stretch-heading text-h3 font-bold">
+              {weekLabel[week.kind]}
+            </dt>
+            <dd class="mt-2 max-w-prose text-concrete-400">{week.text}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* El gis se dibuja al entrar en pantalla; por defecto ya está dibujado. */
+  [data-method][data-animate] :global(.chalk-stroke) {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+  [data-method][data-animate][data-drawn] :global(.chalk-stroke) {
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset var(--duration-draw) var(--ease-out-expo);
+    transition-delay: calc(var(--i) * 70ms + var(--week-delay, 0ms));
+  }
+  [data-method] li:nth-child(2) {
+    --week-delay: 350ms;
+  }
+  [data-method] li:nth-child(3) {
+    --week-delay: 560ms;
+  }
+  [data-method] li:nth-child(4) {
+    --week-delay: 910ms;
+  }
+</style>
+
+<script>
+  const method = document.querySelector<HTMLElement>('[data-method]');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (method && !reduce && 'IntersectionObserver' in window) {
+    method.toggleAttribute('data-animate', true);
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        method.toggleAttribute('data-drawn', true);
+        observer.disconnect();
+      },
+      { threshold: 0.4 },
+    );
+    observer.observe(method);
+  }
+</script>

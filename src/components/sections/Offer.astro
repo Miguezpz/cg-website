@@ -1,0 +1,39 @@
+---
+import Button from '../ui/Button.astro';
+import ChalkMark from '../ui/ChalkMark.astro';
+import { waAttrs } from '../../lib/whatsapp';
+
+interface Props {
+  title: string;
+  text: string;
+  note: string;
+  cta: string;
+}
+
+const { title, text, note, cta } = Astro.props;
+---
+
+<section aria-labelledby="oferta-title" class="py-section">
+  <div class="mx-auto w-full max-w-content px-gutter">
+    <div class="border-y-[6px] border-chalk py-12 md:py-16">
+      <h2
+        id="oferta-title"
+        class="stretch-display max-w-[14ch] text-display font-black uppercase"
+      >
+        {title}
+      </h2>
+      <ChalkMark variant="underline" class="mt-2 h-4 w-64 text-chalk" />
+      <p class="mt-6 max-w-prose text-lede">{text}</p>
+      <Button
+        icon="whatsapp"
+        class="mt-8 w-full sm:w-auto"
+        {...waAttrs({ source: 'offer' })}
+      >
+        {cta}
+      </Button>
+      <p class="stretch-label mt-4 text-label text-concrete-400 uppercase">
+        {note}
+      </p>
+    </div>
+  </div>
+</section>
