@@ -1,0 +1,58 @@
+---
+import type { Testimonial } from '../../data/types';
+import { Image } from 'astro:assets';
+import SectionHeading from '../ui/SectionHeading.astro';
+
+interface Props {
+  title: string;
+  testimonials: Testimonial[];
+}
+
+const { title, testimonials } = Astro.props;
+---
+
+{testimonials.length > 0 && (
+  <section
+    id="testimonios"
+    aria-labelledby="testimonios-title"
+    class="py-section"
+  >
+    <div class="mx-auto w-full max-w-content px-gutter">
+      <SectionHeading id="testimonios-title">{title}</SectionHeading>
+    </div>
+    <ul
+      class="mx-auto mt-10 flex max-w-content snap-x snap-mandatory scroll-px-gutter gap-4 overflow-x-auto overscroll-x-contain px-gutter pb-4 md:grid md:grid-cols-3 md:overflow-visible"
+      tabindex="0"
+      aria-label={title}
+    >
+      {testimonials.map((item) => (
+        <li class="w-[85%] shrink-0 snap-start md:w-auto">
+          <figure class="flex h-full flex-col border-t-[6px] border-steel-700 bg-steel-900 p-6">
+            <blockquote class="text-lede">
+              <p>“{item.quote}”</p>
+            </blockquote>
+            <figcaption class="mt-auto flex items-center gap-3 pt-6">
+              {item.photo && (
+                <Image
+                  src={item.photo}
+                  alt=""
+                  width={48}
+                  height={48}
+                  class="size-12 rounded-full object-cover"
+                />
+              )}
+              <span>
+                <span class="stretch-heading block font-bold">{item.name}</span>
+                {item.achievement && (
+                  <span class="stretch-label block text-label text-concrete-400 uppercase">
+                    {item.achievement}
+                  </span>
+                )}
+              </span>
+            </figcaption>
+          </figure>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
