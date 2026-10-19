@@ -10,7 +10,7 @@ Si la tarea **T0.0** del spec no está marcada como cerrada, **antes de hacer cu
 
 ## Estado
 
-- Branch de trabajo: `nuevo-sitio`. Proyecto desde cero: **no** se usa nada del branch `main`.
+- Branch de trabajo: `nuevo-sitio` (preview en Vercel). `main` es producción en Vercel y ya tiene el sitio nuevo; los cambios pasan a `main` solo cuando el usuario lo pide.
 - Progreso: ver §15 del spec (las tareas cerradas se marcan ahí).
 
 ## Comandos
@@ -65,5 +65,5 @@ Jerarquía ante conflictos: `spec-drive.md` > `DESIGN.md` > Impeccable > Emil.
 ## Git
 
 - Commits pequeños, uno por tarea, con el mensaje en español y el ID de la tarea: `feat(T2.2): hero con CTA a WhatsApp`.
-- No hacer push ni merge a `main` sin confirmación del usuario.
-- ⚠️ `main` está conectado a Netlify: antes de fusionar en `main` hay que desactivar los builds de Netlify (spec §11.1).
+- No hacer push ni merge a `main` sin confirmación del usuario: todo lo que llega a `main` se publica en `controlgravedad.vercel.app`.
+- Los builds de Netlify ya están desactivados (spec §11.1, paso 1).

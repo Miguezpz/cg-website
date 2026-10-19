@@ -279,7 +279,7 @@ type FaqItem   = { q: string; a: string };
 
 El sitio actual (branch `main`) está publicado en **Netlify** en un subdominio `*.netlify.app` (sin dominio propio) y conectado al repositorio. Como no hay DNS que migrar, el cambio consiste en **redirigir la URL vieja a la nueva**:
 
-1. **Antes de fusionar `nuevo-sitio` → `main`**, desactivar los builds automáticos en Netlify (*Site configuration → Build & deploy → Stop builds*). Si no, Netlify intentará desplegar el nuevo proyecto Astro sobre el sitio en producción.
+1. ✅ *(Hecho el 2026-10-19.)* **Antes de fusionar `nuevo-sitio` → `main`**, desactivar los builds automáticos en Netlify (*Site configuration → Build & deploy → Stop builds*). Si no, Netlify intentará desplegar el nuevo proyecto Astro sobre el sitio en producción.
 2. Verificar la nueva landing en producción en `https://controlgravedad.vercel.app`.
 3. Convertir el sitio de Netlify en una redirección: hacer un *deploy manual* (arrastrar una carpeta en Netlify) que solo contenga un archivo `_redirects` con `/*  https://controlgravedad.vercel.app/:splat  301!`. Así los enlaces viejos ya compartidos siguen funcionando.
 4. Actualizar el enlace de la bio de Instagram, TikTok y Google Business (si existe) a la nueva URL.
@@ -378,7 +378,7 @@ Cada tarea se cierra con el ciclo de §13 y su prueba e2e.
 - **T4.4 · Pruebas en dispositivos reales** (iPhone con Safari y Android con Chrome): formulario, WhatsApp y slider.
 - **T4.5 · Cargar contenido y fotos reales** — §17.
 - **T4.6 · `check:content` en verde** (sin `[[PENDIENTE]]`).
-- **T4.7 · Producción en Vercel:** desactivar los builds de Netlify (§11.1 paso 1), merge según D-05, `PUBLIC_SITE_URL=https://controlgravedad.vercel.app` y GA4 verificado en producción.
+- **T4.7 · Producción en Vercel:** ~~desactivar los builds de Netlify (§11.1 paso 1)~~ (hecho), pasar `nuevo-sitio` → `main` según D-05, `PUBLIC_SITE_URL=https://controlgravedad.vercel.app` y GA4 verificado en producción.
 - **T4.8 · Retiro del sitio de Netlify** (§11.1 pasos 2–5) — *dep.* T4.7. **Listo cuando** la URL `*.netlify.app` redirige (301) a la nueva, las bios de las redes apuntan a la nueva URL y el sitemap está enviado a Search Console. **→ M5**
 
 ## 16. Definición de "terminado"
@@ -498,7 +498,7 @@ Leyenda: 🔴 bloquea el inicio · 🟠 bloquea el diseño (T1.2) · 🟢 bloque
 | D-02 | ~~¿Cuál es la oferta de entrada?~~ | ✅ **Resuelta: Clase muestra gratis**, sujeta a disponibilidad | — |
 | D-03 | ¿Hero con video o imagen? | Imagen; video solo en escritorio si hay buen material | T2.2 |
 | D-04 | ~~¿Vercel Pro u otro hosting?~~ | ✅ **Resuelta: Vercel Hobby (gratuito)** | — |
-| D-05 | Branch de producción | Merge de `nuevo-sitio` → `main` al cerrar M4; `main` es producción en Vercel | T4.7 |
+| D-05 | ~~Branch de producción~~ | ✅ **Resuelta (2026-10-19):** `main` es producción en Vercel y ya contiene el sitio nuevo (*fast-forward* desde `nuevo-sitio`). Se sigue desarrollando en `nuevo-sitio` (preview) y los cambios pasan a `main` solo cuando el usuario lo pide | — |
 | D-06 | ¿Hay dirección física pública (estudio o gimnasio)? | No → `Person` + `Service` con `areaServed` | T3.3 |
 | D-07 | ~~¿Dónde está publicado el sitio actual?~~ | ✅ **Resuelta: en Netlify**; se migra a Vercel (§11.1) | — |
 | D-08 | ~~¿El sitio de Netlify usa dominio propio?~~ | ✅ **Resuelta: no, usa `*.netlify.app`**. La migración es por redirección 301 (§11.1) | — |
@@ -530,3 +530,4 @@ Leyenda: 🔴 bloquea el inicio · 🟠 bloquea el diseño (T1.2) · 🟢 bloque
 | v0.4 | 2026-10-18 | Morelia + online; sin dominio propio (D-08 resuelta, D-09); migración por redirección 301; **T0.0 bloqueante**: información de Instagram (§17.1) que Claude pide al iniciar la siguiente sesión |
 | v0.5 | 2026-10-19 | **T0.0 cerrada:** información de la marca (§17.1.1) volcada en §2, RF-03/04/07/08/09, §8 y §18; D-01 y D-02 resueltas; D-10 (paleta provisional); tipografía elegante (§10); sin dominio propio en §3, M5 y §16 |
 | v0.6 | 2026-10-19 | T1.1 (`PRODUCT.md`), T1.2 (dirección «Gis y acero», `DESIGN.md`) y T1.3 (tokens + Archivo); restricción de tipografía elegante levantada por el usuario; nombre del coach: César Augusto |
+| v0.6.1 | 2026-10-19 | D-05 resuelta: `main` adelantada a `nuevo-sitio` (builds de Netlify ya desactivados); el desarrollo sigue en `nuevo-sitio` |
