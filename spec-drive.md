@@ -335,12 +335,12 @@ Formato: **ID · tarea** — *depende de* · *cubre* · **listo cuando**.
 
 ### Fase 0 — Fundaciones (→ M0, M1)
 - **T0.0 · ✅ Recibir la información de la marca (cerrada 2026-10-19).** Al iniciar la siguiente sesión de desarrollo, **Claude pregunta al usuario** por la información del Instagram de Control Gravedad (checklist en §17.1). Con lo recibido: actualizar §2, RF-03, RF-04, RF-08, RF-09, §17 y §18, y dejar los huecos que falten como `[[PENDIENTE]]`. **Listo cuando** el usuario confirma que el spec refleja la marca. **→ M0**
-- **T0.1 · Limpiar el legado** — *dep.* T0.0: eliminar `index.html`, `script.js`, `styles.css`, `assets/` y `.vscode/` (si no se usa). **Listo cuando** solo quedan `.claude/`, `CLAUDE.md` y `spec-drive.md`.
-- **T0.2 · Inicializar Astro** (plantilla mínima, TS estricto, `engines.node`) — *dep.* T0.1. **Listo cuando** `npm run dev` y `npm run build` funcionan.
-- **T0.3 · Tailwind v4 + `@astrojs/sitemap` + Prettier** — *dep.* T0.2. **Listo cuando** una clase de Tailwind se refleja en el build.
-- **T0.4 · Configuración del repo:** `.gitignore` (incluye `.playwright-cli/`, `.env`, `dist/`), `.env.example` y scripts de npm (`check`, `test:e2e`, `check:content`, `format`). **Listo cuando** `npm run check` pasa.
-- **T0.5 · Playwright + axe + Lighthouse CI + GitHub Actions** con una prueba humo — *dep.* T0.3. **Listo cuando** CI está en verde en GitHub.
-- **T0.6 · Conectar Vercel Hobby** (importar el repo con `nuevo-sitio` como branch de preview, variables de entorno, `vercel.json` con cabeceras) — *dep.* T0.5. **Listo cuando** existe la URL de preview y securityheaders.com da A o superior. **→ M1**
+- **T0.1 · ✅ Limpiar el legado** — *dep.* T0.0: eliminar `index.html`, `script.js`, `styles.css`, `assets/` y `.vscode/` (si no se usa). **Listo cuando** solo quedan `.claude/`, `CLAUDE.md` y `spec-drive.md`.
+- **T0.2 · ✅ Inicializar Astro** (plantilla mínima, TS estricto, `engines.node`; Astro 7.4.1 fijado, Node ≥ 22.22 vía `.nvmrc`) — *dep.* T0.1. **Listo cuando** `npm run dev` y `npm run build` funcionan.
+- **T0.3 · ✅ Tailwind v4 + `@astrojs/sitemap` + Prettier** — *dep.* T0.2. **Listo cuando** una clase de Tailwind se refleja en el build.
+- **T0.4 · ✅ Configuración del repo:** `.gitignore` (incluye `.playwright-cli/`, `.env`, `dist/`), `.env.example` y scripts de npm (`check`, `test:e2e`, `check:content`, `format`). **Listo cuando** `npm run check` pasa.
+- **T0.5 · Playwright + axe + Lighthouse CI + GitHub Actions** con una prueba humo — *dep.* T0.3. **Listo cuando** CI está en verde en GitHub. *(Local en verde; falta el push.)*
+- **T0.6 · Conectar Vercel Hobby** (importar el repo con `nuevo-sitio` como branch de preview, variables de entorno, `vercel.json` con cabeceras) — *dep.* T0.5. **Listo cuando** existe la URL de preview y securityheaders.com da A o superior. *(`vercel.json` listo; falta conectar el proyecto en Vercel.)* **→ M1**
 
 ### Fase 1 — Contexto y sistema de diseño (→ M2)
 - **T1.1 · `impeccable init`** usando §1–2 de este spec → `PRODUCT.md`. **Listo cuando** el usuario aprueba `PRODUCT.md`.
