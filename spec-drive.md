@@ -8,14 +8,13 @@
 | Coach | **Cesar Augusto** |
 | Modalidad | **Presencial en Morelia, Michoacán** y **online** |
 | Branch | `nuevo-sitio` |
-| Versión | v0.3 (borrador) |
+| Versión | v0.5 (borrador) |
 | Punto de partida | Proyecto desde cero. No se reutiliza código, estilos ni estructura del branch `main` |
 | Idioma del sitio | Español (`es-MX`) |
 | Hosting | **Vercel, plan Hobby (gratuito)**, en un subdominio `*.vercel.app` (sin dominio propio). Reemplaza al sitio actual en `*.netlify.app` (ver §11.1) |
+| Lema | "Formamos deportistas hábiles y conscientes." |
 
-> ## ⛔ Antes de cualquier desarrollo: T0.0
-> El usuario debe compartir la **información de la marca tomada del Instagram de Control Gravedad** (costos, precios, horarios, restricciones, información general, etc.; checklist completo en §17.1).
-> **Claude debe pedir esta información al inicio de la siguiente sesión de desarrollo**, antes de ejecutar cualquier otra tarea.
+> T0.0 (información de la marca desde Instagram) quedó cerrada el 2026-10-19. Lo recibido está en §17.1.1; lo que falta, marcado como `[[PENDIENTE]]`.
 
 **Convención de IDs:** `RF-xx` requisito funcional · `RNF-xx` requisito no funcional · `ADR-xx` decisión técnica · `Tx.y` tarea · `M#` hito · `D-xx` decisión abierta · `R-xx` riesgo. Las tareas citan los requisitos que cubren, y cada requisito dice cómo se verifica.
 
@@ -45,8 +44,11 @@ Construir una **landing page de conversión** para **Control Gravedad**, la escu
 |---|---|---|---|
 | Principiante (18–40 años) | Ponerse en forma sin gimnasio | "No tengo fuerza / nunca he entrenado" | Cómo funciona, FAQ, Testimonios de principiantes |
 | Intermedio | Aprender skills (muscle-up, handstand, front lever) | "¿Realmente me vas a hacer progresar?" | Sobre el coach, Resultados |
-| Ocupado / remoto | Entrenar con guía desde casa | "No tengo tiempo / no vivo cerca" | Servicios (online), FAQ |
-| Todos | Saber cuánto cuesta y si vale la pena | "Seguro es caro" | Oferta de entrada, Servicios ("desde $X") |
+| Ocupado / remoto | Entrenar con guía desde casa | "No tengo tiempo / no vivo cerca" | Servicios (Rutina personalizada), FAQ |
+| Todos | Saber cuánto cuesta y si vale la pena | "Seguro es caro" | Oferta de entrada (clase muestra gratis), Servicios (precios publicados) |
+| Todos | Entrenar sin lesionarse | "Me voy a lastimar" | Cómo funciona (método Carga & Descarga), FAQ |
+
+**Mensaje central:** formar deportistas *hábiles y conscientes* con un método propio, **Carga & Descarga**, que alterna semanas de fuerza con semanas de técnica, movilidad y descanso (§17.1.1). Disciplinas: Calistenia, Streetlifting, Movilidad, Skills Movements y Funcional. Tono: motivacional y cercano; el sitio lo traduce a un registro elegante (§10).
 
 **Dispositivo principal:** móvil. Todo se diseña *mobile-first* y se valida primero a 375 px.
 
@@ -57,7 +59,7 @@ Construir una **landing page de conversión** para **Control Gravedad**, la escu
 - Página `/privacidad` (aviso de privacidad, obligatorio porque el formulario recolecta datos personales).
 - Página `404` con la marca y un CTA de regreso.
 - Botón flotante de WhatsApp, formulario funcional, analítica de conversión, SEO técnico.
-- Despliegue en Vercel con dominio propio.
+- Despliegue en Vercel Hobby en `controlgravedad.vercel.app`.
 
 ### Fuera de alcance (v1)
 - Pagos en línea, blog, área de miembros, login, reservas automáticas, multi-idioma, CMS, pruebas A/B.
@@ -82,10 +84,16 @@ Orden de secciones = orden del embudo: **atención → autoridad → oferta → 
 
 ### RF-03 · Sobre el coach (`#sobre-mi`)
 - Foto profesional, historia breve (≤ 120 palabras), al menos 3 credenciales (certificaciones, años, logros).
+- Credencial confirmada: **organizador de Gravedad Zero**, evento de calistenia en Morelia (10 de enero de 2026; participantes `[[PENDIENTE]]`). El resto de la historia y credenciales: `[[PENDIENTE]]`.
+- Nombre visible del coach: `[[PENDIENTE]]` ("Cesar/César Augusto" o "Chesare Mozart").
 
 ### RF-04 · Servicios (`#servicios`)
-- Tarjetas: **Clases presenciales (Morelia)**, **Asesoría online**, **Planes de entrenamiento**. El catálogo final se ajusta a lo que entregue T0.0.
-- Cada tarjeta: nombre, para quién es, qué incluye (3–5 puntos), precio o "desde $X" (D-01) y CTA.
+- Tarjetas (precios en MXN, publicados el 2024-12-18; vigencia `[[PENDIENTE]]`):
+  - **Clases presenciales (Morelia):** Clase individual $60 · Paquete I $360 (3 clases/semana, 30 días) · Paquete II $500 (5 clases/semana, 30 días).
+  - **Rutina personalizada (online):** $860. 2 rutinas en PDF para 4 semanas (carga y descarga), ejercicios explicados, imágenes demostrativas y glosario; entrega por correo en 7–12 días.
+  - **Talleres:** temas, frecuencia y precio `[[PENDIENTE]]`. Si no llegan antes del lanzamiento, la tarjeta se oculta.
+- Cada tarjeta: nombre, para quién es, qué incluye (3–5 puntos), precio(s) y CTA.
+- Pago por transferencia SPEI; los datos bancarios se envían por WhatsApp y **nunca** se publican en el sitio.
 
 **Aceptación:** cada CTA abre WhatsApp con un mensaje prellenado **distinto** que nombra el servicio (ver §9.1).
 
@@ -101,13 +109,15 @@ Orden de secciones = orden del embudo: **atención → autoridad → oferta → 
 **Aceptación:** todo el contenido es legible y navegable sin JS.
 
 ### RF-07 · Cómo funciona
-- Tres pasos: **Escríbeme** → **Clase de valoración** → **Tu plan a la medida**.
+- Tres pasos: **Escríbeme** → **Clase muestra gratis** → **Tu plan a la medida**.
+- Presenta el método **Carga & Descarga** (semana de carga: fuerza, resistencia y técnica pulcra; semana de descarga: biomecánica, movilidad, elasticidad y descanso).
 
 ### RF-08 · Oferta de entrada
-- Bloque destacado con la oferta (D-02), urgencia **honesta** opcional ("cupos limitados por mes") y CTA a WhatsApp.
+- Bloque destacado con la oferta: **Clase muestra GRATIS**, sujeta a disponibilidad de horario y espacio en la clase (D-02). Ese límite es la urgencia honesta; no se inventan otras. CTA a WhatsApp.
 
 ### RF-09 · Preguntas frecuentes (`#faq`)
-- 6–8 preguntas con `<details>`/`<summary>` nativos. Deben cubrir: experiencia previa, ubicación, precios, duración, equipo, edad y modalidad online.
+- 6–8 preguntas con `<details>`/`<summary>` nativos. Deben cubrir: experiencia previa, ubicación, precios, formas de pago (SPEI), duración, equipo, edad y modalidad online (Rutina personalizada).
+- Respuestas ya disponibles: precios, pago y Rutina personalizada (§17.1.1). Las demás: `[[PENDIENTE]]`.
 
 **Aceptación:** funciona sin JS; las mismas preguntas se emiten como JSON-LD `FAQPage`.
 
@@ -205,8 +215,9 @@ Orden de secciones = orden del embudo: **atención → autoridad → oferta → 
 
 ```ts
 // src/data/types.ts (borrador)
-type Service   = { id: 'presencial' | 'online' | 'plan'; name: string; audience: string;
-                   includes: string[]; price?: string; waMessage: string };
+type Plan      = { name: string; price: string; detail: string };
+type Service   = { id: 'presencial' | 'rutina' | 'talleres'; name: string; audience: string;
+                   includes: string[]; plans: Plan[]; waMessage: string };
 type Result    = { name: string; duration: string; achievement: string;
                    before: ImageMetadata; after: ImageMetadata; alt: { before: string; after: string } };
 type Testimonial = { name: string; quote: string; achievement?: string; photo?: ImageMetadata };
@@ -244,7 +255,9 @@ type FaqItem   = { q: string; a: string };
 ## 10. Diseño visual
 
 - La dirección visual la define **Impeccable** en modo *Persuade* y queda en `DESIGN.md` (tokens, tipografía, espaciado, componentes, movimiento). `PRODUCT.md` guarda el contexto de negocio (§1–2 de este spec).
-- Punto de partida (puede cambiar en T1.2): estilo oscuro, enérgico y deportivo; fotos protagonistas; tipografía display condensada + sans legible; un solo color de acento; `#25D366` reservado para WhatsApp.
+- Punto de partida (puede cambiar en T1.2): estilo oscuro, enérgico y deportivo; fotos protagonistas; un solo color de acento; `#25D366` reservado para WhatsApp.
+- **Tipografía:** el coach la quiere **elegante**, no moderna ni futurista (descarta display condensadas, geométricas tipo *tech* o de estilo "gamer"). Se eligen en T1.2 respetando RNF-05.
+- **Paleta provisional (D-10):** un diseñador está definiendo la paleta oficial de la marca. Mientras llega, T1.2 propone una paleta provisional y la página se construye con ella. Por eso ningún componente usa colores sueltos: cambiar la paleta debe ser editar solo los tokens de `DESIGN.md` y `@theme`.
 - Los tokens de `DESIGN.md` se trasladan 1:1 a `@theme` en `global.css`. Ningún componente usa colores sueltos.
 
 ## 11. Infraestructura y despliegue (Vercel)
@@ -314,14 +327,14 @@ El sitio actual (branch `main`) está publicado en **Netlify** en un subdominio 
 | **M2 · Sistema de diseño** | `PRODUCT.md`, `DESIGN.md`, layout base y componentes UI en preview | Fase 1 |
 | **M3 · Landing mínima que convierte** | Header, Hero, Servicios, Contacto y WhatsApp flotante funcionando. Ya podría publicarse | T2.1–T2.4 |
 | **M4 · Landing completa** | Todas las secciones con contenido provisional | Fase 2 + Fase 3 |
-| **M5 · Lanzamiento** | Contenido real, QA aprobado y dominio en producción | Fase 4 |
+| **M5 · Lanzamiento** | Contenido real, QA aprobado y sitio en producción | Fase 4 |
 
 ## 15. Tareas
 
 Formato: **ID · tarea** — *depende de* · *cubre* · **listo cuando**.
 
 ### Fase 0 — Fundaciones (→ M0, M1)
-- **T0.0 · ⛔ Recibir la información de la marca (BLOQUEANTE, va antes de todo).** Al iniciar la siguiente sesión de desarrollo, **Claude pregunta al usuario** por la información del Instagram de Control Gravedad (checklist en §17.1). Con lo recibido: actualizar §2, RF-03, RF-04, RF-08, RF-09, §17 y §18, y dejar los huecos que falten como `[[PENDIENTE]]`. **Listo cuando** el usuario confirma que el spec refleja la marca. **→ M0**
+- **T0.0 · ✅ Recibir la información de la marca (cerrada 2026-10-19).** Al iniciar la siguiente sesión de desarrollo, **Claude pregunta al usuario** por la información del Instagram de Control Gravedad (checklist en §17.1). Con lo recibido: actualizar §2, RF-03, RF-04, RF-08, RF-09, §17 y §18, y dejar los huecos que falten como `[[PENDIENTE]]`. **Listo cuando** el usuario confirma que el spec refleja la marca. **→ M0**
 - **T0.1 · Limpiar el legado** — *dep.* T0.0: eliminar `index.html`, `script.js`, `styles.css`, `assets/` y `.vscode/` (si no se usa). **Listo cuando** solo quedan `.claude/`, `CLAUDE.md` y `spec-drive.md`.
 - **T0.2 · Inicializar Astro** (plantilla mínima, TS estricto, `engines.node`) — *dep.* T0.1. **Listo cuando** `npm run dev` y `npm run build` funcionan.
 - **T0.3 · Tailwind v4 + `@astrojs/sitemap` + Prettier** — *dep.* T0.2. **Listo cuando** una clase de Tailwind se refleja en el build.
@@ -372,7 +385,7 @@ Cada tarea se cierra con el ciclo de §13 y su prueba e2e.
 
 **Por tarea:** cumple la aceptación de los RF/RNF que cita · `astro check` y build sin errores · prueba e2e añadida o actualizada · capturas revisadas a 375 y 1280 px · sin hallazgos abiertos de `web-design-guidelines` · commit con mensaje descriptivo.
 
-**Por lanzamiento (M5):** todas las tareas cerradas · CI en verde · RNF-01 a RNF-12 verificados · contenido real · aviso de privacidad aprobado por el cliente · sitio en el dominio propio con HTTPS.
+**Por lanzamiento (M5):** todas las tareas cerradas · CI en verde · RNF-01 a RNF-12 verificados · contenido real · aviso de privacidad aprobado por el cliente · sitio en `controlgravedad.vercel.app` con HTTPS.
 
 ---
 
@@ -399,6 +412,59 @@ Cada tarea se cierra con el ciclo de §13 y su prueba e2e.
 - [ ] **Preguntas frecuentes** que le hacen por mensaje directo.
 - [ ] **Otros:** cualquier dato de la marca que el usuario considere relevante.
 
+### 17.1.1 Información recibida (2026-10-19)
+
+> Resultado de T0.0, ya volcado en §2, RF-03, RF-04, RF-07, RF-08, RF-09 y §18.
+
+**Marca**
+- Lema (bio de Instagram): "Formamos deportistas hábiles y conscientes." · "Desafía tu ser gravitacional" · "Desafía la gravedad con nosotros".
+- Disciplinas: Calistenia · Streetlifting · Movilidad · Skills Movements · Funcional. También imparte talleres.
+- Tono: motivacional, con humor en los reels.
+- Redes: Instagram [@controlgravedad](https://www.instagram.com/controlgravedad) (1,430 seguidores al 2026-10-19) · TikTok [@controlgravedad](https://www.tiktok.com/@controlgravedad).
+
+**Contacto**
+- WhatsApp: +52 443 301 9533 (`524433019533` en los enlaces).
+- Email público (formulario y aviso de privacidad): **controlgravedad@gmail.com**. El email personal del coach no se publica.
+
+**Método: Carga & Descarga** (publicación del 2024-04-10). Las semanas alternan:
+- *Semana de carga:* fuerza relativa y absoluta, resistencia cardiovascular y muscular, técnica pulcra y rangos de repetición adecuados.
+- *Semana de descarga:* biomecánica y técnica, descanso, movilidad y elasticidad para cuidar músculos y articulaciones ("progreso consciente").
+
+**Servicios y precios** (publicación del 2024-12-18, MXN)
+
+| Servicio | Precio | Detalle |
+|---|---|---|
+| Clase muestra | Gratis | Sujeta a disponibilidad de horario y espacio en la clase → oferta de entrada (D-02) |
+| Clase individual | $60 | 1 clase presencial |
+| Paquete I | $360 | 3 clases por semana durante 30 días |
+| Paquete II | $500 | 5 clases por semana durante 30 días |
+| Rutina personalizada | $860 | 2 rutinas en PDF para 4 semanas (carga y descarga), ejercicios explicados, imágenes demostrativas y glosario. Requiere correo, formulario y comprobante de pago; se entrega por correo en 7–12 días |
+
+- Todos los entrenamientos presenciales los imparte un coach capacitado.
+- La modalidad "online" es la Rutina personalizada (no hay asesoría en vivo, salvo que se indique otra cosa).
+
+**Pagos:** transferencia SPEI, con nombre y apellido en el concepto y captura del comprobante. La CLABE **no** se publica en el sitio ni en el repo; se comparte por WhatsApp.
+
+**Gravedad Zero** ([@gravedadzero_mx](https://www.instagram.com/gravedadzero_mx)): evento de calistenia organizado por el coach en Morelia el 2026-01-10 (exhibición, aprendizaje y comunidad). No hay ediciones próximas. Se usa como credencial en RF-03, no como evento.
+
+**Pendientes de T0.0**
+- [ ] [[PENDIENTE]] Número de participantes de Gravedad Zero (el usuario lo consulta con el coach).
+- [ ] [[PENDIENTE]] Nombre del coach en el sitio: "Cesar/César Augusto" (nombre completo: César Augusto Moreno Pérez) o "Chesare Mozart" (nombre en redes).
+- [ ] [[PENDIENTE]] ¿Siguen vigentes los precios de dic. 2024?
+- [ ] [[PENDIENTE]] ¿"Clase individual" es una clase suelta en grupo o una clase privada 1 a 1?
+- [ ] [[PENDIENTE]] CTA de la Rutina personalizada: ¿WhatsApp o correo?
+- [ ] [[PENDIENTE]] Talleres: temas, frecuencia y precio.
+- [ ] [[PENDIENTE]] Skills que enseña (handstand, muscle-up, front lever…).
+- [ ] [[PENDIENTE]] Horarios de las clases presenciales.
+- [ ] [[PENDIENTE]] Ubicación en Morelia y si se puede publicar (D-06).
+- [ ] [[PENDIENTE]] Historia, años de experiencia, certificaciones y logros del coach.
+- [ ] [[PENDIENTE]] Restricciones y políticas (edad mínima, salud, cupo, cancelaciones).
+- [ ] [[PENDIENTE]] Prueba social: testimonios, antes y después, número de alumnos.
+- [ ] [[PENDIENTE]] Logo.
+- [ ] [[PENDIENTE]] Paleta oficial: la define un diseñador externo (D-10); mientras tanto se usa una provisional.
+- [x] Tipografía: elegante, no moderna ni futurista (§10).
+- [ ] [[PENDIENTE]] Preguntas frecuentes que recibe por DM.
+
 ### 17.2 Assets y datos restantes
 
 Leyenda: 🔴 bloquea el inicio · 🟠 bloquea el diseño (T1.2) · 🟢 bloquea solo el lanzamiento (T4.5). Varios de estos se cubren con §17.1.
@@ -407,19 +473,19 @@ Leyenda: 🔴 bloquea el inicio · 🟠 bloquea el diseño (T1.2) · 🟢 bloque
 |---|---|---|
 | ✅ | Nombre del coach / marca | **Cesar Augusto** · escuela **Control Gravedad** (confirmar si es "César" con acento) |
 | ✅ | Ciudad / zona de servicio | **Morelia, Michoacán (presencial) + online** |
-| 🔴 | Información de la marca desde Instagram | §17.1 (T0.0) |
+| ✅ | Información de la marca desde Instagram | §17.1.1 (T0.0) |
 | 🟠 | Foto o video del Hero | Foto ≥ 2400×1600 px (horizontal) **y** ≥ 1080×1920 px (vertical). Video: 10–20 s, sin audio, 1080p |
 | 🟠 | Fotos profesionales del coach | ≥ 1600 px por el lado mayor, buena luz y fondo limpio |
 | 🟠 | Preferencias de estilo / color | Referencias que le gusten o colores de marca existentes |
 | 🟢 | Logo | SVG preferido |
-| 🟢 | Número de WhatsApp | Con código de país (52…) |
-| 🟢 | Instagram y TikTok | Usuarios |
-| 🟢 | Email que recibe los formularios | Para la cuenta de Web3Forms |
+| ✅ | Número de WhatsApp | `524433019533` |
+| ✅ | Instagram y TikTok | @controlgravedad en ambas |
+| ✅ | Email que recibe los formularios | controlgravedad@gmail.com |
 | 🟢 | Historia, certificaciones y logros | ≤ 120 palabras + lista |
-| 🟢 | Servicios: qué incluye cada uno y precios | Ver D-01 |
+| 🟢 | Servicios: qué incluye cada uno y precios | Recibidos (RF-04); faltan talleres y confirmar vigencia |
 | 🟢 | Fotos de antes/después | Mismo encuadre, pose y luz; vertical 4:5; **consentimiento escrito** de cada alumno |
 | 🟢 | Testimonios | Nombre, foto (opcional), texto y autorización de uso |
-| 🟢 | Oferta de entrada | Ver D-02 |
+| ✅ | Oferta de entrada | Clase muestra gratis (D-02) |
 | 🟢 | Datos para el aviso de privacidad | Nombre del responsable y email de contacto ARCO |
 | 🟢 | Cuenta de GA4 | ¿Ya existe? ¿Quién la administra? |
 
@@ -427,8 +493,8 @@ Leyenda: 🔴 bloquea el inicio · 🟠 bloquea el diseño (T1.2) · 🟢 bloque
 
 | ID | Pregunta | Default propuesto | Bloquea |
 |---|---|---|---|
-| D-01 | ¿Mostrar precios? | "Desde $X MXN" | T2.3 (puede ir con valor provisional) |
-| D-02 | ¿Cuál es la oferta de entrada? | "Primera clase de valoración gratis" | T2.8 |
+| D-01 | ~~¿Mostrar precios?~~ | ✅ **Resuelta: sí**, ya son públicos en Instagram (vigencia `[[PENDIENTE]]`) | — |
+| D-02 | ~~¿Cuál es la oferta de entrada?~~ | ✅ **Resuelta: Clase muestra gratis**, sujeta a disponibilidad | — |
 | D-03 | ¿Hero con video o imagen? | Imagen; video solo en escritorio si hay buen material | T2.2 |
 | D-04 | ~~¿Vercel Pro u otro hosting?~~ | ✅ **Resuelta: Vercel Hobby (gratuito)** | — |
 | D-05 | Branch de producción | Merge de `nuevo-sitio` → `main` al cerrar M4; `main` es producción en Vercel | T4.7 |
@@ -436,6 +502,7 @@ Leyenda: 🔴 bloquea el inicio · 🟠 bloquea el diseño (T1.2) · 🟢 bloque
 | D-07 | ~~¿Dónde está publicado el sitio actual?~~ | ✅ **Resuelta: en Netlify**; se migra a Vercel (§11.1) | — |
 | D-08 | ~~¿El sitio de Netlify usa dominio propio?~~ | ✅ **Resuelta: no, usa `*.netlify.app`**. La migración es por redirección 301 (§11.1) | — |
 | D-09 | ¿Comprar un dominio propio (ej. `controlgravedad.mx`)? | Opcional, después de v1. Mejora la confianza y el SEO; en Vercel Hobby no cuesta conectarlo | — |
+| D-10 | Paleta de colores oficial | Paleta provisional propuesta en T1.2; se reemplaza por la del diseñador del coach cuando llegue (solo tokens) | Nada (el cambio llega después) |
 
 ## 19. Riesgos
 
@@ -446,8 +513,8 @@ Leyenda: 🔴 bloquea el inicio · 🟠 bloquea el diseño (T1.2) · 🟢 bloque
 | R-03 | GA4 baja la puntuación de Lighthouse | Incumple RNF-01 | Carga diferida (§9.3) |
 | R-04 | Spam en el formulario | Ruido en el email del coach | Honeypot; plan de escape de ADR-06 |
 | R-05 | Uso comercial en Vercel Hobby (sus términos lo restringen a uso no comercial) | Vercel podría pausar el proyecto | **Riesgo aceptado por el usuario.** Mitigación: ADR-11 (sitio 100% portable). Si ocurre, se pasa a Vercel Pro o a Cloudflare Pages/Netlify (gratis, permiten uso comercial) sin cambiar código |
-| R-07 | Enlaces viejos a `*.netlify.app` (bio de Instagram, mensajes) dejan de llevar al sitio | Se pierden visitas | Redirección 301 en Netlify + actualizar las bios (§11.1 pasos 3–4) |
 | R-06 | Netlify despliega el proyecto nuevo al fusionar en `main` | Sitio en producción roto o sobrescrito durante la migración | §11.1 paso 1 antes del merge (T4.7) |
+| R-07 | Enlaces viejos a `*.netlify.app` (bio de Instagram, mensajes) dejan de llevar al sitio | Se pierden visitas | Redirección 301 en Netlify + actualizar las bios (§11.1 pasos 3–4) |
 
 ---
 
@@ -460,3 +527,4 @@ Leyenda: 🔴 bloquea el inicio · 🟠 bloquea el diseño (T1.2) · 🟢 bloque
 | v0.2 | 2026-10-18 | Reestructura en Partes A–D; IDs y aceptación por requisito; ADRs; arquitectura y modelo de contenido; estrategia de pruebas y CI; hitos y tareas con dependencias; especificación de assets; decisiones abiertas y riesgos |
 | v0.3 | 2026-10-18 | Marca (Control Gravedad / Cesar Augusto); Vercel Hobby (D-04); migración desde Netlify (§11.1, T4.8, R-06); ADR-11 de portabilidad; D-08 |
 | v0.4 | 2026-10-18 | Morelia + online; sin dominio propio (D-08 resuelta, D-09); migración por redirección 301; **T0.0 bloqueante**: información de Instagram (§17.1) que Claude pide al iniciar la siguiente sesión |
+| v0.5 | 2026-10-19 | **T0.0 cerrada:** información de la marca (§17.1.1) volcada en §2, RF-03/04/07/08/09, §8 y §18; D-01 y D-02 resueltas; D-10 (paleta provisional); tipografía elegante (§10); sin dominio propio en §3, M5 y §16 |
