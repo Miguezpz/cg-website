@@ -1,0 +1,357 @@
+/*
+ * Movimiento «Peso y control» (DESIGN.md · Movimiento).
+ *
+ * OJO: lo ligado al scroll usa propiedades sueltas (`animation-name`,
+ * `animation-timeline`…) y sin `animation-duration` a propósito: si están todas,
+ * el minificador las fusiona en el atajo `animation: … view()`, que ningún
+ * navegador acepta, y la animación desaparece.
+ * Nada aparece de la nada: las piezas suben desde detrás de una barra, las
+ * barras de acero se trazan y la magnesia cae con la gravedad.
+ *
+ * - Todo vive dentro de `prefers-reduced-motion: no-preference`.
+ * - Lo ligado al scroll va detrás de `@supports`: sin soporte, la página se ve
+ *   completa y quieta.
+ * - Solo se anima transform (translate/scale/rotate), clip-path y opacity.
+ */
+
+/* Permite animar la posición del comparador antes/después con WAAPI. */
+@property --pos {
+  syntax: '<percentage>';
+  inherits: true;
+  initial-value: 50%;
+}
+
+.scroll-progress {
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* 1. Entrada del Hero: una sola vez, al cargar. -------------------------- */
+
+  .hero-bar {
+    transform-origin: left center;
+    animation: bar-draw 700ms var(--ease-out-expo) both;
+  }
+
+  .hero-grips {
+    animation: grip-puff 700ms var(--ease-out-expo) 420ms both;
+  }
+
+  .hero-dust span {
+    animation: dust-fall 1300ms linear var(--d, 600ms) both;
+  }
+
+  .hero-rise {
+    animation: rise-in var(--duration-enter) var(--ease-out-expo) var(--d, 0ms)
+      both;
+  }
+
+  /* La foto cuelga de la barra solo cuando está justo debajo de ella. */
+  @media (min-width: 64rem) {
+    .hero-hang {
+      transform-origin: 50% 0;
+      animation: hang var(--duration-swing) 250ms both;
+    }
+  }
+
+  /* 2. Ligado al scroll. ---------------------------------------------------- */
+
+  @supports (animation-timeline: view()) {
+    /* Títulos: suben desde una cornisa invisible en su borde inferior. */
+    .ledge {
+      animation-name: ledge;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 30%;
+    }
+
+    /* Bloques: suben con peso mientras entran en pantalla. */
+    .rise {
+      animation-name: rise-scroll;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 90%;
+    }
+
+    /* Barras de acero: se trazan al cruzar la parte baja de la pantalla. */
+    .steel-bar {
+      transform-origin: left center;
+      animation-name: bar-draw;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: view();
+      animation-range: entry 100% cover 45%;
+    }
+    .steel-bar[data-origin='right'] {
+      transform-origin: right center;
+    }
+
+    /* Foto del coach: se descubre hacia arriba desde su barra inferior. */
+    .reveal-photo {
+      animation-name: reveal-photo;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 40%;
+    }
+
+    /* Imagen que se mueve un poco más lento que la página. */
+    .parallax {
+      animation-name: parallax;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 100%;
+    }
+
+    /* Hero: al salir de pantalla, la foto baja y el título se eleva. */
+    .hero-parallax {
+      animation-name: parallax-exit;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: view();
+      animation-range: exit 0% exit 100%;
+    }
+    .hero-lift {
+      animation-name: lift;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: view();
+      animation-range: exit 0% exit 100%;
+    }
+
+    /* Subrayado de gis que se dibuja con el scroll. */
+    .chalk-underline {
+      view-timeline-name: --underline;
+    }
+    .chalk-underline path {
+      stroke-dasharray: 1;
+      animation-name: chalk-draw;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: --underline;
+      animation-range: entry 100% cover 45%;
+    }
+  }
+
+  /* Barra de progreso de lectura bajo el header. */
+  @supports (animation-timeline: scroll()) {
+    .scroll-progress {
+      display: block;
+      transform-origin: left center;
+      animation-name: bar-draw;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: scroll(root block);
+    }
+  }
+
+  /* 3. Microinteracciones. -------------------------------------------------- */
+
+  /* Indicador del menú de escritorio: se desliza entre secciones. */
+  .nav-indicator {
+    transition:
+      translate var(--duration-nav) var(--ease-in-out-strong),
+      scale var(--duration-nav) var(--ease-in-out-strong),
+      opacity var(--duration-fast) var(--ease-out-expo);
+  }
+
+  /* FAQ: abren y cierran con altura animada donde se puede. */
+  @supports selector(::details-content) {
+    :root {
+      interpolate-size: allow-keywords;
+    }
+    .faq-item::details-content {
+      block-size: 0;
+      overflow-y: clip;
+      transition:
+        block-size 280ms var(--ease-out-expo),
+        content-visibility 280ms allow-discrete;
+    }
+    .faq-item[open]::details-content {
+      block-size: auto;
+    }
+  }
+  .faq-item[open] .faq-answer {
+    animation: rise-in 320ms var(--ease-out-expo) both;
+  }
+
+  /* Botón flotante: dos ondas la primera vez que aparece, y se detiene. */
+  [data-floating-wa][data-pulse]::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    border: 2px solid var(--color-whatsapp);
+    animation: ping 1100ms var(--ease-out-expo) 2;
+    pointer-events: none;
+  }
+
+  /* Mensaje del formulario (éxito o error). */
+  [data-form-message]:not([hidden]) {
+    transition:
+      opacity 240ms var(--ease-out-expo),
+      translate 240ms var(--ease-out-expo);
+    @starting-style {
+      opacity: 0;
+      translate: 0 0.5rem;
+    }
+  }
+}
+
+/* Keyframes ---------------------------------------------------------------- */
+
+@keyframes bar-draw {
+  from {
+    scale: 0 1;
+  }
+  to {
+    scale: 1 1;
+  }
+}
+
+@keyframes grip-puff {
+  from {
+    opacity: 0;
+    scale: 0.92;
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+    filter: blur(0);
+  }
+}
+
+/* La magnesia salta un poco al soltarse y luego cae acelerando. */
+@keyframes dust-fall {
+  0% {
+    opacity: 0;
+    translate: 0 0;
+    scale: 1;
+    animation-timing-function: var(--ease-out-expo);
+  }
+  14% {
+    opacity: 0.9;
+    translate: calc(var(--dx) * 0.35) -0.35rem;
+    animation-timing-function: cubic-bezier(0.55, 0, 0.9, 0.45);
+  }
+  100% {
+    opacity: 0;
+    translate: var(--dx) var(--dy);
+    scale: 0.55;
+  }
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    translate: 0 0.75rem;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+/* Oscilación amortiguada de algo que cuelga y se asienta. */
+@keyframes hang {
+  0% {
+    rotate: 2deg;
+    animation-timing-function: ease-in-out;
+  }
+  30% {
+    rotate: -1.2deg;
+    animation-timing-function: ease-in-out;
+  }
+  55% {
+    rotate: 0.6deg;
+    animation-timing-function: ease-in-out;
+  }
+  78% {
+    rotate: -0.25deg;
+    animation-timing-function: ease-in-out;
+  }
+  100% {
+    rotate: 0deg;
+  }
+}
+
+@keyframes ledge {
+  from {
+    translate: 0 100%;
+    clip-path: inset(-0.5em -0.5em 100% -0.5em);
+  }
+  to {
+    translate: 0 0;
+    clip-path: inset(-0.5em);
+  }
+}
+
+@keyframes rise-scroll {
+  from {
+    translate: 0 1.5rem;
+  }
+  to {
+    translate: 0 0;
+  }
+}
+
+@keyframes reveal-photo {
+  from {
+    clip-path: inset(calc(100% - 6px) 0 0 0);
+  }
+  to {
+    clip-path: inset(0);
+  }
+}
+
+@keyframes parallax {
+  from {
+    scale: 1.12;
+    translate: 0 -5%;
+  }
+  to {
+    scale: 1.12;
+    translate: 0 5%;
+  }
+}
+
+@keyframes parallax-exit {
+  from {
+    scale: 1.1;
+    translate: 0 0;
+  }
+  to {
+    scale: 1.1;
+    translate: 0 4.5%;
+  }
+}
+
+@keyframes lift {
+  to {
+    translate: 0 -30%;
+  }
+}
+
+@keyframes chalk-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes ping {
+  from {
+    scale: 1;
+    opacity: 0.8;
+  }
+  to {
+    scale: 1.65;
+    opacity: 0;
+  }
+}

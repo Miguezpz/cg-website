@@ -1,6 +1,7 @@
 ---
 import ChalkMark from '../ui/ChalkMark.astro';
 import SectionHeading from '../ui/SectionHeading.astro';
+import SteelBar from '../ui/SteelBar.astro';
 
 interface Props {
   title: string;
@@ -22,16 +23,17 @@ const weekLabel = Object.fromEntries(
 <section
   id="como-funciona"
   aria-labelledby="como-funciona-title"
-  class="border-t-[6px] border-steel-700 py-section"
+  class="relative border-t-[6px] border-transparent py-section"
 >
+  <SteelBar />
   <div class="mx-auto w-full max-w-content px-gutter">
     <SectionHeading id="como-funciona-title">{title}</SectionHeading>
 
     <ol class="mt-10 grid gap-8 md:grid-cols-3 md:gap-6">
       {steps.map((step, i) => (
-        <li class="border-t border-steel-700 pt-5">
+        <li class="rise border-t border-steel-700 pt-5">
           <span
-            class="stretch-display block text-[3.5rem] leading-none font-black text-concrete-400 tabular-nums"
+            class="ledge stretch-display block text-[3.5rem] leading-none font-black text-concrete-400 tabular-nums"
             aria-hidden="true"
           >
             {i + 1}
@@ -44,7 +46,7 @@ const weekLabel = Object.fromEntries(
 
     <!-- Carga & Descarga: el ciclo de 4 semanas marcado con gis sobre la barra. -->
     <div class="mt-20" data-method>
-      <h3 class="stretch-display text-h2 font-extrabold uppercase">
+      <h3 class="ledge stretch-display text-h2 font-extrabold uppercase">
         {method.title}
       </h3>
       <p class="mt-3 max-w-prose text-lede">{method.text}</p>
@@ -80,7 +82,7 @@ const weekLabel = Object.fromEntries(
 
       <dl class="mt-10 grid gap-6 md:grid-cols-2">
         {method.weeks.map((week) => (
-          <div class="border-t border-steel-700 pt-4">
+          <div class="rise border-t border-steel-700 pt-4">
             <dt class="stretch-heading text-h3 font-bold">
               {weekLabel[week.kind]}
             </dt>
@@ -102,6 +104,15 @@ const weekLabel = Object.fromEntries(
     stroke-dashoffset: 0;
     transition: stroke-dashoffset var(--duration-draw) var(--ease-out-expo);
     transition-delay: calc(var(--i) * 70ms + var(--week-delay, 0ms));
+  }
+  [data-method][data-animate] [data-kind] {
+    transform-origin: left center;
+    scale: 0 1;
+  }
+  [data-method][data-animate][data-drawn] [data-kind] {
+    scale: 1 1;
+    transition: scale 600ms var(--ease-out-expo);
+    transition-delay: calc(var(--week-delay, 0ms) + 200ms);
   }
   [data-method] li:nth-child(2) {
     --week-delay: 350ms;

@@ -8,7 +8,7 @@
 | Coach | **César Augusto** (en redes: "Chesare Mozart") |
 | Modalidad | **Presencial en Morelia, Michoacán** y **online** |
 | Branch | `nuevo-sitio` |
-| Versión | v0.7 (borrador) |
+| Versión | v0.8 (borrador) |
 | Punto de partida | Proyecto desde cero. No se reutiliza código, estilos ni estructura del branch `main` |
 | Idioma del sitio | Español (`es-MX`) |
 | Hosting | **Vercel, plan Hobby (gratuito)**, en un subdominio `*.vercel.app` (sin dominio propio). Reemplaza al sitio actual en `*.netlify.app` (ver §11.1) |
@@ -370,6 +370,7 @@ Cada tarea se cierra con el ciclo de §13 y su prueba e2e.
 - **T3.3 · ✅ JSON-LD** (`Person`, `Service`, `FAQPage`) — §9.4. **Listo cuando** Rich Results Test no reporta errores. *(Grafo con `SportsOrganization`, `Person`, `Service` con `Offer` en MXN y `FAQPage`; lo provisional se excluye. Validado por e2e; falta pasar Rich Results Test sobre producción cuando se publique.)*
 - **T3.4 · ✅ Animaciones** (revelado al scroll, microinteracciones) con `emil-design-eng` — RNF-07. *(Un solo momento propio, el gis de Carga & Descarga, sin revelados genéricos; presión `scale(0.97)`, entrada del menú con `@starting-style` y tiempos asimétricos en el botón flotante. Detalle en `DESIGN.md` · Movimiento.)*
 - **T3.5 · ✅ `impeccable critique` + `polish`** sobre la landing completa. *(Crítica 25/32 en un solo contexto, sin subagentes; polish de todo lo que no es contenido: Hero móvil con la foto antes de los indicadores, entrada a la rutina online, un solo texto para los CTA, marcas de agarre de gis, precios pendientes ocultos, sección activa en el menú, pista del carrusel e interlineado de etiquetas. Detector: 0 hallazgos.)* **→ M4**
+- **T3.6 · ✅ Movimiento «Peso y control»** (pedido del usuario, 2026-10-19: que la página se sienta viva) — RNF-01/02/07. Entrada del Hero, revelados ligados al scroll con CSS, barras de acero que se trazan, magnesia que cae, indicador de sección, FAQ animadas y microinteracciones. Detalle en `DESIGN.md` · Movimiento. **Listo cuando** Lighthouse sigue ≥ 95 y con movimiento reducido no hay animaciones. *(Lighthouse: 99/100/100/100, LCP 1.9 s, CLS 0; 178 e2e en verde.)*
 
 ### Fase 4 — QA y lanzamiento (→ M5)
 - **T4.1 · ✅ Completar la suite e2e** (sin JS, reduced motion, axe, WebKit) — RNF-06–08, RNF-11.
@@ -532,3 +533,4 @@ Leyenda: 🔴 bloquea el inicio · 🟠 bloquea el diseño (T1.2) · 🟢 bloque
 | v0.6 | 2026-10-19 | T1.1 (`PRODUCT.md`), T1.2 (dirección «Gis y acero», `DESIGN.md`) y T1.3 (tokens + Archivo); restricción de tipografía elegante levantada por el usuario; nombre del coach: César Augusto |
 | v0.6.1 | 2026-10-19 | D-05 resuelta: `main` adelantada a `nuevo-sitio` (builds de Netlify ya desactivados); el desarrollo sigue en `nuevo-sitio` |
 | v0.7 | 2026-10-19 | Fases 2–3 y T4.1–T4.3 completas; `main` publicada en producción con contenido provisional (a petición del usuario); pendientes: contenido real (T4.5), Web3Forms, GA4 y pruebas en dispositivos (T4.4) |
+| v0.8 | 2026-10-19 | T3.6: sistema de movimiento «Peso y control» (reemplaza la regla de un solo momento propio de `DESIGN.md`) |

@@ -1,0 +1,21 @@
+---
+// Barra de acero de 6 px sobre el borde de un bloque. Se traza con el scroll
+// (motion.css · .steel-bar); sin soporte, se ve completa. El padre debe ser
+// `relative` y reservar el borde (`border-t-[6px] border-transparent`).
+interface Props {
+  edge?: 'top' | 'bottom';
+  tone?: 'steel' | 'chalk';
+  origin?: 'left' | 'right';
+}
+const { edge = 'top', tone = 'steel', origin = 'left' } = Astro.props;
+---
+
+<span
+  aria-hidden="true"
+  data-origin={origin}
+  class:list={[
+    'steel-bar pointer-events-none absolute inset-x-0 h-1.5',
+    edge === 'top' ? '-top-1.5' : '-bottom-1.5',
+    tone === 'chalk' ? 'bg-chalk' : 'bg-steel-700',
+  ]}
+></span>

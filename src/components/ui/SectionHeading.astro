@@ -8,7 +8,10 @@ const { id, class: className } = Astro.props;
 
 <h2
   id={id}
-  class:list={['stretch-display text-h2 font-extrabold uppercase', className]}
+  class:list={[
+    'ledge stretch-display text-h2 font-extrabold uppercase',
+    className,
+  ]}
 >
   <slot />
 </h2>

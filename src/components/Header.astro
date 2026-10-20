@@ -36,20 +36,25 @@ const { brand, links, cta } = Astro.props;
       </span>
     </a>
 
-    <nav aria-label="Principal" class="hidden lg:block">
+    <nav aria-label="Principal" class="relative hidden lg:block">
       <ul class="flex items-center gap-1">
         {links.map((link) => (
           <li>
             <a
               href={link.href}
               data-nav-link
-              class="stretch-label inline-flex min-h-11 items-center px-3 text-label font-semibold text-concrete-400 uppercase transition-colors duration-fast hover:text-chalk aria-[current=location]:text-chalk aria-[current=location]:underline aria-[current=location]:decoration-2 aria-[current=location]:underline-offset-8"
+              class="stretch-label inline-flex min-h-11 items-center px-3 text-label font-semibold text-concrete-400 uppercase transition-colors duration-fast hover:text-chalk aria-[current=location]:text-chalk"
             >
               {link.label}
             </a>
           </li>
         ))}
       </ul>
+      <span
+        data-nav-indicator
+        aria-hidden="true"
+        class="nav-indicator pointer-events-none absolute bottom-2 left-0 h-0.5 w-px origin-left bg-chalk opacity-0"
+      ></span>
     </nav>
 
     <Button variant="secondary" size="sm" href={cta.href}>
@@ -92,6 +97,10 @@ const { brand, links, cta } = Astro.props;
       </ul>
     </nav>
   </div>
+  <span
+    aria-hidden="true"
+    class="scroll-progress pointer-events-none absolute inset-x-0 -bottom-px h-0.5 bg-chalk"
+  ></span>
 </header>
 
 <style>
@@ -127,28 +136,63 @@ const { brand, links, cta } = Astro.props;
     }).observe(sentinel);
   }
 
-  // Marca en el menú la sección que está en pantalla.
+  // Marca en el menú la sección que está en pantalla y desliza el indicador.
   const navLinks = [
     ...document.querySelectorAll<HTMLAnchorElement>('[data-nav-link]'),
   ];
+  const indicator = document.querySelector<HTMLElement>('[data-nav-indicator]');
   const sections = navLinks
     .map((link) => document.getElementById(link.hash.slice(1)))
     .filter((el): el is HTMLElement => el !== null);
+  let current: HTMLAnchorElement | undefined;
+  let indicatorShown = false;
+
+  const placeIndicator = (animate: boolean) => {
+    if (!indicator) return;
+    if (!current || current.offsetParent === null) {
+      indicator.style.opacity = '0';
+      indicatorShown = false;
+      return;
+    }
+    // Los enlaces tienen 12 px de padding: la línea va solo bajo el texto.
+    const place = () => {
+      indicator.style.translate = `${current!.offsetLeft + 12}px 0`;
+      indicator.style.scale = `${Math.max(current!.offsetWidth - 24, 0)} 1`;
+    };
+    if (!animate || !indicatorShown) {
+      indicator.style.transition = 'none';
+      place();
+      void indicator.offsetWidth;
+      indicator.style.transition = '';
+    } else place();
+    indicator.style.opacity = '1';
+    indicatorShown = true;
+  };
+
   if (sections.length) {
+    const visible = new Set<Element>();
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          if (!entry.isIntersecting) continue;
-          for (const link of navLinks) {
-            if (link.hash === `#${entry.target.id}`) {
-              link.setAttribute('aria-current', 'location');
-            } else link.removeAttribute('aria-current');
-          }
+          if (entry.isIntersecting) visible.add(entry.target);
+          else visible.delete(entry.target);
         }
+        const section = sections.find((s) => visible.has(s));
+        current = navLinks.find((l) => section && l.hash === `#${section.id}`);
+        for (const link of navLinks) {
+          if (link === current) link.setAttribute('aria-current', 'location');
+          else link.removeAttribute('aria-current');
+        }
+        placeIndicator(true);
       },
       { rootMargin: '-45% 0px -50% 0px' },
     );
     sections.forEach((section) => observer.observe(section));
+    if (indicator?.parentElement) {
+      new ResizeObserver(() => placeIndicator(false)).observe(
+        indicator.parentElement,
+      );
+    }
   }
 
   if (header && toggle && menu) {

@@ -2,6 +2,7 @@
 import Button from '../ui/Button.astro';
 import Icon from '../ui/Icon.astro';
 import SectionHeading from '../ui/SectionHeading.astro';
+import SteelBar from '../ui/SteelBar.astro';
 import type { SocialLink } from '../../data/types';
 import { waAttrs } from '../../lib/whatsapp';
 
@@ -53,8 +54,9 @@ const errorText = 'mt-2 text-label text-error-on-dark';
 <section
   id="contacto"
   aria-labelledby="contacto-title"
-  class="border-t-[6px] border-steel-700 py-section"
+  class="relative border-t-[6px] border-transparent py-section"
 >
+  <SteelBar />
   <div class="mx-auto grid w-full max-w-content gap-12 px-gutter lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:gap-16">
     <div>
       <SectionHeading id="contacto-title" class="text-display">
@@ -94,7 +96,7 @@ const errorText = 'mt-2 text-label text-error-on-dark';
       method="POST"
       action={formAction}
       data-contact-form
-      class="border border-steel-700 bg-steel-900 p-6 sm:p-8"
+      class="rise border border-steel-700 bg-steel-900 p-6 sm:p-8"
       aria-labelledby="form-title"
     >
       <h3 id="form-title" class="stretch-heading text-h3 font-bold">

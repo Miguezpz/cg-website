@@ -1,6 +1,7 @@
 ---
 import Button from '../ui/Button.astro';
 import ChalkMark from '../ui/ChalkMark.astro';
+import SteelBar from '../ui/SteelBar.astro';
 import { waAttrs } from '../../lib/whatsapp';
 
 interface Props {
@@ -15,14 +16,19 @@ const { title, text, note, cta } = Astro.props;
 
 <section aria-labelledby="oferta-title" class="py-section">
   <div class="mx-auto w-full max-w-content px-gutter">
-    <div class="border-y-[6px] border-chalk py-12 md:py-16">
+    <div class="relative border-y-[6px] border-transparent py-12 md:py-16">
+      <SteelBar tone="chalk" />
+      <SteelBar edge="bottom" tone="chalk" origin="right" />
       <h2
         id="oferta-title"
-        class="stretch-display max-w-[14ch] text-display font-black uppercase"
+        class="ledge stretch-display max-w-[14ch] text-display font-black uppercase"
       >
         {title}
       </h2>
-      <ChalkMark variant="underline" class="mt-2 h-4 w-64 text-chalk" />
+      <ChalkMark
+        variant="underline"
+        class="chalk-underline mt-2 h-4 w-64 text-chalk"
+      />
       <p class="mt-6 max-w-prose text-lede">{text}</p>
       <Button
         icon="whatsapp"

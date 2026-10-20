@@ -68,12 +68,54 @@ Las cifras de precios usan `tabular-nums`.
 - Separación entre secciones `section`: `clamp(4.5rem, 12vw, 8rem)`. Siempre hay más aire sobre un título que debajo.
 - Objetivos táctiles de 44 px como mínimo (`tap-min`).
 
-## Movimiento
+## Movimiento · «Peso y control»
 
-- **Un solo momento propio:** las marcas de gis del calendario Carga & Descarga se dibujan (`stroke-dashoffset`) al entrar en pantalla, con `ease-out-expo` y `duration-draw` (900 ms) en secuencia. El estado por defecto es **ya dibujado**: sin JS o con `prefers-reduced-motion` se ve completo.
-- Microinteracciones de 160 ms (`duration-fast`) en hover y presión (`scale(0.97)` al presionar). El hover solo se aplica con puntero fino (Tailwind v4 lo limita a `@media (hover: hover)`).
-- **Menú móvil:** entra en 200 ms (opacidad + 0.5 rem) con `@starting-style` y los enlaces escalonados 40 ms; se cierra al instante. **Botón flotante:** aparece en 200 ms y se oculta en 150 ms.
-- No hay entradas idénticas en cada sección ni revelados genéricos al hacer scroll; la imagen del Hero (LCP) nunca se anima.
+> Reemplaza la regla anterior de "un solo momento propio" a pedido del usuario (2026-10-19): la página debe sentirse viva. El código está en `src/styles/motion.css`.
+
+**Gramática: nada aparece de la nada.** Las piezas suben desde detrás de una barra, las barras de acero se trazan y la magnesia cae con la gravedad. El movimiento es vertical y con peso; no hay fundidos sueltos ni deslizamientos laterales.
+
+**Entrada del Hero** (una vez, al cargar):
+
+- La barra se traza de izquierda a derecha en 700 ms (`scale` desde la izquierda).
+- Las marcas de agarre aparecen a los 420 ms (opacidad, escala y desenfoque) y sueltan 14 partículas de magnesia. Las partículas saltan un poco y luego caen acelerando, en 1.3 s.
+- El texto de apoyo sube escalonado 60 ms: entrada, ciudad, botones, enlace online e indicadores (`--duration-enter` 520 ms).
+- En escritorio, la foto cuelga de la barra y se asienta con una oscilación amortiguada de ±2° (`--duration-swing` 1.6 s).
+- El `h1` y la imagen nunca se ocultan, para no retrasar el LCP.
+
+**Ligado al scroll** (CSS `animation-timeline`, sin JS):
+
+- `.ledge`: los títulos suben desde una cornisa invisible en su borde inferior (`translate` + `clip-path`).
+- `.rise`: listas, filas de precios, tarjetas, FAQ y formulario suben 1.5 rem mientras entran.
+- `.steel-bar` (componente `SteelBar`): las barras de 6 px de cada bloque se trazan al cruzar la parte baja de la pantalla. La inferior de la Oferta se traza de derecha a izquierda.
+- `.reveal-photo` + `.parallax`: la foto del coach se descubre hacia arriba desde su barra y se mueve más lento que la página.
+- `.hero-parallax` / `.hero-lift`: al salir de pantalla, la foto del Hero baja y el título se eleva.
+- `.chalk-underline`: el subrayado de gis de la Oferta se dibuja con el scroll.
+- `.scroll-progress`: una barra de gis de 2 px bajo el header indica cuánto llevas de página.
+
+**Momentos con JS** (IntersectionObserver o WAAPI, una sola vez):
+
+- Ciclo Carga & Descarga: las marcas de gis se dibujan (`duration-draw` 900 ms) y después se trazan las barras de cada semana.
+- Comparador: un vaivén de 1.6 s la primera vez que se ve, que solo mueve la imagen (`--pos` registrada con `@property`), no el valor del control. Se cancela si el usuario lo toca.
+- Botón flotante: dos ondas la primera vez que aparece, y se detiene.
+
+**Microinteracciones:**
+
+- Presión: `scale(0.97)` en 160 ms.
+- Botón primario: el ícono de WhatsApp «suena» al pasar el puntero (`animate-ring`, 520 ms).
+- Botón secundario: la tiza se llena desde abajo (200 ms).
+- Menú de escritorio: un indicador se desliza bajo la sección activa (`--duration-nav` 300 ms, `--ease-in-out-strong`).
+- FAQ: abren y cierran con altura animada (`::details-content` + `interpolate-size`, 280 ms) y la respuesta sube al abrir.
+- Menú móvil: entra en 200 ms con `@starting-style` y los enlaces escalonados 40 ms; se cierra al instante.
+- Mensajes del formulario: suben al aparecer.
+
+**Reglas:**
+
+- Solo se anima `transform` (translate, scale, rotate), `clip-path`, `opacity` y el trazo de SVG.
+- Nada en bucle infinito.
+- El hover solo se aplica con puntero fino.
+- Todo está dentro de `prefers-reduced-motion: no-preference`; con movimiento reducido no hay ninguna animación.
+- Sin soporte de animaciones ligadas al scroll, la página se ve completa y quieta.
+- ⚠️ En `motion.css`, lo ligado al scroll va en propiedades sueltas y sin `animation-duration`. Si no, Lightning CSS las fusiona en `animation: … view()`, que ningún navegador acepta, y la animación desaparece.
 
 ## Superficies del navegador
 

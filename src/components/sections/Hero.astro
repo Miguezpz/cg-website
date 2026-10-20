@@ -29,23 +29,50 @@ const {
   image,
   imageAlt,
 } = Astro.props;
+
+// Partículas de magnesia que se sueltan de las marcas de agarre al cargar
+// (decorativas; posiciones fijas para que el HTML sea estable entre builds).
+const dust = Array.from({ length: 14 }, (_, i) => {
+  const rand = (n: number) =>
+    (((Math.sin(i * 12.9898 + n * 78.233) * 43758.5453) % 1) + 1) % 1;
+  const left = i % 2 === 0 ? 20 + rand(1) * 16 : 63 + rand(1) * 17;
+  const size = (2 + rand(4) * 2.5).toFixed(1);
+  return [
+    `left:${left.toFixed(1)}%`,
+    `width:${size}px`,
+    `height:${size}px`,
+    `--dx:${((rand(2) - 0.5) * 48).toFixed(0)}px`,
+    `--dy:${(40 + rand(3) * 60).toFixed(0)}px`,
+    `--d:${(560 + rand(5) * 380).toFixed(0)}ms`,
+  ].join(';');
+});
 ---
 
 <section
   aria-labelledby="hero-title"
-  class="relative -mt-16 pt-16 pb-12 lg:pb-20"
+  class="relative -mt-16 overflow-x-clip pt-16 pb-12 lg:pb-20"
 >
   <div class="mx-auto w-full max-w-content px-gutter">
     <!-- La barra: cruza la pantalla y sostiene la foto. -->
     <div class="relative mt-6 lg:mt-12">
       <div
-        class="relative left-1/2 h-1.5 w-screen -translate-x-1/2 bg-steel-700"
+        class="hero-bar relative left-1/2 h-1.5 w-screen -translate-x-1/2 bg-steel-700"
         aria-hidden="true"
       ></div>
-      <ChalkMark
-        variant="hands"
-        class="absolute -top-3 left-1/2 z-10 h-7 w-72 -translate-x-1/2 text-chalk lg:right-0 lg:left-auto lg:w-[26rem] lg:translate-x-0"
-      />
+      <div class="absolute -top-3 left-1/2 z-10 h-7 w-72 -translate-x-1/2 lg:right-0 lg:left-auto lg:w-[26rem] lg:translate-x-0">
+        <ChalkMark
+          variant="hands"
+          class="hero-grips h-full w-full text-chalk"
+        />
+        <div class="hero-dust" aria-hidden="true">
+          {dust.map((style) => (
+            <span
+              class="absolute top-1/2 rounded-full bg-chalk opacity-0"
+              style={style}
+            />
+          ))}
+        </div>
+      </div>
     </div>
 
     <!-- Móvil: texto → foto → indicadores. Escritorio: texto e indicadores a la izquierda, foto a la derecha. -->
@@ -53,16 +80,27 @@ const {
       <div class="lg:pt-14">
         <h1
           id="hero-title"
-          class="stretch-display text-display font-black uppercase"
+          class="hero-lift stretch-display text-display font-black uppercase"
         >
           {title}
         </h1>
-        <p class="mt-4 max-w-[22ch] text-lede text-chalk">{lede}</p>
-        <p class="stretch-label mt-2 text-label font-semibold text-concrete-400 uppercase">
+        <p
+          class="hero-rise mt-4 max-w-[22ch] text-lede text-chalk"
+          style="--d:180ms"
+        >
+          {lede}
+        </p>
+        <p
+          class="hero-rise stretch-label mt-2 text-label font-semibold text-concrete-400 uppercase"
+          style="--d:240ms"
+        >
           {where}
         </p>
 
-        <div class="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+        <div
+          class="hero-rise mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap"
+          style="--d:300ms"
+        >
           <Button icon="whatsapp" {...waAttrs({ source: 'hero' })}>
             {primaryCta}
           </Button>
@@ -72,7 +110,8 @@ const {
         </div>
         <a
           href={onlineLink.href}
-          class="group mt-3 inline-block py-2.5 text-concrete-400 transition-colors duration-fast hover:text-chalk"
+          class="hero-rise group mt-3 inline-block py-2.5 text-concrete-400 transition-colors duration-fast hover:text-chalk"
+          style="--d:360ms"
         >
           {onlineLink.question}{' '}
           <span class="font-semibold whitespace-nowrap text-chalk underline">
@@ -85,7 +124,7 @@ const {
         </a>
       </div>
 
-      <figure class="relative -mx-gutter border-steel-700 sm:mx-0 self-start sm:border-x-2 sm:border-b-2 lg:col-start-2 lg:row-span-2 lg:row-start-1">
+      <figure class="hero-hang relative -mx-gutter self-start overflow-hidden border-steel-700 sm:mx-0 sm:border-x-2 sm:border-b-2 lg:col-start-2 lg:row-span-2 lg:row-start-1">
         <Picture
           src={image}
           alt={imageAlt}
@@ -94,11 +133,14 @@ const {
           sizes="(min-width: 64rem) 26rem, 100vw"
           loading="eager"
           fetchpriority="high"
-          class="aspect-[4/5] w-full object-cover"
+          class="hero-parallax aspect-[4/5] w-full object-cover"
         />
       </figure>
 
-      <ul class="flex flex-wrap gap-x-6 gap-y-3 self-start border-t border-steel-700 pt-5 lg:col-start-1 lg:row-start-2">
+      <ul
+        class="hero-rise flex flex-wrap gap-x-6 gap-y-3 self-start border-t border-steel-700 pt-5 lg:col-start-1 lg:row-start-2"
+        style="--d:420ms"
+      >
         {indicators.map((item) => (
           <li class="stretch-label text-label uppercase">
             <span class="font-bold text-chalk">{item.value}</span>{' '}

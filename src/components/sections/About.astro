@@ -21,13 +21,13 @@ const { title, role, story, credentials, photo, photoAlt } = Astro.props;
   class="bg-concrete-100 py-section text-steel-950"
 >
   <div class="mx-auto grid w-full max-w-content gap-10 px-gutter md:grid-cols-[minmax(0,0.8fr)_minmax(0,1fr)] md:items-end lg:gap-16">
-    <figure class="relative border-b-[6px] border-steel-950">
+    <figure class="reveal-photo relative overflow-hidden border-b-[6px] border-steel-950">
       <Image
         src={photo}
         alt={photoAlt}
         widths={[360, 537]}
         sizes="(min-width: 48rem) 40vw, 100vw"
-        class="aspect-[537/690] w-full object-cover grayscale"
+        class="parallax aspect-[537/690] w-full object-cover grayscale"
       />
     </figure>
 
@@ -43,7 +43,7 @@ const { title, role, story, credentials, photo, photoAlt } = Astro.props;
       </div>
       <ul class="mt-8 border-t border-steel-950/20">
         {credentials.map((item) => (
-          <li class="stretch-heading flex gap-3 border-b border-steel-950/20 py-3 text-h3 leading-tight font-bold">
+          <li class="rise stretch-heading flex gap-3 border-b border-steel-950/20 py-3 text-h3 leading-tight font-bold">
             <span
               class="mt-[0.55em] h-1 w-5 shrink-0 bg-steel-950"
               aria-hidden="true"

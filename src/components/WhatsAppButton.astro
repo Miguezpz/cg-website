@@ -12,6 +12,7 @@ const { label } = Astro.props;
   {...waAttrs({ source: 'floating' })}
   aria-label={label}
   data-floating-wa
+  data-hidden
   class="fixed right-4 bottom-[calc(1rem+env(safe-area-inset-bottom))] z-30 inline-flex size-14 items-center justify-center rounded-full bg-whatsapp text-steel-950 shadow-[0_6px_20px_rgb(0_0_0/0.45)] transition-[opacity,translate,scale] duration-200 ease-out-expo active:scale-[0.97] data-hidden:pointer-events-none data-hidden:translate-y-[150%] data-hidden:opacity-0 data-hidden:duration-150"
 >
   <Icon name="whatsapp" class="size-7" />
@@ -27,6 +28,7 @@ const { label } = Astro.props;
 
   if (button && targets.length) {
     const visible = new Set<Element>();
+    let pulsed = false;
     const observer = new IntersectionObserver((entries) => {
       for (const entry of entries) {
         if (entry.isIntersecting) visible.add(entry.target);
@@ -35,6 +37,12 @@ const { label } = Astro.props;
       const hide = visible.size > 0;
       button.toggleAttribute('data-hidden', hide);
       button.toggleAttribute('inert', hide);
+      // La primera vez que aparece emite dos ondas (motion.css) y se detiene.
+      if (!hide && !pulsed) {
+        pulsed = true;
+        button.toggleAttribute('data-pulse', true);
+        setTimeout(() => button.removeAttribute('data-pulse'), 2400);
+      }
     });
     targets.forEach((target) => observer.observe(target));
   }

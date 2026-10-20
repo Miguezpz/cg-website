@@ -2,6 +2,7 @@
 import type { Result } from '../../data/types';
 import BeforeAfterSlider from '../BeforeAfterSlider.astro';
 import SectionHeading from '../ui/SectionHeading.astro';
+import SteelBar from '../ui/SteelBar.astro';
 
 interface Props {
   title: string;
@@ -19,14 +20,15 @@ const { title, intro, sliderLabel, before, after, results } = Astro.props;
   <section
     id="resultados"
     aria-labelledby="resultados-title"
-    class="border-t-[6px] border-steel-700 py-section"
+    class="relative border-t-[6px] border-transparent py-section"
   >
+    <SteelBar />
     <div class="mx-auto w-full max-w-content px-gutter">
       <SectionHeading id="resultados-title">{title}</SectionHeading>
       <p class="mt-4 max-w-prose text-concrete-400">{intro}</p>
       <ul class="mt-12 grid gap-12 md:grid-cols-2 md:gap-8">
         {results.map((result) => (
-          <li>
+          <li class="rise">
             <BeforeAfterSlider
               result={result}
               label={sliderLabel}

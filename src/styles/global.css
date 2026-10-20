@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import './motion.css';
 
 /* Archivo variable (wght 100–900, wdth 62–125), solo subset latino (RNF-05). */
 @font-face {
@@ -74,8 +75,30 @@
   --container-prose: 65ch;
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-strong: cubic-bezier(0.77, 0, 0.175, 1);
   --duration-fast: 160ms;
+  --duration-nav: 300ms;
+  --duration-enter: 520ms;
   --duration-draw: 900ms;
+  --duration-swing: 1600ms;
+
+  /* Ícono de WhatsApp que «suena» al pasar el puntero (botón primario). */
+  --animate-ring: ring 520ms var(--ease-out-expo);
+  @keyframes ring {
+    0%,
+    100% {
+      rotate: 0deg;
+    }
+    20% {
+      rotate: -14deg;
+    }
+    45% {
+      rotate: 10deg;
+    }
+    70% {
+      rotate: -5deg;
+    }
+  }
 
   --tap-min: 44px;
 }
@@ -174,5 +197,17 @@
       transition-duration: 0.01ms !important;
       scroll-behavior: auto !important;
     }
+  }
+}
+
+/*
+ * El botón flotante empieza oculto para no parpadear al cargar; su script lo
+ * muestra cuando corresponde. Sin JavaScript se queda visible (RNF-08).
+ */
+@media (scripting: none) {
+  [data-floating-wa][data-hidden] {
+    opacity: 1;
+    translate: none;
+    pointer-events: auto;
   }
 }

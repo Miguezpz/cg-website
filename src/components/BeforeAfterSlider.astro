@@ -68,9 +68,12 @@ const imageProps = {
 </div>
 
 <script>
-  for (const root of document.querySelectorAll<HTMLElement>('[data-compare]')) {
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const roots = document.querySelectorAll<HTMLElement>('[data-compare]');
+
+  roots.forEach((root, index) => {
     const range = root.querySelector<HTMLInputElement>('[data-compare-range]');
-    if (!range) continue;
+    if (!range) return;
     const before =
       root
         .querySelector('figure figcaption')
@@ -87,5 +90,40 @@ const imageProps = {
     root.toggleAttribute('data-enhanced', true);
     range.addEventListener('input', update);
     update();
-  }
+
+    // La primera vez que se ve, el corte hace un vaivén para mostrar que se
+    // puede arrastrar. Solo mueve la imagen: el valor del control no cambia.
+    if (reduceMotion || !('IntersectionObserver' in window)) return;
+    let nudge: Animation | undefined;
+    let touched = false;
+    const stop = () => {
+      touched = true;
+      nudge?.cancel();
+    };
+    range.addEventListener('pointerdown', stop, { once: true });
+    range.addEventListener('keydown', stop, { once: true });
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        observer.disconnect();
+        if (touched) return;
+        const at = `${range.value}%`;
+        nudge = root.animate(
+          [
+            { '--pos': at },
+            { '--pos': '64%' },
+            { '--pos': '38%' },
+            { '--pos': at },
+          ],
+          {
+            duration: 1600,
+            delay: 250 + index * 200,
+            easing: 'cubic-bezier(0.77, 0, 0.175, 1)',
+          },
+        );
+      },
+      { threshold: 0.6 },
+    );
+    observer.observe(root);
+  });
 </script>
