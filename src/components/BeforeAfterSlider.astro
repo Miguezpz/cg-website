@@ -17,7 +17,9 @@ const imageProps = {
 };
 ---
 
-<!-- Sin JS: las dos fotos lado a lado. Con JS: comparador con <input type="range">. -->
+<!-- Sin JS: las dos fotos lado a lado. Con JS: comparador. Solo se arrastra desde
+     la línea o el círculo del centro (el resto de la foto deja pasar el scroll en
+     móvil); el <input type="range"> queda para el teclado y los lectores. -->
 <div
   data-compare
   class="group/compare relative grid grid-cols-2 gap-1 outline-offset-4 outline-signal data-enhanced:block data-enhanced:gap-0 has-[[data-compare-range]:focus-visible]:outline-2"
@@ -39,9 +41,11 @@ const imageProps = {
   </figure>
   <div
     aria-hidden="true"
-    class="pointer-events-none absolute inset-y-0 left-[var(--pos,50%)] hidden w-1 -translate-x-1/2 bg-chalk group-data-enhanced/compare:block"
+    data-compare-handle
+    class="absolute inset-y-0 left-[var(--pos,50%)] z-10 hidden w-6 -translate-x-1/2 cursor-ew-resize touch-none group-data-enhanced/compare:block"
   >
-    <span class="absolute top-1/2 left-1/2 flex size-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-chalk text-steel-950">
+    <span class="pointer-events-none absolute inset-y-0 left-1/2 w-1 -translate-x-1/2 bg-chalk"></span>
+    <span class="absolute top-1/2 left-1/2 flex size-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-chalk text-steel-950 transition-[scale] duration-fast ease-out-expo group-data-dragging/compare:scale-110">
       <svg
         viewBox="0 0 24 24"
         class="size-5"
@@ -63,7 +67,7 @@ const imageProps = {
     data-compare-range
     aria-label={`${label}: ${result.name}`}
     aria-valuetext={`Mostrando 50% ${beforeLabel.toLowerCase()}`}
-    class="absolute inset-0 h-full w-full cursor-ew-resize appearance-none bg-transparent opacity-0 [&::-moz-range-thumb]:size-11 [&::-moz-range-thumb]:opacity-0 [&::-webkit-slider-thumb]:size-11 [&::-webkit-slider-thumb]:appearance-none"
+    class="pointer-events-none absolute inset-0 h-full w-full appearance-none bg-transparent opacity-0"
   />
 </div>
 
@@ -90,6 +94,32 @@ const imageProps = {
     root.toggleAttribute('data-enhanced', true);
     range.addEventListener('input', update);
     update();
+
+    // Arrastre solo desde el centro (línea o círculo), con Pointer Events.
+    const handle = root.querySelector<HTMLElement>('[data-compare-handle]');
+    const moveTo = (clientX: number) => {
+      const rect = root.getBoundingClientRect();
+      const value = Math.round(((clientX - rect.left) / rect.width) * 100);
+      range.value = String(Math.min(100, Math.max(0, value)));
+      update();
+    };
+    handle?.addEventListener('pointerdown', (event) => {
+      event.preventDefault();
+      handle.setPointerCapture(event.pointerId);
+      root.toggleAttribute('data-dragging', true);
+      range.dispatchEvent(new Event('pointerdown'));
+    });
+    handle?.addEventListener('pointermove', (event) => {
+      if (handle.hasPointerCapture(event.pointerId)) moveTo(event.clientX);
+    });
+    const release = (event: PointerEvent) => {
+      if (handle?.hasPointerCapture(event.pointerId)) {
+        handle.releasePointerCapture(event.pointerId);
+      }
+      root.removeAttribute('data-dragging');
+    };
+    handle?.addEventListener('pointerup', release);
+    handle?.addEventListener('pointercancel', release);
 
     // La primera vez que se ve, el corte hace un vaivén para mostrar que se
     // puede arrastrar. Solo mueve la imagen: el valor del control no cambia.
