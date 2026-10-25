@@ -1,17 +1,18 @@
 /*
  * Movimiento «Peso y control» (DESIGN.md · Movimiento).
- *
- * OJO: lo ligado al scroll usa propiedades sueltas (`animation-name`,
- * `animation-timeline`…) y sin `animation-duration` a propósito: si están todas,
- * el minificador las fusiona en el atajo `animation: … view()`, que ningún
- * navegador acepta, y la animación desaparece.
  * Nada aparece de la nada: las piezas suben desde detrás de una barra, las
  * barras de acero se trazan y la magnesia cae con la gravedad.
  *
  * - Todo vive dentro de `prefers-reduced-motion: no-preference`.
  * - Lo ligado al scroll va detrás de `@supports`: sin soporte, la página se ve
  *   completa y quieta.
- * - Solo se anima transform (translate/scale/rotate), clip-path y opacity.
+ * - Solo se anima transform (translate/scale/rotate), clip-path, opacity y el
+ *   trazo de los SVG.
+ *
+ * OJO: lo ligado al scroll usa propiedades sueltas (`animation-name`,
+ * `animation-timeline`…) y sin `animation-duration` a propósito: si están todas,
+ * el minificador las fusiona en el atajo `animation: … view()`, que ningún
+ * navegador acepta, y la animación desaparece.
  */
 
 /* Permite animar la posición del comparador antes/después con WAAPI. */
@@ -23,6 +24,22 @@
 
 .scroll-progress {
   display: none;
+}
+
+/* Nube de magnesia al tocar WhatsApp (la crea src/lib/chalk.ts). */
+.chalk-burst {
+  position: fixed;
+  z-index: 60;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+.chalk-burst span {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 9999px;
+  background: var(--color-chalk);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -121,19 +138,6 @@
       animation-timeline: view();
       animation-range: exit 0% exit 100%;
     }
-
-    /* Subrayado de gis que se dibuja con el scroll. */
-    .chalk-underline {
-      view-timeline-name: --underline;
-    }
-    .chalk-underline path {
-      stroke-dasharray: 1;
-      animation-name: chalk-draw;
-      animation-timing-function: linear;
-      animation-fill-mode: both;
-      animation-timeline: --underline;
-      animation-range: entry 100% cover 45%;
-    }
   }
 
   /* Barra de progreso de lectura bajo el header. */
@@ -149,6 +153,25 @@
   }
 
   /* 3. Microinteracciones. -------------------------------------------------- */
+
+  /* Gis a mano: [data-chalk] se traza al entrar en pantalla (src/lib/chalk.ts). */
+  [data-chalk-ready] .chalk-stroke {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+  [data-chalk-ready][data-drawn] .chalk-stroke {
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset var(--chalk-duration, 550ms)
+      var(--ease-out-expo);
+    transition-delay: calc(var(--chalk-delay, 0ms) + var(--i, 0) * 110ms);
+  }
+
+  /* Gis que se dibuja cada vez que aparece (palomitas, subrayado de la FAQ). */
+  .chalk-on-show .chalk-stroke {
+    stroke-dasharray: 1;
+    animation: chalk-draw 450ms var(--ease-out-expo) both;
+    animation-delay: calc(var(--i, 0) * 110ms);
+  }
 
   /* Indicador del menú de escritorio: se desliza entre secciones. */
   .nav-indicator {

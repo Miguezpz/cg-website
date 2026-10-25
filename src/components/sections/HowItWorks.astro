@@ -1,10 +1,11 @@
 ---
 import ChalkMark from '../ui/ChalkMark.astro';
-import SectionHeading from '../ui/SectionHeading.astro';
+import SectionHeading, { type HeadingMark } from '../ui/SectionHeading.astro';
 import SteelBar from '../ui/SteelBar.astro';
 
 interface Props {
   title: string;
+  mark?: HeadingMark;
   steps: readonly { title: string; text: string }[];
   method: {
     title: string;
@@ -14,7 +15,7 @@ interface Props {
   };
 }
 
-const { title, steps, method } = Astro.props;
+const { title, mark, steps, method } = Astro.props;
 const weekLabel = Object.fromEntries(
   method.weeks.map((w) => [w.kind, w.label]),
 );
@@ -27,7 +28,7 @@ const weekLabel = Object.fromEntries(
 >
   <SteelBar />
   <div class="mx-auto w-full max-w-content px-gutter">
-    <SectionHeading id="como-funciona-title">{title}</SectionHeading>
+    <SectionHeading id="como-funciona-title" title={title} mark={mark} />
 
     <ol class="mt-10 grid gap-8 md:grid-cols-3 md:gap-6">
       {steps.map((step, i) => (

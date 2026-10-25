@@ -1,22 +1,24 @@
 ---
 import type { Service } from '../../data/types';
 import Button from '../ui/Button.astro';
-import SectionHeading from '../ui/SectionHeading.astro';
+import ChalkMark from '../ui/ChalkMark.astro';
+import SectionHeading, { type HeadingMark } from '../ui/SectionHeading.astro';
 import SteelBar from '../ui/SteelBar.astro';
 import { waAttrs } from '../../lib/whatsapp';
 
 interface Props {
   title: string;
+  mark?: HeadingMark;
   intro: string;
   services: Service[];
 }
 
-const { title, intro, services } = Astro.props;
+const { title, mark, intro, services } = Astro.props;
 ---
 
 <section id="servicios" aria-labelledby="servicios-title" class="py-section">
   <div class="mx-auto w-full max-w-content px-gutter">
-    <SectionHeading id="servicios-title">{title}</SectionHeading>
+    <SectionHeading id="servicios-title" title={title} mark={mark} />
     <p class="mt-4 max-w-prose text-concrete-400">{intro}</p>
 
     <div class="mt-12 space-y-16 lg:space-y-20">
@@ -59,6 +61,14 @@ const { title, intro, services } = Astro.props;
                       <span class="stretch-label mt-1 block text-label text-concrete-400 uppercase">
                         {plan.detail}
                       </span>
+                      {plan.perWeek && (
+                        <ChalkMark
+                          variant="tally"
+                          count={plan.perWeek}
+                          draw
+                          class="mt-2 h-7 w-auto text-chalk [--chalk-delay:200ms]"
+                        />
+                      )}
                     </dt>
                     <dd class="stretch-display text-[2.5rem] leading-none font-black tabular-nums">
                       {plan.price}

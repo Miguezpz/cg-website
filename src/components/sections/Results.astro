@@ -1,11 +1,12 @@
 ---
 import type { Result } from '../../data/types';
 import BeforeAfterSlider from '../BeforeAfterSlider.astro';
-import SectionHeading from '../ui/SectionHeading.astro';
+import SectionHeading, { type HeadingMark } from '../ui/SectionHeading.astro';
 import SteelBar from '../ui/SteelBar.astro';
 
 interface Props {
   title: string;
+  mark?: HeadingMark;
   intro: string;
   sliderLabel: string;
   before: string;
@@ -13,7 +14,7 @@ interface Props {
   results: Result[];
 }
 
-const { title, intro, sliderLabel, before, after, results } = Astro.props;
+const { title, mark, intro, sliderLabel, before, after, results } = Astro.props;
 ---
 
 {results.length > 0 && (
@@ -24,7 +25,7 @@ const { title, intro, sliderLabel, before, after, results } = Astro.props;
   >
     <SteelBar />
     <div class="mx-auto w-full max-w-content px-gutter">
-      <SectionHeading id="resultados-title">{title}</SectionHeading>
+      <SectionHeading id="resultados-title" title={title} mark={mark} />
       <p class="mt-4 max-w-prose text-concrete-400">{intro}</p>
       <ul class="mt-12 grid gap-12 md:grid-cols-2 md:gap-8">
         {results.map((result) => (

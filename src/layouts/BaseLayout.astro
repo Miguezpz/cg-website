@@ -68,7 +68,9 @@ const ogImage = new URL(site.seo.ogImage, Astro.site);
     <slot name="footer" />
     <script>
       import { initAnalytics } from '../lib/analytics';
+      import { initChalk } from '../lib/chalk';
       initAnalytics();
+      initChalk();
     </script>
   </body>
 </html>

@@ -27,7 +27,8 @@ const { title, text, note, cta } = Astro.props;
       </h2>
       <ChalkMark
         variant="underline"
-        class="chalk-underline mt-2 h-4 w-64 text-chalk"
+        draw
+        class="mt-2 h-4 w-64 text-chalk [--chalk-duration:800ms]"
       />
       <p class="mt-6 max-w-prose text-lede">{text}</p>
       <Button

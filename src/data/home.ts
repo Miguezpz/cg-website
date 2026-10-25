@@ -30,6 +30,7 @@ export const hero = {
 
 export const about = {
   title: 'César Augusto',
+  mark: { word: 'Augusto', kind: 'underline' },
   role: 'Coach y fundador de Control Gravedad',
   story: [
     '[[PENDIENTE]] Historia del coach (máximo 120 palabras): cómo empezó en la calistenia, qué lo llevó a fundar Control Gravedad y por qué entrena con el método Carga & Descarga.',
@@ -46,6 +47,7 @@ export const about = {
 
 export const servicesSection = {
   title: 'Planes y precios',
+  mark: { word: 'precios', kind: 'circle' },
   intro:
     'Precios en pesos mexicanos. Se paga por transferencia SPEI; te enviamos los datos por WhatsApp.',
   ctaPrefix: 'Quiero',
@@ -53,6 +55,7 @@ export const servicesSection = {
 
 export const howItWorks = {
   title: 'Cómo funciona',
+  mark: { word: 'funciona', kind: 'underline' },
   steps: [
     {
       title: 'Escríbeme',
@@ -93,10 +96,14 @@ export const offer = {
   cta: 'Agenda tu clase muestra gratis',
 } as const;
 
-export const faqSection = { title: 'Preguntas frecuentes' } as const;
+export const faqSection = {
+  title: 'Preguntas frecuentes',
+  mark: { word: 'frecuentes', kind: 'double' },
+} as const;
 
 export const resultsSection = {
   title: 'Resultados',
+  mark: { word: 'Resultados', kind: 'double' },
   intro: 'Mismo encuadre, misma luz: arrastra para comparar.',
   sliderLabel: 'Comparar antes y después',
   before: 'Antes',
@@ -105,11 +112,13 @@ export const resultsSection = {
 
 export const testimonialsSection = {
   title: 'Lo que dicen los alumnos',
+  mark: { word: 'alumnos', kind: 'underline' },
   swipeHint: 'Desliza para ver más',
 } as const;
 
 export const contact = {
   title: 'Empieza hoy',
+  mark: { word: 'hoy', kind: 'circle' },
   text: 'Escríbeme por WhatsApp o déjame tus datos y te contacto.',
   whatsappCta: 'Agenda tu clase muestra gratis',
   floatingLabel: 'Escríbeme por WhatsApp',

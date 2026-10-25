@@ -2,16 +2,17 @@
 import type { Testimonial } from '../../data/types';
 import { Image } from 'astro:assets';
 import Icon from '../ui/Icon.astro';
-import SectionHeading from '../ui/SectionHeading.astro';
+import SectionHeading, { type HeadingMark } from '../ui/SectionHeading.astro';
 import SteelBar from '../ui/SteelBar.astro';
 
 interface Props {
   title: string;
+  mark?: HeadingMark;
   swipeHint: string;
   testimonials: Testimonial[];
 }
 
-const { title, swipeHint, testimonials } = Astro.props;
+const { title, mark, swipeHint, testimonials } = Astro.props;
 ---
 
 {testimonials.length > 0 && (
@@ -21,7 +22,7 @@ const { title, swipeHint, testimonials } = Astro.props;
     class="py-section"
   >
     <div class="mx-auto w-full max-w-content px-gutter">
-      <SectionHeading id="testimonios-title">{title}</SectionHeading>
+      <SectionHeading id="testimonios-title" title={title} mark={mark} />
       <p
         class="stretch-label mt-3 flex items-center gap-2 text-label text-concrete-400 uppercase md:hidden"
         aria-hidden="true"

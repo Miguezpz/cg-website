@@ -18,11 +18,13 @@ export const services: Service[] = [
       {
         name: 'Paquete I',
         price: '$360',
+        perWeek: 3,
         detail: '3 clases por semana · 30 días',
       },
       {
         name: 'Paquete II',
         price: '$500',
+        perWeek: 5,
         detail: '5 clases por semana · 30 días',
       },
     ],

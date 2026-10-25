@@ -1,7 +1,8 @@
 ---
 import Button from '../ui/Button.astro';
+import ChalkMark from '../ui/ChalkMark.astro';
 import Icon from '../ui/Icon.astro';
-import SectionHeading from '../ui/SectionHeading.astro';
+import SectionHeading, { type HeadingMark } from '../ui/SectionHeading.astro';
 import SteelBar from '../ui/SteelBar.astro';
 import type { SocialLink } from '../../data/types';
 import { waAttrs } from '../../lib/whatsapp';
@@ -23,6 +24,7 @@ interface FormCopy {
 
 interface Props {
   title: string;
+  mark?: HeadingMark;
   text: string;
   whatsappCta: string;
   social: SocialLink[];
@@ -35,6 +37,7 @@ interface Props {
 
 const {
   title,
+  mark,
   text,
   whatsappCta,
   social,
@@ -59,9 +62,12 @@ const errorText = 'mt-2 text-label text-error-on-dark';
   <SteelBar />
   <div class="mx-auto grid w-full max-w-content gap-12 px-gutter lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:gap-16">
     <div>
-      <SectionHeading id="contacto-title" class="text-display">
-        {title}
-      </SectionHeading>
+      <SectionHeading
+        id="contacto-title"
+        class="text-display"
+        title={title}
+        mark={mark}
+      />
       <p class="mt-5 max-w-[30ch] text-lede">{text}</p>
       <Button
         icon="whatsapp"
@@ -120,16 +126,22 @@ const errorText = 'mt-2 text-label text-error-on-dark';
           <label for="f-name" class={label}>
             {form.name.label} <span aria-hidden="true">*</span>
           </label>
-          <input
-            id="f-name"
-            name="name"
-            type="text"
-            autocomplete="name"
-            required
-            placeholder={form.name.placeholder}
-            aria-describedby="f-name-error"
-            class={field}
-          />
+          <div class="group/field relative" data-field>
+            <input
+              id="f-name"
+              name="name"
+              type="text"
+              autocomplete="name"
+              required
+              placeholder={form.name.placeholder}
+              aria-describedby="f-name-error"
+              class:list={[field, 'pr-11']}
+            />
+            <ChalkMark
+              variant="check"
+              class="chalk-on-show pointer-events-none absolute top-1/2 right-3 hidden size-6 -translate-y-1/2 text-chalk group-data-valid/field:block"
+            />
+          </div>
           <p id="f-name-error" class={errorText} data-error-for="name" hidden>
             {form.errors.required}
           </p>
@@ -138,18 +150,24 @@ const errorText = 'mt-2 text-label text-error-on-dark';
           <label for="f-phone" class={label}>
             {form.phone.label} <span aria-hidden="true">*</span>
           </label>
-          <input
-            id="f-phone"
-            name="phone"
-            type="tel"
-            inputmode="tel"
-            autocomplete="tel"
-            required
-            pattern="[0-9 +()-]{10,}"
-            placeholder={form.phone.placeholder}
-            aria-describedby="f-phone-error"
-            class={field}
-          />
+          <div class="group/field relative" data-field>
+            <input
+              id="f-phone"
+              name="phone"
+              type="tel"
+              inputmode="tel"
+              autocomplete="tel"
+              required
+              pattern="[0-9 +()-]{10,}"
+              placeholder={form.phone.placeholder}
+              aria-describedby="f-phone-error"
+              class:list={[field, 'pr-11']}
+            />
+            <ChalkMark
+              variant="check"
+              class="chalk-on-show pointer-events-none absolute top-1/2 right-3 hidden size-6 -translate-y-1/2 text-chalk group-data-valid/field:block"
+            />
+          </div>
           <p id="f-phone-error" class={errorText} data-error-for="phone" hidden>
             {form.errors.phone}
           </p>
@@ -158,20 +176,26 @@ const errorText = 'mt-2 text-label text-error-on-dark';
           <label for="f-goal" class={label}>
             {form.goal.label} <span aria-hidden="true">*</span>
           </label>
-          <select
-            id="f-goal"
-            name="goal"
-            required
-            aria-describedby="f-goal-error"
-            class={field}
-          >
-            <option value="" disabled selected>
-              {form.goal.placeholder}
-            </option>
-            {form.goal.options.map((option) => (
-              <option>{option}</option>
-            ))}
-          </select>
+          <div class="group/field relative" data-field>
+            <select
+              id="f-goal"
+              name="goal"
+              required
+              aria-describedby="f-goal-error"
+              class={field}
+            >
+              <option value="" disabled selected>
+                {form.goal.placeholder}
+              </option>
+              {form.goal.options.map((option) => (
+                <option>{option}</option>
+              ))}
+            </select>
+            <ChalkMark
+              variant="check"
+              class="chalk-on-show pointer-events-none absolute top-1/2 right-10 hidden size-6 -translate-y-1/2 text-chalk group-data-valid/field:block"
+            />
+          </div>
           <p id="f-goal-error" class={errorText} data-error-for="goal" hidden>
             {form.errors.goal}
           </p>
@@ -222,7 +246,15 @@ const errorText = 'mt-2 text-label text-error-on-dark';
         <span data-submit-label>{form.submit}</span>
       </Button>
       <div class="mt-4 min-h-6" aria-live="polite" role="status">
-        <p data-form-message hidden></p>
+        <div class="flex items-center gap-3">
+          <ChalkMark
+            variant="check"
+            hidden
+            data-success-check
+            class="chalk-on-show size-9 shrink-0 text-chalk"
+          />
+          <p data-form-message hidden></p>
+        </div>
         <a
           data-form-fallback
           hidden
@@ -260,6 +292,7 @@ const errorText = 'mt-2 text-label text-error-on-dark';
     const label = submit.querySelector<HTMLElement>('[data-submit-label]')!;
     const message = form.querySelector<HTMLElement>('[data-form-message]')!;
     const fallback = form.querySelector<HTMLElement>('[data-form-fallback]')!;
+    const successCheck = form.querySelector('[data-success-check]');
     const fields = ['name', 'phone', 'goal', 'privacy'].map(
       (name) => form.elements.namedItem(name) as HTMLInputElement,
     );
@@ -280,10 +313,23 @@ const errorText = 'mt-2 text-label text-error-on-dark';
       message.className =
         state === 'error' ? 'text-error-on-dark' : 'font-semibold text-chalk';
       fallback.hidden = state !== 'error';
+      successCheck?.toggleAttribute('hidden', state !== 'success');
+    };
+
+    // Palomita de gis en cada campo bien llenado.
+    const markValid = (field: HTMLInputElement) => {
+      field
+        .closest('[data-field]')
+        ?.toggleAttribute(
+          'data-valid',
+          field.value.trim() !== '' && field.checkValidity(),
+        );
     };
 
     for (const field of fields) {
+      field.addEventListener('input', () => markValid(field));
       field.addEventListener('change', () => {
+        markValid(field);
         if (field.getAttribute('aria-invalid') === 'true') {
           showError(field, !field.checkValidity());
         }
@@ -315,6 +361,9 @@ const errorText = 'mt-2 text-label text-error-on-dark';
         // Sin PII: solo el objetivo elegido (RNF-12).
         track('form_submit', { goal: String(data.get('goal') ?? '') });
         form.reset();
+        form
+          .querySelectorAll('[data-field]')
+          .forEach((el) => el.removeAttribute('data-valid'));
         setStatus('success');
       } catch {
         setStatus('error');

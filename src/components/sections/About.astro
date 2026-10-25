@@ -1,10 +1,11 @@
 ---
 import type { ImageMetadata } from 'astro';
 import { Image } from 'astro:assets';
-import SectionHeading from '../ui/SectionHeading.astro';
+import SectionHeading, { type HeadingMark } from '../ui/SectionHeading.astro';
 
 interface Props {
   title: string;
+  mark?: HeadingMark;
   role: string;
   story: readonly string[];
   credentials: readonly string[];
@@ -12,13 +13,13 @@ interface Props {
   photoAlt: string;
 }
 
-const { title, role, story, credentials, photo, photoAlt } = Astro.props;
+const { title, mark, role, story, credentials, photo, photoAlt } = Astro.props;
 ---
 
 <section
   id="sobre-mi"
   aria-labelledby="sobre-mi-title"
-  class="bg-concrete-100 py-section text-steel-950"
+  class="grain bg-concrete-100 py-section text-steel-950"
 >
   <div class="mx-auto grid w-full max-w-content gap-10 px-gutter md:grid-cols-[minmax(0,0.8fr)_minmax(0,1fr)] md:items-end lg:gap-16">
     <figure class="reveal-photo relative overflow-hidden border-b-[6px] border-steel-950">
@@ -32,7 +33,7 @@ const { title, role, story, credentials, photo, photoAlt } = Astro.props;
     </figure>
 
     <div>
-      <SectionHeading id="sobre-mi-title">{title}</SectionHeading>
+      <SectionHeading id="sobre-mi-title" title={title} mark={mark} />
       <p class="stretch-label mt-3 text-label font-semibold text-concrete-600 uppercase">
         {role}
       </p>

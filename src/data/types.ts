@@ -6,6 +6,8 @@ export interface Plan {
   name: string;
   price: string;
   detail: string;
+  /** Clases por semana: se dibujan como marcas de gis junto al plan. */
+  perWeek?: number;
 }
 
 export interface Service {
