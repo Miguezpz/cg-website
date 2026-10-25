@@ -19,6 +19,8 @@ interface Props {
   indicators: readonly { value: string; label: string }[];
   image: ImageMetadata;
   imageAlt: string;
+  /** Punto focal del recorte 4:5 (`object-position`). */
+  imagePosition?: string;
   imageDemo?: string;
 }
 
@@ -33,6 +35,7 @@ const {
   indicators,
   image,
   imageAlt,
+  imagePosition = '50% 50%',
   imageDemo,
 } = Astro.props;
 
@@ -142,9 +145,11 @@ const dust = Array.from({ length: 14 }, (_, i) => {
           loading="eager"
           fetchpriority="high"
           class="hero-parallax aspect-[4/5] w-full object-cover"
+          style={`object-position: ${imagePosition}`}
         />
+        {/* Arriba, para no tapar las manos en la barra. */}
         {imageDemo && (
-          <DemoNote text={imageDemo} class="absolute right-3 bottom-3 left-3" />
+          <DemoNote text={imageDemo} class="absolute top-3 right-3 left-3" />
         )}
       </figure>
 

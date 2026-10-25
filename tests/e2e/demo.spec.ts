@@ -14,11 +14,13 @@ test.describe('Contenido demo', () => {
     }
   });
 
-  test('la foto del Hero avisa que es de stock', async ({ page }) => {
+  test('la foto del Hero avisa que falta la versión en alta resolución', async ({
+    page,
+  }) => {
     await page.goto('/');
     await expect(
       page.locator('section[aria-labelledby="hero-title"] .demo-note'),
-    ).toContainText('foto real del coach');
+    ).toContainText('1600 × 2000');
   });
 
   test('las respuestas demo no se publican en los datos estructurados', async ({

@@ -25,11 +25,14 @@ export const hero = {
     { value: 'Carga & Descarga', label: 'método propio' },
     { value: 'Gravedad Zero', label: 'evento que organizamos' },
   ],
-  // [[PENDIENTE]] Foto real del coach en la barra (foto actual: stock, demo).
+  // [[PENDIENTE]] La foto actual mide 540 × 960 px: falta la versión en alta
+  // resolución (vertical, de al menos 1600 × 2000 px).
   imageAlt:
-    'Foto de ejemplo: atleta haciendo parada de manos sobre barras paralelas en un parque junto a la playa',
+    'Atleta sin camiseta y con gorra en hollow back sobre barras paralelas bajas, en un parque con árboles',
+  // El recorte 4:5 baja hasta las manos y las barras.
+  imagePosition: '50% 75%',
   imageDemo:
-    'Foto de stock. Falta: foto real del coach en la barra, vertical 4:5, de al menos 1600 × 2000 px.',
+    'Foto en baja resolución (540 × 960 px). Falta: la misma foto de al menos 1600 × 2000 px.',
 } as const;
 
 export const about = {
