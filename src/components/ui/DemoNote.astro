@@ -1,0 +1,27 @@
+---
+// Aviso visible de contenido demo: qué falta reunir o desarrollar para que sea
+// real. Se ve como nota de trabajo, no como parte del diseño. Desaparece al
+// quitar el campo `demo` del dato correspondiente en src/data/.
+interface Props {
+  text: string;
+  tone?: 'dark' | 'light';
+  class?: string;
+}
+
+const { text, tone = 'dark', class: className } = Astro.props;
+---
+
+<p
+  class:list={[
+    'demo-note flex items-start gap-2 border border-dashed px-3 py-2 text-label leading-snug',
+    tone === 'dark'
+      ? 'border-concrete-400 bg-steel-950 text-concrete-400'
+      : 'border-concrete-600 bg-concrete-100 text-concrete-600',
+    className,
+  ]}
+>
+  <span class="stretch-label shrink-0 font-bold tracking-[0.08em] uppercase">
+    Demo
+  </span>
+  <span>{text}</span>
+</p>

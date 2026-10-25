@@ -1,12 +1,14 @@
 // Aviso de privacidad (LFPDPPP). [[PENDIENTE]] Validación del texto por el cliente (RF-13).
 export const privacy = {
   title: 'Aviso de privacidad',
-  updated: 'Última actualización: [[PENDIENTE]] fecha de publicación',
+  // [[PENDIENTE]] Fecha de publicación y nombre del responsable.
+  updated: 'Última actualización: octubre de 2026 (borrador)',
+  demo: 'Borrador. Falta: nombre completo del responsable, fecha de publicación y validación del texto por el cliente.',
   sections: [
     {
       heading: 'Responsable',
       body: [
-        '[[PENDIENTE]] Nombre completo del responsable, que opera la escuela de calistenia Control Gravedad en Morelia, Michoacán, es responsable del tratamiento de tus datos personales.',
+        'El responsable (nombre por confirmar), que opera la escuela de calistenia Control Gravedad en Morelia, Michoacán, es responsable del tratamiento de tus datos personales.',
         'Correo de contacto: controlgravedad@gmail.com.',
       ],
     },

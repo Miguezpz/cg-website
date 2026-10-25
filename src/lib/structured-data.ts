@@ -1,5 +1,6 @@
 // JSON-LD: Person + Organization + Service por servicio + FAQPage (spec §9.4).
-// Sin dirección pública no se usa LocalBusiness (D-06). Lo provisional no se publica.
+// Sin dirección pública no se usa LocalBusiness (D-06). Lo provisional o demo
+// (borradores, respuestas `demo`, [[PENDIENTE]]) no se publica.
 import type { FaqItem, Service, Site } from '../data/types';
 
 const PENDING = '[[PENDIENTE]]';
@@ -58,7 +59,7 @@ export function buildStructuredData({
   };
 
   const serviceNodes = services
-    .filter((s) => isReal(s.name, s.audience))
+    .filter((s) => !s.draft && isReal(s.name, s.audience))
     .map((s) => ({
       '@type': 'Service',
       name: `${s.name} · ${site.name}`,
@@ -80,7 +81,7 @@ export function buildStructuredData({
   const faqPage = {
     '@type': 'FAQPage',
     mainEntity: faq
-      .filter((item) => isReal(item.q, item.a))
+      .filter((item) => !item.demo && isReal(item.q, item.a))
       .map((item) => ({
         '@type': 'Question',
         name: item.q,

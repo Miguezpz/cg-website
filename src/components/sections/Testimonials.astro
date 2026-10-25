@@ -1,6 +1,7 @@
 ---
 import type { Testimonial } from '../../data/types';
 import { Image } from 'astro:assets';
+import DemoNote from '../ui/DemoNote.astro';
 import Icon from '../ui/Icon.astro';
 import SectionHeading, { type HeadingMark } from '../ui/SectionHeading.astro';
 import SteelBar from '../ui/SteelBar.astro';
@@ -9,10 +10,11 @@ interface Props {
   title: string;
   mark?: HeadingMark;
   swipeHint: string;
+  demo?: string;
   testimonials: Testimonial[];
 }
 
-const { title, mark, swipeHint, testimonials } = Astro.props;
+const { title, mark, swipeHint, demo, testimonials } = Astro.props;
 ---
 
 {testimonials.length > 0 && (
@@ -23,6 +25,7 @@ const { title, mark, swipeHint, testimonials } = Astro.props;
   >
     <div class="mx-auto w-full max-w-content px-gutter">
       <SectionHeading id="testimonios-title" title={title} mark={mark} />
+      {demo && <DemoNote text={demo} class="mt-5 max-w-prose" />}
       <p
         class="stretch-label mt-3 flex items-center gap-2 text-label text-concrete-400 uppercase md:hidden"
         aria-hidden="true"

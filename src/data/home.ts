@@ -25,22 +25,28 @@ export const hero = {
     { value: 'Carga & Descarga', label: 'método propio' },
     { value: 'Gravedad Zero', label: 'evento que organizamos' },
   ],
+  // [[PENDIENTE]] Foto real del coach en la barra (foto actual: stock, demo).
   imageAlt:
-    '[[PENDIENTE]] Foto del coach haciendo un skill en la barra (foto provisional)',
+    'Foto de ejemplo: atleta haciendo parada de manos sobre barras paralelas en un parque junto a la playa',
+  imageDemo:
+    'Foto de stock. Falta: foto real del coach en la barra, vertical 4:5, de al menos 1600 × 2000 px.',
 } as const;
 
 export const about = {
   title: 'César Augusto',
   mark: { word: 'Augusto', kind: 'underline' },
   role: 'Coach y fundador de Control Gravedad',
+  // [[PENDIENTE]] Historia real del coach (máx. 120 palabras).
   story: [
-    '[[PENDIENTE]] Historia del coach (máximo 120 palabras): cómo empezó en la calistenia, qué lo llevó a fundar Control Gravedad y por qué entrena con el método Carga & Descarga.',
+    'La calistenia me enseñó que la fuerza se construye con técnica, paciencia y constancia. Fundé Control Gravedad para entrenar así a más personas en Morelia: con un método que alterna semanas de carga y de descarga para progresar sin lastimarte.',
   ],
+  demo: 'Historia de ejemplo. Falta: la historia real del coach (máx. 120 palabras), sus años de experiencia y sus certificaciones.',
   credentials: [
     'Creador del método Carga & Descarga',
     'Organizador de Gravedad Zero, evento de calistenia en Morelia (enero 2026)',
     'Calistenia, streetlifting, movilidad, skills y entrenamiento funcional',
-    '[[PENDIENTE]] Años de experiencia y certificaciones',
+    // [[PENDIENTE]] Años de experiencia y certificaciones reales.
+    'Años de experiencia y certificaciones: por confirmar',
   ],
   photoAlt:
     'César Augusto, coach de Control Gravedad, con camisa negra y lentes, de pie con las manos en los bolsillos',
@@ -128,6 +134,7 @@ export const testimonialsSection = {
   title: 'Lo que dicen los alumnos',
   mark: { word: 'alumnos', kind: 'underline' },
   swipeHint: 'Desliza para ver más',
+  demo: 'Testimonios de ejemplo. Falta: testimonios reales con nombre, logro, foto opcional y autorización de uso.',
 } as const;
 
 export const contact = {

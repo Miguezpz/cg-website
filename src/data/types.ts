@@ -18,6 +18,10 @@ export interface Service {
   plans: Plan[];
   /** Anotación a mano junto a los precios (informativa). */
   note?: string;
+  /** Aviso de contenido demo: qué falta reunir para que sea real. */
+  demo?: string;
+  /** Servicio aún sin definir: no se publica en los datos estructurados. */
+  draft?: boolean;
   /** Texto del botón de WhatsApp de la tarjeta. */
   cta: string;
   /** Lo que completa «Hola, vi tu página web y me interesa …». */
@@ -25,6 +29,8 @@ export interface Service {
 }
 
 export interface Result {
+  /** Aviso de contenido demo: qué falta reunir para que sea real. */
+  demo?: string;
   name: string;
   duration: string;
   achievement: string;
@@ -43,6 +49,8 @@ export interface Testimonial {
 export interface FaqItem {
   q: string;
   a: string;
+  /** Respuesta demo: qué falta confirmar. No se publica en el JSON-LD. */
+  demo?: string;
 }
 
 export interface SocialLink {

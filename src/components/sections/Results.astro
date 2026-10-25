@@ -1,6 +1,7 @@
 ---
 import type { Result } from '../../data/types';
 import BeforeAfterSlider from '../BeforeAfterSlider.astro';
+import DemoNote from '../ui/DemoNote.astro';
 import SectionHeading, { type HeadingMark } from '../ui/SectionHeading.astro';
 import SteelBar from '../ui/SteelBar.astro';
 
@@ -42,6 +43,7 @@ const { title, mark, intro, sliderLabel, before, after, results } = Astro.props;
             <p class="stretch-label mt-1 text-label text-concrete-400 uppercase">
               {result.name} · {result.duration}
             </p>
+            {result.demo && <DemoNote text={result.demo} class="mt-4" />}
           </li>
         ))}
       </ul>

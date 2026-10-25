@@ -1,6 +1,7 @@
 ---
 import type { FaqItem } from '../../data/types';
 import ChalkMark from '../ui/ChalkMark.astro';
+import DemoNote from '../ui/DemoNote.astro';
 import SectionHeading, { type HeadingMark } from '../ui/SectionHeading.astro';
 
 interface Props {
@@ -36,6 +37,9 @@ const { title, mark, items } = Astro.props;
             />
           </summary>
           <p class="faq-answer max-w-prose pb-6 text-concrete-600">{item.a}</p>
+          {item.demo && (
+            <DemoNote text={item.demo} tone="light" class="mb-6 max-w-prose" />
+          )}
         </details>
       ))}
     </div>

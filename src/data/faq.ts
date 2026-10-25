@@ -3,11 +3,15 @@ import type { FaqItem } from './types';
 export const faq: FaqItem[] = [
   {
     q: '¿Necesito experiencia o fuerza para empezar?',
-    a: '[[PENDIENTE]] Respuesta del coach para principiantes.',
+    // [[PENDIENTE]] Respuesta del coach.
+    a: 'No. Cada clase se adapta a tu nivel: empiezas con progresiones básicas y avanzas a tu ritmo con el método Carga & Descarga.',
+    demo: 'Respuesta de ejemplo. Confirmar con el coach.',
   },
   {
     q: '¿Dónde son las clases presenciales?',
-    a: '[[PENDIENTE]] Ubicación en Morelia.',
+    // [[PENDIENTE]] Ubicación real (D-06).
+    a: 'En un parque de Morelia con barras de calistenia. Te compartimos la ubicación exacta por WhatsApp.',
+    demo: 'Falta: la ubicación real y si se puede publicar la dirección.',
   },
   {
     q: '¿Cuánto cuesta?',
@@ -19,15 +23,21 @@ export const faq: FaqItem[] = [
   },
   {
     q: '¿Cuánto dura una clase?',
-    a: '[[PENDIENTE]] Duración de cada clase.',
+    // [[PENDIENTE]] Duración real.
+    a: 'Alrededor de 60 minutos, con calentamiento y movilidad incluidos.',
+    demo: 'Dato de ejemplo. Confirmar la duración real de cada clase.',
   },
   {
     q: '¿Necesito equipo?',
-    a: '[[PENDIENTE]] Qué debe llevar el alumno.',
+    // [[PENDIENTE]] Qué lleva el alumno.
+    a: 'Ropa cómoda, agua y toalla. El equipo de la clase lo pone el coach.',
+    demo: 'Respuesta de ejemplo. Confirmar qué debe llevar el alumno.',
   },
   {
     q: '¿Hay edad mínima?',
-    a: '[[PENDIENTE]] Edad mínima y restricciones.',
+    // [[PENDIENTE]] Edad mínima y restricciones de salud.
+    a: 'Se recomienda a partir de 15 años; menores con autorización de un adulto.',
+    demo: 'Dato de ejemplo. Confirmar edad mínima y restricciones de salud.',
   },
   {
     q: '¿Puedo entrenar si no vivo en Morelia?',

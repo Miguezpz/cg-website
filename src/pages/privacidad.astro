@@ -1,5 +1,6 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
+import DemoNote from '../components/ui/DemoNote.astro';
 import { privacy } from '../data/privacy';
 import { site } from '../data/site';
 ---
@@ -15,6 +16,7 @@ import { site } from '../data/site';
     <p class="stretch-label mt-3 text-label text-concrete-400 uppercase">
       {privacy.updated}
     </p>
+    {privacy.demo && <DemoNote text={privacy.demo} class="mt-6 max-w-prose" />}
     <div class="mt-10 max-w-prose space-y-10">
       {privacy.sections.map((section) => (
         <section>

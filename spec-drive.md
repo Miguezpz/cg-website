@@ -451,6 +451,8 @@ Cada tarea se cierra con el ciclo de §13 y su prueba e2e.
 
 **Gravedad Zero** ([@gravedadzero_mx](https://www.instagram.com/gravedadzero_mx)): evento de calistenia organizado por el coach en Morelia el 2026-01-10 (exhibición, aprendizaje y comunidad). No hay ediciones próximas. Se usa como credencial en RF-03, no como evento.
 
+**Contenido demo (2026-10-24, a pedido del usuario):** lo que falta se rellenó con texto e imágenes de ejemplo. Cada pieza muestra un aviso visible «Demo» (`DemoNote`) con lo que hay que reunir o desarrollar. Las fotos son de stock CC0/dominio público (`src/assets/demo/CREDITOS.md`). No se inventaron precios, certificaciones ni años de experiencia. El contenido demo no se publica en el JSON-LD, y los `[[PENDIENTE]]` siguen en comentarios de `src/data/` para que `check:content` bloquee el lanzamiento hasta tener lo real.
+
 **Pendientes de T0.0**
 - [ ] [[PENDIENTE]] Número de participantes de Gravedad Zero (el usuario lo consulta con el coach).
 - [x] Nombre del coach en el sitio: **César Augusto** (T1.1).
@@ -538,3 +540,4 @@ Leyenda: 🔴 bloquea el inicio · 🟠 bloquea el diseño (T1.2) · 🟢 bloque
 | v0.7 | 2026-10-19 | Fases 2–3 y T4.1–T4.3 completas; `main` publicada en producción con contenido provisional (a petición del usuario); pendientes: contenido real (T4.5), Web3Forms, GA4 y pruebas en dispositivos (T4.4) |
 | v0.8 | 2026-10-19 | T3.6: sistema de movimiento «Peso y control» (reemplaza la regla de un solo momento propio de `DESIGN.md`) |
 | v0.9 | 2026-10-24 | T3.7–T3.9: tres olas de movimiento y gis (marcas por semana, títulos marcados, nube de magnesia, línea entre pasos, ciclo interactivo, cinta de disciplinas, View Transitions, título con gravedad, foto con física, anotaciones en Kalam) |
+| v0.9.1 | 2026-10-24 | Contenido e imágenes demo con aviso visible de lo que falta (sin datos comerciales inventados); `[[PENDIENTE]]` conservados en comentarios |

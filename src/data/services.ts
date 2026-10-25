@@ -11,7 +11,8 @@ export const services: Service[] = [
       'Calistenia, streetlifting, movilidad, skills y funcional',
       'Método Carga & Descarga: semanas de fuerza y semanas de técnica y recuperación',
       'Todos los entrenamientos los imparte un coach capacitado',
-      'Horarios y ubicación: [[PENDIENTE]]',
+      // [[PENDIENTE]] Horarios y ubicación reales.
+      'Horario de ejemplo: lunes a viernes 7:00 y 19:00 · sábados 9:00',
     ],
     plans: [
       { name: 'Clase individual', price: '$60', detail: '1 clase' },
@@ -29,6 +30,7 @@ export const services: Service[] = [
       },
     ],
     note: 'los paquetes duran 30 días',
+    demo: 'Horario de ejemplo. Falta: horarios reales y el lugar en Morelia (¿se puede publicar la dirección?).',
     cta: 'Quiero entrenar en Morelia',
     waInterest: 'las clases presenciales en Morelia',
   },
@@ -52,8 +54,16 @@ export const services: Service[] = [
   {
     id: 'talleres',
     name: 'Talleres',
-    audience: '[[PENDIENTE]] Temas, frecuencia y a quién van dirigidos.',
-    includes: ['[[PENDIENTE]]'],
+    // [[PENDIENTE]] Talleres reales: temas, fechas, duración y precio.
+    audience:
+      'Sesiones especiales para dominar un skill concreto, en grupos reducidos y por nivel.',
+    includes: [
+      'Taller de parada de manos (ejemplo)',
+      'Taller de muscle-up (ejemplo)',
+      'Taller de movilidad para hombros y cadera (ejemplo)',
+    ],
+    demo: 'Talleres de ejemplo. Falta: temas reales, fechas, duración y precio.',
+    draft: true,
     // [[PENDIENTE]] Precio de los talleres; sin precio real no se muestra la fila.
     plans: [],
     cta: 'Quiero info de talleres',

@@ -4,6 +4,7 @@ import { Picture } from 'astro:assets';
 import Button from '../ui/Button.astro';
 import ChalkMark from '../ui/ChalkMark.astro';
 import ChalkNote from '../ui/ChalkNote.astro';
+import DemoNote from '../ui/DemoNote.astro';
 import Icon from '../ui/Icon.astro';
 import { waAttrs } from '../../lib/whatsapp';
 
@@ -18,6 +19,7 @@ interface Props {
   indicators: readonly { value: string; label: string }[];
   image: ImageMetadata;
   imageAlt: string;
+  imageDemo?: string;
 }
 
 const {
@@ -31,6 +33,7 @@ const {
   indicators,
   image,
   imageAlt,
+  imageDemo,
 } = Astro.props;
 
 // Partículas de magnesia que se sueltan de las marcas de agarre al cargar
@@ -143,6 +146,9 @@ const dust = Array.from({ length: 14 }, (_, i) => {
           fetchpriority="high"
           class="hero-parallax aspect-[4/5] w-full object-cover"
         />
+        {imageDemo && (
+          <DemoNote text={imageDemo} class="absolute right-3 bottom-3 left-3" />
+        )}
       </figure>
 
       <ul
