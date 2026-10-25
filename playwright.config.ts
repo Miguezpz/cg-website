@@ -1,6 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const PORT = 4321;
+// Puerto propio: no choca con `npm run dev` (4321), que agrega la barra de Astro.
+const PORT = 4400;
 
 export default defineConfig({
   testDir: 'tests/e2e',

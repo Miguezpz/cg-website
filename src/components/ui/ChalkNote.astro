@@ -1,0 +1,35 @@
+---
+// Anotación a mano en gis (Kalam), siempre informativa: una flecha que señala
+// algo y una nota corta. Se dibuja al entrar en pantalla (src/lib/chalk.ts):
+// primero la flecha y luego el texto. Es texto real: los lectores lo leen.
+// La letra a mano (Kalam) se aplica al acercarse a la pantalla (global.css).
+import ChalkMark from './ChalkMark.astro';
+
+interface Props {
+  text: string;
+  arrow: 'up' | 'down' | 'left' | 'right';
+  class?: string;
+}
+
+const { text, arrow, class: className } = Astro.props;
+
+const layout = {
+  up: 'flex-col items-start',
+  down: 'flex-col-reverse items-start',
+  left: 'flex-row items-center',
+  right: 'flex-row-reverse items-center',
+}[arrow];
+const arrowSize = arrow === 'up' || arrow === 'down' ? 'size-9' : 'h-8 w-12';
+---
+
+<p
+  data-chalk
+  class:list={[
+    'chalk-note flex -rotate-2 gap-1 text-[1.3rem] leading-tight',
+    layout,
+    className,
+  ]}
+>
+  <ChalkMark variant={`arrow-${arrow}`} class={`shrink-0 ${arrowSize}`} />
+  <span class="chalk-write">{text}</span>
+</p>

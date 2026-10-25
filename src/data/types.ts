@@ -16,6 +16,8 @@ export interface Service {
   audience: string;
   includes: string[];
   plans: Plan[];
+  /** Anotación a mano junto a los precios (informativa). */
+  note?: string;
   /** Texto del botón de WhatsApp de la tarjeta. */
   cta: string;
   /** Lo que completa «Hola, vi tu página web y me interesa …». */

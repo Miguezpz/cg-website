@@ -45,6 +45,8 @@ Una sola familia, **Archivo Variable** (Fontsource, subset latino, `font-display
 
 Las cifras de precios usan `tabular-nums`.
 
+**Letra a mano (segunda familia, RNF-05):** **Kalam 400**, recortada a los caracteres del español (14 KB, `src/assets/fonts/kalam-es-400.woff2`). Solo se usa en las anotaciones de gis (`ChalkNote`, token `--font-hand`), siempre **informativas**: nunca afirmaciones nuevas. Se aplica cuando la nota está a una pantalla de distancia (`[data-near]`), para que no compita con el LCP; sin JS se aplica desde el inicio. Para regenerarla: `pyftsubset kalam-latin-400-normal.woff2 --flavor=woff2 --unicodes="U+0020-007E,U+00A0-00A1,U+00B7,U+00BF,U+00C1,U+00C9,U+00CD,U+00D1,U+00D3,U+00D7,U+00DA,U+00DC,U+00E1,U+00E9,U+00ED,U+00F1,U+00F3,U+00FA,U+00FC,U+2013-2014,U+2018-2019,U+201C-201D,U+2026,U+2192"`.
+
 ## Material y forma
 
 - **Esquinas rectas** (`radius-none`). Los campos de formulario llevan `radius-input` (2 px).
@@ -91,6 +93,29 @@ Las cifras de precios usan `tabular-nums`.
 - `.hero-parallax` / `.hero-lift`: al salir de pantalla, la foto del Hero baja y el título se eleva.
 - `.chalk-underline`: el subrayado de gis de la Oferta se dibuja con el scroll.
 - `.scroll-progress`: una barra de gis de 2 px bajo el header indica cuánto llevas de página.
+
+**Gis vivo** (`src/lib/chalk.ts` + `ChalkMark`, 2026-10-24):
+
+- **Trazos a mano:** los SVG con `[data-chalk]` se dibujan la primera vez que entran en pantalla, trazo por trazo (110 ms de separación). Variantes: subrayado, doble subrayado, círculo, palomita, marcas de conteo y flechas.
+- **Títulos marcados:** cada sección marca una palabra con un trazo distinto (círculo en «precios» y «hoy», subrayado en «Augusto», «funciona» y «alumnos», doble en «Resultados» y «frecuentes»). El trazo usa el color del título (gis sobre acero, carbón sobre concreto).
+- **Clases por semana:** los paquetes muestran sus clases semanales como marcas de conteo (Paquete I `|||`, Paquete II `||||/`).
+- **Nube de magnesia:** al tocar cualquier enlace de WhatsApp saltan 12 partículas desde el punto exacto y caen (WAAPI, < 1.2 s). Con teclado no hay nube.
+- **Palomitas:** cada campo bien llenado y el envío exitoso reciben una palomita de gis; la pregunta abierta de la FAQ se subraya (`.chalk-on-show`).
+- **Anotaciones a mano** (`ChalkNote`): primero se dibuja la flecha y luego el texto «se escribe» de izquierda a derecha.
+- **Grano:** textura estática de pizarrón/concreto detrás del contenido (`--grain`, utilidad `grain`). No se mueve ni toca el contraste.
+- ⚠️ Sin `vector-effect: non-scaling-stroke` en trazos animados: con él, `pathLength` deja de normalizar y la línea queda cortada al estirarse. Y los SVG con posición absoluta necesitan ancho y alto explícitos: con solo `left`/`right` toman el ancho de su `viewBox`.
+
+**Contar el método** (2026-10-24):
+
+- **Línea entre pasos:** una línea de gis une 1 → 2 → 3 y avanza con el scroll (vertical en móvil, horizontal con flecha en escritorio).
+- **Ciclo interactivo:** cada semana es un radio nativo. Al elegirla, las demás se atenúan (solo lo decorativo) y se resalta su enfoque, con `:has()`, sin JS.
+- **Cinta de disciplinas:** dos filas en sentidos opuestos que se desplazan **solo** con el scroll (no es un bucle automático).
+- **Cambio de página:** View Transitions entre documentos (240 ms); el header persiste (`view-transition-name: site-header`).
+
+**Firma del Hero** (`src/lib/hero-physics.ts`, solo con puntero fino):
+
+- **El título siente la gravedad:** al pasar el puntero, las letras cercanas se hunden (hasta 0.14em) y se inclinan como una cuerda; vuelven con un resorte. Se parten en letras al primer contacto, con `aria-label` en el `h1`.
+- **La foto colgante responde:** en escritorio se balancea hacia el puntero (±2.2°) y, al salir, oscila como un péndulo hasta detenerse.
 
 **Momentos con JS** (IntersectionObserver o WAAPI, una sola vez):
 

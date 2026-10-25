@@ -2,6 +2,7 @@
 import type { Service } from '../../data/types';
 import Button from '../ui/Button.astro';
 import ChalkMark from '../ui/ChalkMark.astro';
+import ChalkNote from '../ui/ChalkNote.astro';
 import SectionHeading, { type HeadingMark } from '../ui/SectionHeading.astro';
 import SteelBar from '../ui/SteelBar.astro';
 import { waAttrs } from '../../lib/whatsapp';
@@ -76,6 +77,9 @@ const { title, mark, intro, services } = Astro.props;
                   </div>
                 ))}
               </dl>
+            )}
+            {service.note && (
+              <ChalkNote text={service.note} arrow="up" class="mt-2 self-end" />
             )}
             <Button
               icon="whatsapp"

@@ -16,6 +16,20 @@
     U+2215, U+FEFF, U+FFFD;
 }
 
+/* Kalam 400 recortada a los caracteres del español (14 KB): letra a mano de
+   las anotaciones de gis. Se regenera con pyftsubset (ver DESIGN.md). */
+@font-face {
+  font-family: 'Kalam';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url('../assets/fonts/kalam-es-400.woff2') format('woff2');
+  unicode-range:
+    U+0020-007E, U+00A0-00A1, U+00B7, U+00BF, U+00C1, U+00C9, U+00CD, U+00D1,
+    U+00D3, U+00D7, U+00DA, U+00DC, U+00E1, U+00E9, U+00ED, U+00F1, U+00F3,
+    U+00FA, U+00FC, U+2013-2014, U+2018-2019, U+201C-201D, U+2026, U+2192;
+}
+
 /*
  * Tokens de DESIGN.md («Gis y acero»). La paleta es provisional (spec D-10):
  * cambiarla es editar solo este bloque.
@@ -42,6 +56,7 @@
   --font-sans:
     'Archivo Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
     Roboto, sans-serif;
+  --font-hand: 'Kalam', 'Segoe Print', cursive;
 
   /* Escala tipográfica (móvil → escritorio). */
   --text-display: clamp(3.5rem, 15vw, 6rem);
@@ -220,5 +235,19 @@
     opacity: 1;
     translate: none;
     pointer-events: auto;
+  }
+}
+
+/*
+ * Letra a mano de las anotaciones: se aplica cuando la nota está a una pantalla
+ * de distancia (src/lib/chalk.ts pone [data-near]). Así Kalam no compite con el
+ * LCP, y el cambio de fuente ocurre fuera de pantalla (sin CLS).
+ */
+.chalk-note[data-near] {
+  font-family: var(--font-hand);
+}
+@media (scripting: none) {
+  .chalk-note {
+    font-family: var(--font-hand);
   }
 }

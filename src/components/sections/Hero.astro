@@ -3,6 +3,7 @@ import type { ImageMetadata } from 'astro';
 import { Picture } from 'astro:assets';
 import Button from '../ui/Button.astro';
 import ChalkMark from '../ui/ChalkMark.astro';
+import ChalkNote from '../ui/ChalkNote.astro';
 import Icon from '../ui/Icon.astro';
 import { waAttrs } from '../../lib/whatsapp';
 
@@ -11,6 +12,7 @@ interface Props {
   lede: string;
   where: string;
   primaryCta: string;
+  note: string;
   secondaryCta: { label: string; href: string };
   onlineLink: { question: string; label: string; href: string };
   indicators: readonly { value: string; label: string }[];
@@ -23,6 +25,7 @@ const {
   lede,
   where,
   primaryCta,
+  note,
   secondaryCta,
   onlineLink,
   indicators,
@@ -108,6 +111,11 @@ const dust = Array.from({ length: 14 }, (_, i) => {
             {secondaryCta.label}
           </Button>
         </div>
+        <ChalkNote
+          text={note}
+          arrow="up"
+          class="mt-1 ml-10 hidden [--chalk-delay:900ms] lg:flex"
+        />
         <a
           href={onlineLink.href}
           class="hero-rise group mt-3 inline-block py-2.5 text-concrete-400 transition-colors duration-fast hover:text-chalk"
@@ -151,3 +159,8 @@ const dust = Array.from({ length: 14 }, (_, i) => {
     </div>
   </div>
 </section>
+
+<script>
+  import { initHeroPhysics } from '../../lib/hero-physics';
+  initHeroPhysics();
+</script>

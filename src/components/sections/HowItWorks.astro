@@ -1,5 +1,6 @@
 ---
 import ChalkMark from '../ui/ChalkMark.astro';
+import ChalkNote from '../ui/ChalkNote.astro';
 import SectionHeading, { type HeadingMark } from '../ui/SectionHeading.astro';
 import SteelBar from '../ui/SteelBar.astro';
 
@@ -13,6 +14,7 @@ interface Props {
     weeks: readonly { kind: string; label: string; text: string }[];
     cycle: readonly ('carga' | 'descarga')[];
     legend: string;
+    hint: string;
   };
 }
 
@@ -111,7 +113,8 @@ const weekLabel = Object.fromEntries(
       <p class="mt-3 max-w-prose text-lede">{method.text}</p>
 
       <!-- Ciclo interactivo: radios nativos + :has(), funciona sin JS. -->
-      <fieldset class="mt-10">
+      <ChalkNote text={method.hint} arrow="down" class="mt-8" />
+      <fieldset class="mt-2">
         <legend class="sr-only">{method.legend}</legend>
         <ol
           class="relative grid grid-cols-4 gap-2 sm:gap-4"

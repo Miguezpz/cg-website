@@ -13,6 +13,7 @@ export const hero = {
   lede: 'Formamos deportistas hábiles y conscientes.',
   where: 'Calistenia en Morelia y online',
   primaryCta: 'Agenda tu clase muestra gratis',
+  note: 'sin costo · sujeta a cupo',
   secondaryCta: { label: 'Ver planes y precios', href: '#servicios' },
   onlineLink: {
     question: '¿No estás en Morelia?',
@@ -87,6 +88,7 @@ export const howItWorks = {
     ],
     cycle: ['carga', 'descarga', 'carga', 'descarga'] as const,
     legend: 'Elige una semana para ver su enfoque',
+    hint: 'toca una semana para ver su enfoque',
   },
 } as const;
 
@@ -159,6 +161,7 @@ export const contact = {
       link: 'aviso de privacidad',
       after: '.',
     },
+    note: 'solo uso tus datos para contactarte',
     submit: 'Enviar',
     sending: 'Enviando…',
     success: '¡Listo! Te escribo pronto por WhatsApp.',

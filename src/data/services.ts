@@ -28,6 +28,7 @@ export const services: Service[] = [
         detail: '5 clases por semana · 30 días',
       },
     ],
+    note: 'los paquetes duran 30 días',
     cta: 'Quiero entrenar en Morelia',
     waInterest: 'las clases presenciales en Morelia',
   },

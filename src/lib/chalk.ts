@@ -7,9 +7,31 @@ const reduceMotion = () =>
   matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 export function initChalk(): void {
+  initNear();
   if (reduceMotion()) return;
   initDraw();
   document.addEventListener('pointerdown', onPointerDown, { passive: true });
+}
+
+/** Marca las notas a mano cuando están a una pantalla de distancia. */
+function initNear(): void {
+  const notes = document.querySelectorAll<Element>('.chalk-note');
+  if (!notes.length) return;
+  if (!('IntersectionObserver' in window)) {
+    notes.forEach((note) => note.setAttribute('data-near', ''));
+    return;
+  }
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        entry.target.setAttribute('data-near', '');
+        observer.unobserve(entry.target);
+      }
+    },
+    { rootMargin: '100% 0px' },
+  );
+  notes.forEach((note) => observer.observe(note));
 }
 
 function initDraw(): void {

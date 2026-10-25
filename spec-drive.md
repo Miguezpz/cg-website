@@ -8,7 +8,7 @@
 | Coach | **César Augusto** (en redes: "Chesare Mozart") |
 | Modalidad | **Presencial en Morelia, Michoacán** y **online** |
 | Branch | `nuevo-sitio` |
-| Versión | v0.8 (borrador) |
+| Versión | v0.9 (borrador) |
 | Punto de partida | Proyecto desde cero. No se reutiliza código, estilos ni estructura del branch `main` |
 | Idioma del sitio | Español (`es-MX`) |
 | Hosting | **Vercel, plan Hobby (gratuito)**, en un subdominio `*.vercel.app` (sin dominio propio). Reemplaza al sitio actual en `*.netlify.app` (ver §11.1) |
@@ -373,6 +373,7 @@ Cada tarea se cierra con el ciclo de §13 y su prueba e2e.
 - **T3.6 · ✅ Movimiento «Peso y control»** (pedido del usuario, 2026-10-19: que la página se sienta viva) — RNF-01/02/07. Entrada del Hero, revelados ligados al scroll con CSS, barras de acero que se trazan, magnesia que cae, indicador de sección, FAQ animadas y microinteracciones. Detalle en `DESIGN.md` · Movimiento. **Listo cuando** Lighthouse sigue ≥ 95 y con movimiento reducido no hay animaciones. *(Lighthouse: 99/100/100/100, LCP 1.9 s, CLS 0; 178 e2e en verde.)*
 - **T3.7 · ✅ Ola 1 · Más gis** (pedido del usuario, 2026-10-24): clases por semana dibujadas como marcas de gis en los paquetes, trazos de gis en los títulos, nube de magnesia al tocar WhatsApp, palomitas de gis en el formulario y la FAQ, y grano de pizarrón en los fondos. Motor en `src/lib/chalk.ts`.
 - **T3.8 · ✅ Ola 2 · Contar el método** (2026-10-24): línea de gis entre los 3 pasos ligada al scroll, ciclo Carga & Descarga interactivo (radios nativos + `:has()`, funciona sin JS), cinta de disciplinas que avanza solo con el scroll y transición entre páginas (View Transitions, el header persiste).
+- **T3.9 · ✅ Ola 3 · Firma** (2026-10-24): el título del Hero «siente la gravedad» bajo el puntero, la foto colgante responde con física de péndulo y anotaciones a mano informativas en Kalam recortada (14 KB; segunda familia de RNF-05), que se carga al acercarse para no afectar el LCP. *(Lighthouse: 99/100/100/100, LCP 1.88 s, CLS 0; 239 e2e en verde; JS propio ≈ 4.4 KB gzip.)*
 
 ### Fase 4 — QA y lanzamiento (→ M5)
 - **T4.1 · ✅ Completar la suite e2e** (sin JS, reduced motion, axe, WebKit) — RNF-06–08, RNF-11.
@@ -536,3 +537,4 @@ Leyenda: 🔴 bloquea el inicio · 🟠 bloquea el diseño (T1.2) · 🟢 bloque
 | v0.6.1 | 2026-10-19 | D-05 resuelta: `main` adelantada a `nuevo-sitio` (builds de Netlify ya desactivados); el desarrollo sigue en `nuevo-sitio` |
 | v0.7 | 2026-10-19 | Fases 2–3 y T4.1–T4.3 completas; `main` publicada en producción con contenido provisional (a petición del usuario); pendientes: contenido real (T4.5), Web3Forms, GA4 y pruebas en dispositivos (T4.4) |
 | v0.8 | 2026-10-19 | T3.6: sistema de movimiento «Peso y control» (reemplaza la regla de un solo momento propio de `DESIGN.md`) |
+| v0.9 | 2026-10-24 | T3.7–T3.9: tres olas de movimiento y gis (marcas por semana, títulos marcados, nube de magnesia, línea entre pasos, ciclo interactivo, cinta de disciplinas, View Transitions, título con gravedad, foto con física, anotaciones en Kalam) |
