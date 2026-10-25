@@ -44,8 +44,10 @@ const tally = Array.from({ length: count }, (_, i) => {
   return `M${x} 8 Q${x + 2} 30 ${x - 1} 52`;
 });
 
-// Trazos a mano alzada: viewBox, caminos (en orden de dibujo) y si el trazo
-// conserva su grosor aunque el SVG se estire.
+// Trazos a mano alzada: viewBox, caminos (en orden de dibujo) y si el SVG se
+// estira para ocupar su caja. Sin `vector-effect: non-scaling-stroke` a
+// propósito: con él, `pathLength` deja de normalizar el trazo y la línea se
+// dibuja cortada cuando el SVG se estira.
 const strokes: Record<
   Exclude<Variant, 'hands'>,
   { viewBox: string; paths: string[]; stretch?: boolean; width?: number }
@@ -54,11 +56,13 @@ const strokes: Record<
     viewBox: '0 0 300 20',
     paths: ['M4 13 C60 6 140 15 210 9 S280 8 296 11'],
     stretch: true,
+    width: 4.5,
   },
   double: {
     viewBox: '0 0 300 30',
     paths: ['M6 10 C80 4 200 13 294 7', 'M22 23 C100 17 212 25 286 19'],
     stretch: true,
+    width: 4.5,
   },
   circle: {
     viewBox: '0 0 220 90',
@@ -66,6 +70,7 @@ const strokes: Record<
       'M42 15 C92 1 186 5 209 36 C222 62 160 86 104 84 C44 82 6 64 12 40 C18 20 66 8 132 10',
     ],
     stretch: true,
+    width: 3.5,
   },
   check: { viewBox: '0 0 40 40', paths: ['M6 22 L16 32 L35 7'], width: 4 },
   tally: { viewBox: `0 0 ${Math.ceil(count / 5) * 70} 60`, paths: tally },
@@ -128,19 +133,13 @@ const stroke = variant === 'hands' ? undefined : strokes[variant];
     <g
       fill="none"
       stroke="currentColor"
-      stroke-width={stroke.stretch ? 3 : (stroke.width ?? 5)}
+      stroke-width={stroke.width ?? 5}
       stroke-linecap="round"
       stroke-linejoin="round"
       filter="url(#chalk)"
     >
       {stroke.paths.map((d, i) => (
-        <path
-          d={d}
-          pathLength="1"
-          class="chalk-stroke"
-          style={`--i:${i}`}
-          vector-effect={stroke.stretch ? 'non-scaling-stroke' : undefined}
-        />
+        <path d={d} pathLength="1" class="chalk-stroke" style={`--i:${i}`} />
       ))}
     </g>
   </svg>

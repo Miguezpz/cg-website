@@ -140,6 +140,74 @@
     }
   }
 
+  @supports (animation-timeline: view()) {
+    /* Pasos de «Cómo funciona»: la línea de gis avanza con el scroll. */
+    .steps > li {
+      view-timeline-name: --step;
+    }
+    .step-link path,
+    .step-arrow path {
+      stroke-dasharray: 1;
+      animation-name: chalk-draw;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: --step;
+      animation-range: entry 80% cover 55%;
+    }
+    /* En escritorio los pasos están en fila: se encadenan sobre la misma lista. */
+    @media (min-width: 48rem) {
+      .steps {
+        view-timeline-name: --steps;
+      }
+      .step-link path,
+      .step-arrow path {
+        animation-timeline: --steps;
+      }
+      .steps > li:nth-child(1) .step-link path {
+        animation-range: entry 70% cover 38%;
+      }
+      .steps > li:nth-child(1) .step-arrow path {
+        animation-range: cover 37% cover 41%;
+      }
+      .steps > li:nth-child(2) .step-link path {
+        animation-range: cover 41% cover 52%;
+      }
+      .steps > li:nth-child(2) .step-arrow path {
+        animation-range: cover 51% cover 55%;
+      }
+    }
+
+    /* Cinta de disciplinas: se desplaza solo con el scroll, en sentidos opuestos. */
+    .tape-section {
+      view-timeline-name: --tape;
+    }
+    .tape-forward,
+    .tape-back {
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: --tape;
+      animation-range: cover;
+    }
+    .tape-forward {
+      animation-name: tape-forward;
+    }
+    .tape-back {
+      animation-name: tape-back;
+    }
+  }
+
+  /* Cambio de página suave (inicio ↔ privacidad, gracias, 404); el header se queda. */
+  @view-transition {
+    navigation: auto;
+  }
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 240ms;
+  }
+  [data-header] {
+    view-transition-name: site-header;
+  }
+
   /* Barra de progreso de lectura bajo el header. */
   @supports (animation-timeline: scroll()) {
     .scroll-progress {
@@ -365,6 +433,24 @@
   }
   to {
     stroke-dashoffset: 0;
+  }
+}
+
+@keyframes tape-forward {
+  from {
+    translate: 0 0;
+  }
+  to {
+    translate: -22% 0;
+  }
+}
+
+@keyframes tape-back {
+  from {
+    translate: -22% 0;
+  }
+  to {
+    translate: 0 0;
   }
 }
 

@@ -1,0 +1,48 @@
+---
+// Cinta de disciplinas: se desplaza solo cuando haces scroll (motion.css · .tape).
+// Sin soporte o con movimiento reducido queda fija. La primera copia de la
+// lista es la accesible; las repeticiones están ocultas para lectores.
+interface Props {
+  label: string;
+  items: readonly string[];
+}
+
+const { label, items } = Astro.props;
+const loop = [...items, ...items, ...items];
+const back = [...loop].reverse();
+---
+
+<section
+  aria-label={label}
+  class="tape-section overflow-x-clip border-y border-steel-700 py-6 md:py-8"
+>
+  <ul class="tape-forward flex w-max items-center gap-6 md:gap-10">
+    {loop.map((item, i) => (
+      <li
+        class="flex items-center gap-6 md:gap-10"
+        aria-hidden={i >= items.length ? 'true' : undefined}
+      >
+        <span class="stretch-display text-[clamp(2.75rem,9vw,5rem)] leading-none font-black whitespace-nowrap uppercase">
+          {item}
+        </span>
+        <span
+          class="size-2.5 shrink-0 rounded-full bg-chalk"
+          aria-hidden="true"
+        />
+      </li>
+    ))}
+  </ul>
+  <ul
+    class="tape-back mt-3 flex w-max items-center gap-5 md:gap-8"
+    aria-hidden="true"
+  >
+    {back.map((item) => (
+      <li class="flex items-center gap-5 md:gap-8">
+        <span class="stretch-heading text-[clamp(1.25rem,4vw,2rem)] leading-none font-bold whitespace-nowrap text-concrete-400 uppercase">
+          {item}
+        </span>
+        <span class="h-0.5 w-6 shrink-0 bg-steel-700" />
+      </li>
+    ))}
+  </ul>
+</section>

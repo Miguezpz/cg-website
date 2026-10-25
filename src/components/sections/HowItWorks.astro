@@ -12,6 +12,7 @@ interface Props {
     text: string;
     weeks: readonly { kind: string; label: string; text: string }[];
     cycle: readonly ('carga' | 'descarga')[];
+    legend: string;
   };
 }
 
@@ -30,17 +31,74 @@ const weekLabel = Object.fromEntries(
   <div class="mx-auto w-full max-w-content px-gutter">
     <SectionHeading id="como-funciona-title" title={title} mark={mark} />
 
-    <ol class="mt-10 grid gap-8 md:grid-cols-3 md:gap-6">
+    <!-- Los pasos se unen con una línea de gis que avanza con el scroll.
+         Los SVG llevan ancho/alto explícitos: con solo left/right se quedan
+         con el ancho de su viewBox. -->
+    <ol class="steps mt-10 grid gap-8 md:grid-cols-3 md:gap-6">
       {steps.map((step, i) => (
-        <li class="rise border-t border-steel-700 pt-5">
+        <li class="rise relative grid grid-cols-[3rem_minmax(0,1fr)] gap-x-4 border-t border-steel-700 pt-5 md:block">
           <span
-            class="ledge stretch-display block text-[3.5rem] leading-none font-black text-concrete-400 tabular-nums"
+            class="ledge stretch-display row-span-2 block text-[3.5rem] leading-none font-black text-concrete-400 tabular-nums"
             aria-hidden="true"
           >
             {i + 1}
           </span>
-          <h3 class="stretch-heading mt-3 text-h3 font-bold">{step.title}</h3>
+          <h3 class="stretch-heading text-h3 font-bold md:mt-3">
+            {step.title}
+          </h3>
           <p class="mt-2 max-w-[34ch] text-concrete-400">{step.text}</p>
+          {i < steps.length - 1 && (
+            <>
+              <svg
+                viewBox="0 0 16 100"
+                preserveAspectRatio="none"
+                aria-hidden="true"
+                class="step-link pointer-events-none absolute top-[5.25rem] left-[0.35rem] h-[calc(100%-2.5rem)] w-4 text-concrete-400 md:hidden"
+              >
+                <path
+                  d="M8 0 C3 25 13 50 7 75 S9 95 8 100"
+                  pathLength="1"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                  filter="url(#chalk)"
+                />
+              </svg>
+              <svg
+                viewBox="0 0 100 16"
+                preserveAspectRatio="none"
+                aria-hidden="true"
+                class="step-link pointer-events-none absolute top-[2.45rem] left-[3.25rem] hidden h-4 w-[calc(100%-2.5rem)] text-concrete-400 md:block"
+              >
+                <path
+                  d="M0 9 C25 3 50 13 75 7 S95 9 100 8"
+                  pathLength="1"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                  filter="url(#chalk)"
+                />
+              </svg>
+              <svg
+                viewBox="0 0 20 20"
+                aria-hidden="true"
+                class="step-arrow pointer-events-none absolute top-[2.4rem] -right-[1.35rem] hidden size-5 text-concrete-400 md:block"
+              >
+                <path
+                  d="M5 3 L16 10 L5 17"
+                  pathLength="1"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  filter="url(#chalk)"
+                />
+              </svg>
+            </>
+          )}
         </li>
       ))}
     </ol>
@@ -52,38 +110,55 @@ const weekLabel = Object.fromEntries(
       </h3>
       <p class="mt-3 max-w-prose text-lede">{method.text}</p>
 
-      <ol
-        class="relative mt-10 grid grid-cols-4 gap-2 sm:gap-4"
-        aria-label="Ciclo de cuatro semanas"
-      >
-        {method.cycle.map((kind, i) => (
-          <li class="flex flex-col">
-            <ChalkMark
-              variant="tally"
-              count={kind === 'carga' ? 5 : 2}
-              class="h-10 w-auto self-start text-chalk sm:h-14"
-            />
-            <span
-              class="mt-3 h-1.5 bg-steel-700 data-[kind=carga]:bg-chalk"
-              data-kind={kind}
-              aria-hidden="true"
-            />
-            <span class="stretch-label mt-3 text-label font-semibold uppercase">
-              <span class="sr-only">Semana {i + 1}: </span>
-              <span aria-hidden="true" class="block text-concrete-400">
-                S{i + 1}
-              </span>
-              <span class="block">
-                {kind === 'carga' ? 'Carga' : 'Descarga'}
-              </span>
-            </span>
-          </li>
-        ))}
-      </ol>
+      <!-- Ciclo interactivo: radios nativos + :has(), funciona sin JS. -->
+      <fieldset class="mt-10">
+        <legend class="sr-only">{method.legend}</legend>
+        <ol
+          class="relative grid grid-cols-4 gap-2 sm:gap-4"
+          aria-label="Ciclo de cuatro semanas"
+        >
+          {method.cycle.map((kind, i) => (
+            <li class="flex">
+              <label class="week flex w-full cursor-pointer flex-col py-2 outline-offset-4 outline-signal has-[:focus-visible]:outline-2">
+                <input
+                  type="radio"
+                  name="semana"
+                  value={kind}
+                  class="sr-only"
+                />
+                <span class="week-visual flex flex-col">
+                  <ChalkMark
+                    variant="tally"
+                    count={kind === 'carga' ? 5 : 2}
+                    class="h-10 w-auto self-start text-chalk sm:h-14"
+                  />
+                  <span
+                    class="mt-3 h-1.5 bg-steel-700 data-[kind=carga]:bg-chalk"
+                    data-kind={kind}
+                    aria-hidden="true"
+                  />
+                </span>
+                <span class="week-name stretch-label mt-3 text-label font-semibold uppercase">
+                  <span class="sr-only">Semana {i + 1}: </span>
+                  <span aria-hidden="true" class="block text-concrete-400">
+                    S{i + 1}
+                  </span>
+                  <span class="block">
+                    {kind === 'carga' ? 'Carga' : 'Descarga'}
+                  </span>
+                </span>
+              </label>
+            </li>
+          ))}
+        </ol>
+      </fieldset>
 
       <dl class="mt-10 grid gap-6 md:grid-cols-2">
         {method.weeks.map((week) => (
-          <div class="rise border-t border-steel-700 pt-4">
+          <div
+            class="week-info rise -mx-4 border-t-2 border-steel-700 px-4 py-4"
+            data-week-info={week.kind}
+          >
             <dt class="stretch-heading text-h3 font-bold">
               {weekLabel[week.kind]}
             </dt>
@@ -96,6 +171,33 @@ const weekLabel = Object.fromEntries(
 </section>
 
 <style>
+  /* Ciclo interactivo: al elegir una semana se atenúan las otras y se resalta
+     su enfoque. Solo se atenúa lo decorativo; el texto conserva su contraste. */
+  .week-visual,
+  .week-info {
+    transition:
+      opacity 200ms var(--ease-out-expo),
+      background-color 200ms var(--ease-out-expo),
+      border-color 200ms var(--ease-out-expo);
+  }
+  [data-method]:has(input[name='semana']:checked) .week-visual {
+    opacity: 0.3;
+  }
+  [data-method] .week:has(input:checked) .week-visual {
+    opacity: 1;
+  }
+  [data-method] .week:has(input:checked) .week-name {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.35em;
+  }
+  [data-method]:has(input[value='carga']:checked) [data-week-info='carga'],
+  [data-method]:has(input[value='descarga']:checked)
+    [data-week-info='descarga'] {
+    border-color: var(--color-chalk);
+    background-color: var(--color-steel-900);
+  }
+
   /* El gis se dibuja al entrar en pantalla; por defecto ya está dibujado. */
   [data-method][data-animate] :global(.chalk-stroke) {
     stroke-dasharray: 1;

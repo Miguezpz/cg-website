@@ -86,7 +86,19 @@ export const howItWorks = {
       },
     ],
     cycle: ['carga', 'descarga', 'carga', 'descarga'] as const,
+    legend: 'Elige una semana para ver su enfoque',
   },
+} as const;
+
+export const tape = {
+  label: 'Disciplinas',
+  items: [
+    'Calistenia',
+    'Streetlifting',
+    'Movilidad',
+    'Skills Movements',
+    'Funcional',
+  ],
 } as const;
 
 export const offer = {

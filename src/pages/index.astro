@@ -2,6 +2,7 @@
 import SiteLayout from '../layouts/SiteLayout.astro';
 import Hero from '../components/sections/Hero.astro';
 import About from '../components/sections/About.astro';
+import DisciplineTape from '../components/sections/DisciplineTape.astro';
 import Services from '../components/sections/Services.astro';
 import Results from '../components/sections/Results.astro';
 import Testimonials from '../components/sections/Testimonials.astro';
@@ -28,6 +29,7 @@ import {
   offer,
   resultsSection,
   servicesSection,
+  tape,
   testimonialsSection,
 } from '../data/home';
 
@@ -48,6 +50,7 @@ const structuredData = buildStructuredData({
 <SiteLayout>
   <JsonLd slot="head" data={structuredData} />
   <Hero {...hero} image={heroImage} />
+  <DisciplineTape {...tape} />
   <About {...about} photo={coachPhoto} />
   <Services {...servicesSection} services={services} />
   <Results {...resultsSection} results={results} />
