@@ -35,16 +35,18 @@ Tailwind solo conoce estos colores (`--color-*: initial`), así que un color sue
 
 ## Tipografía
 
-Una sola familia, **Archivo Variable** (Fontsource, subset latino, `font-display: swap`), con dos ejes: peso (100–900) y ancho (62–125 %). El ancho separa las dos voces:
+Una sola familia, **Readex Pro Variable** (Fontsource, subset latino, solo eje de peso 160–700, `font-display: swap`, 31 KB), elegida por el usuario el 2026-10-25 en lugar de Archivo. Readex es una geométrica ancha **sin eje de ancho**, así que las dos voces se separan solo por tamaño, peso, mayúsculas y tracking: los titulares van en MAYÚSCULAS con el tracking cerrado, y el texto en minúsculas con tracking normal. Su peso máximo es 700, por eso todos los titulares usan `font-bold`.
 
-| Rol | Token | Ancho | Peso | Notas |
-|---|---|---|---|---|
-| Display (h1) | `text-display` · `stretch-display` | 62 % | 900 | MAYÚSCULAS, interlineado 0.88, `clamp(3.5rem, 15vw, 6rem)` |
-| Sección (h2) | `text-h2` · `stretch-display` | 62 % | 800 | MAYÚSCULAS, `clamp(2.5rem, 9vw, 4.5rem)` |
-| Subtítulo (h3) | `text-h3` · `stretch-heading` | 75 % | 700 | 1.5rem |
-| Entrada | `text-lede` · `stretch-body` | 100 % | 400 | |
-| Texto | `text-body` · `stretch-body` | 100 % | 400 | 17px / 1.55, medida máx. `max-w-prose` (65ch) |
-| Etiqueta | `text-label` · `stretch-label` | 87.5 % | 600 | MAYÚSCULAS +0.04em; para botones, precios y datos. **Nunca** como "eyebrow" sobre un título |
+| Rol | Token | Peso | Notas |
+|---|---|---|---|
+| Display (h1) | `text-display` | 700 | MAYÚSCULAS, interlineado 0.95, tracking −0.03em, `clamp(2.625rem, 12.5vw, 5.25rem)` |
+| Sección (h2) | `text-h2` | 700 | MAYÚSCULAS, interlineado 1, tracking −0.02em, `clamp(2rem, 8vw, 3.75rem)` |
+| Subtítulo (h3) | `text-h3` | 700 | 1.5rem |
+| Entrada | `text-lede` | 400 | |
+| Texto | `text-body` | 400 | 17px / 1.55, medida máx. `max-w-prose` (65ch) |
+| Etiqueta | `text-label` | 600 | MAYÚSCULAS +0.02em; para botones, precios y datos. **Nunca** como "eyebrow" sobre un título |
+
+La escala de titulares es más chica que la que tenía Archivo extracondensada: con Readex, «GRAVEDAD» tiene que caber en 288 px (pantalla de 320 px).
 
 Las cifras de precios usan `tabular-nums`.
 

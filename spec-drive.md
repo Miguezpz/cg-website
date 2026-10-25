@@ -256,7 +256,7 @@ type FaqItem   = { q: string; a: string };
 
 - La dirección visual la define **Impeccable** en modo *Persuade* y queda en `DESIGN.md` (tokens, tipografía, espaciado, componentes, movimiento). `PRODUCT.md` guarda el contexto de negocio (§1–2 de este spec).
 - Punto de partida (puede cambiar en T1.2): estilo oscuro, enérgico y deportivo; fotos protagonistas; un solo color de acento; `#25D366` reservado para WhatsApp.
-- **Dirección elegida en T1.2: «Gis y acero»** (acero negro mate, magnesia, concreto y un acento amarillo de seguridad, reemplazado el 2026-10-25 por el vino de la guía de marca; Archivo Variable condensada para titulares). Detalle en `DESIGN.md`. El coach había pedido tipografía elegante; el usuario levantó esa restricción al elegir esta dirección (2026-10-19).
+- **Dirección elegida en T1.2: «Gis y acero»** (acero negro mate, magnesia, concreto y un acento amarillo de seguridad, reemplazado el 2026-10-25 por el vino de la guía de marca; Archivo Variable condensada para titulares, reemplazada el 2026-10-25 por Readex Pro). Detalle en `DESIGN.md`. El coach había pedido tipografía elegante; el usuario levantó esa restricción al elegir esta dirección (2026-10-19).
 - **Paleta (D-10):** T1.2 propuso una paleta provisional con acento amarillo. El 2026-10-25 llegó la guía de marca (*Brand Guidelines Vol. 1*): vino `#6A1E2B`, burdeos `#4F111E`, negro y blanco, y el amarillo se reemplazó por el vino (T3.10). Los hex se leyeron de una imagen y están por confirmar con el diseñador. Ningún componente usa colores sueltos: cambiar la paleta debe ser editar solo los tokens de `DESIGN.md` y `@theme`.
 - Los tokens de `DESIGN.md` se trasladan 1:1 a `@theme` en `global.css`. Ningún componente usa colores sueltos.
 
@@ -375,6 +375,7 @@ Cada tarea se cierra con el ciclo de §13 y su prueba e2e.
 - **T3.8 · ✅ Ola 2 · Contar el método** (2026-10-24): línea de gis entre los 3 pasos ligada al scroll, ciclo Carga & Descarga interactivo (radios nativos + `:has()`, funciona sin JS), cinta de disciplinas que avanza solo con el scroll y transición entre páginas (View Transitions, el header persiste).
 - **T3.9 · ✅ Ola 3 · Firma** (2026-10-24): el título del Hero «siente la gravedad» bajo el puntero, la foto colgante responde con física de péndulo y anotaciones a mano informativas en Kalam recortada (14 KB; segunda familia de RNF-05), que se carga al acercarse para no afectar el LCP. *(Lighthouse: 99/100/100/100, LCP 1.88 s, CLS 0; 239 e2e en verde; JS propio ≈ 4.4 KB gzip.)*
 - **T3.10 · ✅ Acento vino de la guía de marca** (2026-10-25, branch `red-theme`) — D-10, RNF-06: `signal` pasa del amarillo al vino `#6A1E2B` (hover en burdeos `#4F111E`) con texto `chalk` encima; nuevo `signal-glow` `#E0707F` para foco, cursor y enlaces sobre acero; foco en vino oscuro en las secciones claras (`on-light`); resplandor vino en el CTA primario (única sombra del sistema); error sobre oscuro a naranja `#FFA057`. *(Tipografía de la guía, Momentum Grotesk, fuera de alcance: se queda Archivo. 275 e2e en verde, axe incluido.)*
+- **T3.11 · ✅ Tipografía Readex Pro** (2026-10-25, branch `red-theme`) — RNF-05: Readex Pro Variable (Fontsource, latino, solo peso 160–700, 31 KB, precargada) reemplaza a Archivo (90 KB) a pedido del usuario. Sin eje de ancho: se quitan las utilidades `stretch-*`, los pesos 800–900 pasan a 700 y la escala de titulares se reduce (display `clamp(2.625rem, 12.5vw, 5.25rem)`, h2 `clamp(2rem, 8vw, 3.75rem)`) para que nada se desborde a 320 px. `og-image.jpg` regenerada con Readex. Kalam sigue como segunda familia.
 
 ### Fase 4 — QA y lanzamiento (→ M5)
 - **T4.1 · ✅ Completar la suite e2e** (sin JS, reduced motion, axe, WebKit) — RNF-06–08, RNF-11.
@@ -469,7 +470,7 @@ Cada tarea se cierra con el ciclo de §13 y su prueba e2e.
 - [ ] [[PENDIENTE]] Prueba social: testimonios, antes y después, número de alumnos.
 - [ ] [[PENDIENTE]] Logo.
 - [ ] [[PENDIENTE]] Paleta oficial: aplicada la de la guía de marca Vol. 1 (vino `#6A1E2B`, burdeos `#4F111E`); falta que el diseñador confirme los hex exactos (D-10).
-- [x] Tipografía: restricción de "elegante" levantada por el usuario en T1.2; se usa Archivo (§10, `DESIGN.md`).
+- [x] Tipografía: restricción de "elegante" levantada por el usuario en T1.2; se usó Archivo y desde el 2026-10-25 Readex Pro, a pedido del usuario (§10, `DESIGN.md`).
 - [ ] [[PENDIENTE]] Logo en SVG oficial. Mientras tanto, `src/components/ui/Logo.astro` es un redibujo vectorial del de 150 px (también en `favicon.svg` y `og-image.jpg`).
 - [ ] [[PENDIENTE]] Preguntas frecuentes que recibe por DM.
 
@@ -543,3 +544,4 @@ Leyenda: 🔴 bloquea el inicio · 🟠 bloquea el diseño (T1.2) · 🟢 bloque
 | v0.9 | 2026-10-24 | T3.7–T3.9: tres olas de movimiento y gis (marcas por semana, títulos marcados, nube de magnesia, línea entre pasos, ciclo interactivo, cinta de disciplinas, View Transitions, título con gravedad, foto con física, anotaciones en Kalam) |
 | v0.9.1 | 2026-10-24 | Contenido e imágenes demo con aviso visible de lo que falta (sin datos comerciales inventados); `[[PENDIENTE]]` conservados en comentarios |
 | v0.9.2 | 2026-10-25 | `nuevo-sitio` eliminada (era idéntica a `main`); el trabajo sigue en branches que salen de `main`. T3.10: acento vino de la guía de marca Vol. 1 en el branch `red-theme` (D-10 casi resuelta, faltan los hex confirmados) |
+| v0.9.3 | 2026-10-25 | T3.11: tipografía Readex Pro en lugar de Archivo (branch `red-theme`) |

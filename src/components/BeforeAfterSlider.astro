@@ -26,7 +26,7 @@ const imageProps = {
 >
   <figure class="relative">
     <Image src={result.before} alt={result.alt.before} {...imageProps} />
-    <figcaption class="stretch-label absolute top-3 left-3 bg-steel-950 px-2 py-1 text-label font-semibold uppercase">
+    <figcaption class="absolute top-3 left-3 bg-steel-950 px-2 py-1 text-label font-semibold uppercase">
       {beforeLabel}
     </figcaption>
   </figure>
@@ -35,7 +35,7 @@ const imageProps = {
     class="relative group-data-enhanced/compare:absolute group-data-enhanced/compare:inset-0 group-data-enhanced/compare:[clip-path:inset(0_0_0_var(--pos,50%))]"
   >
     <Image src={result.after} alt={result.alt.after} {...imageProps} />
-    <figcaption class="stretch-label absolute top-3 right-3 bg-steel-950 px-2 py-1 text-label font-semibold uppercase">
+    <figcaption class="absolute top-3 right-3 bg-steel-950 px-2 py-1 text-label font-semibold uppercase">
       {afterLabel}
     </figcaption>
   </figure>

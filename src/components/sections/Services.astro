@@ -33,7 +33,7 @@ const { title, mark, intro, services } = Astro.props;
           <div>
             <h3
               id={`servicio-${service.id}`}
-              class="ledge stretch-display text-[2.25rem] leading-[0.95] font-extrabold uppercase lg:text-5xl"
+              class="ledge text-[1.875rem] leading-none font-bold tracking-[-0.02em] uppercase lg:text-[2.75rem]"
             >
               {service.name}
             </h3>
@@ -58,10 +58,8 @@ const { title, mark, intro, services } = Astro.props;
                 {service.plans.map((plan) => (
                   <div class="rise grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-4 border-b border-steel-700 py-4">
                     <dt>
-                      <span class="stretch-heading block text-h3 font-bold">
-                        {plan.name}
-                      </span>
-                      <span class="stretch-label mt-1 block text-label text-concrete-400 uppercase">
+                      <span class="block text-h3 font-bold">{plan.name}</span>
+                      <span class="mt-1 block text-label text-concrete-400 uppercase">
                         {plan.detail}
                       </span>
                       {plan.perWeek && (
@@ -73,7 +71,7 @@ const { title, mark, intro, services } = Astro.props;
                         />
                       )}
                     </dt>
-                    <dd class="stretch-display text-[2.5rem] leading-none font-black tabular-nums">
+                    <dd class="text-[2.5rem] leading-none font-bold tabular-nums">
                       {plan.price}
                     </dd>
                   </div>

@@ -21,7 +21,7 @@ const { title, text, note, cta } = Astro.props;
       <SteelBar edge="bottom" tone="chalk" origin="right" />
       <h2
         id="oferta-title"
-        class="ledge stretch-display max-w-[14ch] text-display font-black uppercase"
+        class="ledge max-w-[14ch] text-display font-bold uppercase"
       >
         {title}
       </h2>
@@ -38,9 +38,7 @@ const { title, text, note, cta } = Astro.props;
       >
         {cta}
       </Button>
-      <p class="stretch-label mt-4 text-label text-concrete-400 uppercase">
-        {note}
-      </p>
+      <p class="mt-4 text-label text-concrete-400 uppercase">{note}</p>
     </div>
   </div>
 </section>

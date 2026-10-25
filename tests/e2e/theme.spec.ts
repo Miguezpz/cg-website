@@ -31,3 +31,17 @@ test('el foco es vino claro sobre acero y vino oscuro sobre concreto', async ({
   await page.keyboard.press('Tab');
   await expect(summary).toHaveCSS('outline-color', WINE);
 });
+
+test('los textos usan Readex Pro y la fuente carga', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('h1')).toHaveCSS(
+    'font-family',
+    // WebKit lo devuelve sin comillas.
+    /^"?Readex Pro Variable"?,/,
+  );
+  const loaded = await page.evaluate(async () => {
+    await document.fonts.ready;
+    return document.fonts.check('700 1rem "Readex Pro Variable"');
+  });
+  expect(loaded).toBe(true);
+});

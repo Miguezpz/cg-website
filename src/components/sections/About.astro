@@ -37,7 +37,7 @@ const { title, mark, role, story, credentials, photo, photoAlt, demo } =
 
     <div>
       <SectionHeading id="sobre-mi-title" title={title} mark={mark} />
-      <p class="stretch-label mt-3 text-label font-semibold text-concrete-600 uppercase">
+      <p class="mt-3 text-label font-semibold text-concrete-600 uppercase">
         {role}
       </p>
       <div class="mt-6 max-w-prose space-y-4 text-lede">
@@ -48,7 +48,7 @@ const { title, mark, role, story, credentials, photo, photoAlt, demo } =
       {demo && <DemoNote text={demo} tone="light" class="mt-5 max-w-prose" />}
       <ul class="mt-8 border-t border-steel-950/20">
         {credentials.map((item) => (
-          <li class="rise stretch-heading flex gap-3 border-b border-steel-950/20 py-3 text-h3 leading-tight font-bold">
+          <li class="rise flex gap-3 border-b border-steel-950/20 py-3 text-h3 leading-tight font-bold">
             <span
               class="mt-[0.55em] h-1 w-5 shrink-0 bg-steel-950"
               aria-hidden="true"

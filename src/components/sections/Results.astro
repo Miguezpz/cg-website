@@ -37,10 +37,8 @@ const { title, mark, intro, sliderLabel, before, after, results } = Astro.props;
               beforeLabel={before}
               afterLabel={after}
             />
-            <p class="stretch-heading mt-5 text-h3 font-bold">
-              {result.achievement}
-            </p>
-            <p class="stretch-label mt-1 text-label text-concrete-400 uppercase">
+            <p class="mt-5 text-h3 font-bold">{result.achievement}</p>
+            <p class="mt-1 text-label text-concrete-400 uppercase">
               {result.name} · {result.duration}
             </p>
             {result.demo && <DemoNote text={result.demo} class="mt-4" />}

@@ -1,6 +1,6 @@
 ---
 import '../styles/global.css';
-import archivoLatin from '@fontsource-variable/archivo/files/archivo-latin-wdth-normal.woff2?url';
+import readexLatin from '@fontsource-variable/readex-pro/files/readex-pro-latin-wght-normal.woff2?url';
 import { site } from '../data/site';
 
 interface Props {
@@ -33,7 +33,7 @@ const ogImage = new URL(site.seo.ogImage, Astro.site);
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link
       rel="preload"
-      href={archivoLatin}
+      href={readexLatin}
       as="font"
       type="font/woff2"
       crossorigin

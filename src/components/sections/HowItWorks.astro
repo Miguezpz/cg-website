@@ -40,14 +40,12 @@ const weekLabel = Object.fromEntries(
       {steps.map((step, i) => (
         <li class="rise relative grid grid-cols-[3rem_minmax(0,1fr)] gap-x-4 border-t border-steel-700 pt-5 md:block">
           <span
-            class="ledge stretch-display row-span-2 block text-[3.5rem] leading-none font-black text-concrete-400 tabular-nums"
+            class="ledge row-span-2 block text-[3.5rem] leading-none font-bold text-concrete-400 tabular-nums"
             aria-hidden="true"
           >
             {i + 1}
           </span>
-          <h3 class="stretch-heading text-h3 font-bold md:mt-3">
-            {step.title}
-          </h3>
+          <h3 class="text-h3 font-bold md:mt-3">{step.title}</h3>
           <p class="mt-2 max-w-[34ch] text-concrete-400">{step.text}</p>
           {i < steps.length - 1 && (
             <>
@@ -107,9 +105,7 @@ const weekLabel = Object.fromEntries(
 
     <!-- Carga & Descarga: el ciclo de 4 semanas marcado con gis sobre la barra. -->
     <div class="mt-20" data-method>
-      <h3 class="ledge stretch-display text-h2 font-extrabold uppercase">
-        {method.title}
-      </h3>
+      <h3 class="ledge text-h2 font-bold uppercase">{method.title}</h3>
       <p class="mt-3 max-w-prose text-lede">{method.text}</p>
 
       <!-- Ciclo interactivo: radios nativos + :has(), funciona sin JS. -->
@@ -141,7 +137,7 @@ const weekLabel = Object.fromEntries(
                     aria-hidden="true"
                   />
                 </span>
-                <span class="week-name stretch-label mt-3 text-label font-semibold uppercase">
+                <span class="week-name mt-3 text-label font-semibold uppercase">
                   <span class="sr-only">Semana {i + 1}: </span>
                   <span aria-hidden="true" class="block text-concrete-400">
                     S{i + 1}
@@ -162,9 +158,7 @@ const weekLabel = Object.fromEntries(
             class="week-info rise -mx-4 border-t-2 border-steel-700 px-4 py-4"
             data-week-info={week.kind}
           >
-            <dt class="stretch-heading text-h3 font-bold">
-              {weekLabel[week.kind]}
-            </dt>
+            <dt class="text-h3 font-bold">{weekLabel[week.kind]}</dt>
             <dd class="mt-2 max-w-prose text-concrete-400">{week.text}</dd>
           </div>
         ))}

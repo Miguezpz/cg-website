@@ -29,7 +29,7 @@ const { brand, links, cta } = Astro.props;
     >
       <Logo class="h-8 w-auto" />
       <span
-        class="stretch-label hidden text-label font-bold tracking-[0.08em] uppercase sm:inline"
+        class="hidden text-label font-bold tracking-[0.08em] uppercase sm:inline"
         translate="no"
       >
         {brand}
@@ -43,7 +43,7 @@ const { brand, links, cta } = Astro.props;
             <a
               href={link.href}
               data-nav-link
-              class="stretch-label inline-flex min-h-11 items-center px-3 text-label font-semibold text-concrete-400 uppercase transition-colors duration-fast hover:text-chalk aria-[current=location]:text-chalk"
+              class="inline-flex min-h-11 items-center px-3 text-label font-semibold text-concrete-400 uppercase transition-colors duration-fast hover:text-chalk aria-[current=location]:text-chalk"
             >
               {link.label}
             </a>
@@ -88,7 +88,7 @@ const { brand, links, cta } = Astro.props;
             <a
               href={link.href}
               data-menu-link
-              class="stretch-display flex min-h-16 items-center text-h2 font-extrabold uppercase"
+              class="flex min-h-16 items-center text-h2 font-bold uppercase"
             >
               {link.label}
             </a>

@@ -22,7 +22,7 @@ const back = [...loop].reverse();
         class="flex items-center gap-6 md:gap-10"
         aria-hidden={i >= items.length ? 'true' : undefined}
       >
-        <span class="stretch-display text-[clamp(2.75rem,9vw,5rem)] leading-none font-black whitespace-nowrap uppercase">
+        <span class="text-[clamp(2.25rem,8vw,4.25rem)] leading-none font-bold whitespace-nowrap uppercase">
           {item}
         </span>
         <span
@@ -38,7 +38,7 @@ const back = [...loop].reverse();
   >
     {back.map((item) => (
       <li class="flex items-center gap-5 md:gap-8">
-        <span class="stretch-heading text-[clamp(1.25rem,4vw,2rem)] leading-none font-bold whitespace-nowrap text-concrete-400 uppercase">
+        <span class="text-[clamp(1.25rem,4vw,2rem)] leading-none font-bold whitespace-nowrap text-concrete-400 uppercase">
           {item}
         </span>
         <span class="h-0.5 w-6 shrink-0 bg-steel-700" />

@@ -24,7 +24,7 @@ const { title, mark, items } = Astro.props;
       {items.map((item) => (
         <details class="faq-item rise group border-b border-steel-950">
           <summary class="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 py-4 [&::-webkit-details-marker]:hidden">
-            <span class="stretch-heading relative text-h3 leading-tight font-bold">
+            <span class="relative text-h3 leading-tight font-bold">
               {item.q}
               <ChalkMark
                 variant="underline"

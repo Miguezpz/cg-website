@@ -52,7 +52,7 @@ const {
 
 const field =
   'block min-h-12 w-full rounded-input border border-steel-700 bg-steel-950 px-4 py-3 text-chalk placeholder:text-concrete-400 transition-colors duration-fast hover:border-concrete-400 user-invalid:border-error-on-dark';
-const label = 'stretch-label mb-2 block text-label font-semibold uppercase';
+const label = 'mb-2 block text-label font-semibold uppercase';
 const errorText = 'mt-2 text-label text-error-on-dark';
 ---
 
@@ -87,7 +87,7 @@ const errorText = 'mt-2 text-label text-error-on-dark';
               rel="noopener"
               data-track="social"
               data-network={link.network}
-              class="stretch-label inline-flex min-h-11 items-center gap-2 border border-steel-700 px-4 text-label font-semibold uppercase transition-colors duration-fast hover:border-chalk"
+              class="inline-flex min-h-11 items-center gap-2 border border-steel-700 px-4 text-label font-semibold uppercase transition-colors duration-fast hover:border-chalk"
             >
               <Icon name={link.network} class="size-4" />
               <span translate="no">{link.handle}</span>
@@ -107,7 +107,7 @@ const errorText = 'mt-2 text-label text-error-on-dark';
       class="rise border border-steel-700 bg-steel-900 p-6 sm:p-8"
       aria-labelledby="form-title"
     >
-      <h3 id="form-title" class="stretch-heading text-h3 font-bold">
+      <h3 id="form-title" class="text-h3 font-bold">
         {form.title}
       </h3>
       <input type="hidden" name="access_key" value={accessKey} />

@@ -1,14 +1,13 @@
 @import 'tailwindcss';
 @import './motion.css';
 
-/* Archivo variable (wght 100–900, wdth 62–125), solo subset latino (RNF-05). */
+/* Readex Pro variable (wght 160–700), solo subset latino (RNF-05). */
 @font-face {
-  font-family: 'Archivo Variable';
+  font-family: 'Readex Pro Variable';
   font-style: normal;
   font-display: swap;
-  font-weight: 100 900;
-  font-stretch: 62% 125%;
-  src: url('@fontsource-variable/archivo/files/archivo-latin-wdth-normal.woff2')
+  font-weight: 160 700;
+  src: url('@fontsource-variable/readex-pro/files/readex-pro-latin-wght-normal.woff2')
     format('woff2-variations');
   unicode-range:
     U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
@@ -55,16 +54,19 @@
 
   --font-*: initial;
   --font-sans:
-    'Archivo Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
+    'Readex Pro Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
     Roboto, sans-serif;
   --font-hand: 'Kalam', 'Segoe Print', cursive;
 
   /* Escala tipográfica (móvil → escritorio). */
-  --text-display: clamp(3.5rem, 15vw, 6rem);
-  --text-display--line-height: 0.88;
-  --text-display--letter-spacing: -0.01em;
-  --text-h2: clamp(2.5rem, 9vw, 4.5rem);
-  --text-h2--line-height: 0.92;
+  /* Readex no tiene eje de ancho: los titulares son más chicos que con una
+     condensada y aprietan el tracking para conservar el bloque. */
+  --text-display: clamp(2.625rem, 12.5vw, 5.25rem);
+  --text-display--line-height: 0.95;
+  --text-display--letter-spacing: -0.03em;
+  --text-h2: clamp(2rem, 8vw, 3.75rem);
+  --text-h2--line-height: 1;
+  --text-h2--letter-spacing: -0.02em;
   --text-h3: 1.5rem;
   --text-h3--line-height: 1.15;
   --text-lede: clamp(1.1875rem, 2.4vw, 1.375rem);
@@ -73,13 +75,7 @@
   --text-body--line-height: 1.55;
   --text-label: 0.875rem;
   --text-label--line-height: 1.35;
-  --text-label--letter-spacing: 0.04em;
-
-  /* Ancho de Archivo: extracondensado para titulares, normal para texto. */
-  --font-stretch-display: 62%;
-  --font-stretch-heading: 75%;
-  --font-stretch-label: 87.5%;
-  --font-stretch-body: 100%;
+  --text-label--letter-spacing: 0.02em;
 
   --radius-*: initial;
   --radius-none: 0;
@@ -135,19 +131,6 @@
   background-image: var(--grain);
 }
 
-@utility stretch-display {
-  font-stretch: var(--font-stretch-display);
-}
-@utility stretch-heading {
-  font-stretch: var(--font-stretch-heading);
-}
-@utility stretch-label {
-  font-stretch: var(--font-stretch-label);
-}
-@utility stretch-body {
-  font-stretch: var(--font-stretch-body);
-}
-
 @layer base {
   html {
     color-scheme: dark;
@@ -171,7 +154,6 @@
     background-image: var(--grain);
     font-size: var(--text-body);
     line-height: var(--text-body--line-height);
-    font-stretch: var(--font-stretch-body);
   }
 
   [id] {
