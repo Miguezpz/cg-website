@@ -256,8 +256,8 @@ type FaqItem   = { q: string; a: string };
 
 - La dirección visual la define **Impeccable** en modo *Persuade* y queda en `DESIGN.md` (tokens, tipografía, espaciado, componentes, movimiento). `PRODUCT.md` guarda el contexto de negocio (§1–2 de este spec).
 - Punto de partida (puede cambiar en T1.2): estilo oscuro, enérgico y deportivo; fotos protagonistas; un solo color de acento; `#25D366` reservado para WhatsApp.
-- **Dirección elegida en T1.2: «Gis y acero»** (acero negro mate, magnesia, concreto y un acento amarillo de seguridad; Archivo Variable condensada para titulares). Detalle en `DESIGN.md`. El coach había pedido tipografía elegante; el usuario levantó esa restricción al elegir esta dirección (2026-10-19).
-- **Paleta provisional (D-10):** un diseñador está definiendo la paleta oficial de la marca. Mientras llega, T1.2 propone una paleta provisional y la página se construye con ella. Por eso ningún componente usa colores sueltos: cambiar la paleta debe ser editar solo los tokens de `DESIGN.md` y `@theme`.
+- **Dirección elegida en T1.2: «Gis y acero»** (acero negro mate, magnesia, concreto y un acento amarillo de seguridad, reemplazado el 2026-10-25 por el vino de la guía de marca; Archivo Variable condensada para titulares). Detalle en `DESIGN.md`. El coach había pedido tipografía elegante; el usuario levantó esa restricción al elegir esta dirección (2026-10-19).
+- **Paleta (D-10):** T1.2 propuso una paleta provisional con acento amarillo. El 2026-10-25 llegó la guía de marca (*Brand Guidelines Vol. 1*): vino `#6A1E2B`, burdeos `#4F111E`, negro y blanco, y el amarillo se reemplazó por el vino (T3.10). Los hex se leyeron de una imagen y están por confirmar con el diseñador. Ningún componente usa colores sueltos: cambiar la paleta debe ser editar solo los tokens de `DESIGN.md` y `@theme`.
 - Los tokens de `DESIGN.md` se trasladan 1:1 a `@theme` en `global.css`. Ningún componente usa colores sueltos.
 
 ## 11. Infraestructura y despliegue (Vercel)
@@ -374,6 +374,7 @@ Cada tarea se cierra con el ciclo de §13 y su prueba e2e.
 - **T3.7 · ✅ Ola 1 · Más gis** (pedido del usuario, 2026-10-24): clases por semana dibujadas como marcas de gis en los paquetes, trazos de gis en los títulos, nube de magnesia al tocar WhatsApp, palomitas de gis en el formulario y la FAQ, y grano de pizarrón en los fondos. Motor en `src/lib/chalk.ts`.
 - **T3.8 · ✅ Ola 2 · Contar el método** (2026-10-24): línea de gis entre los 3 pasos ligada al scroll, ciclo Carga & Descarga interactivo (radios nativos + `:has()`, funciona sin JS), cinta de disciplinas que avanza solo con el scroll y transición entre páginas (View Transitions, el header persiste).
 - **T3.9 · ✅ Ola 3 · Firma** (2026-10-24): el título del Hero «siente la gravedad» bajo el puntero, la foto colgante responde con física de péndulo y anotaciones a mano informativas en Kalam recortada (14 KB; segunda familia de RNF-05), que se carga al acercarse para no afectar el LCP. *(Lighthouse: 99/100/100/100, LCP 1.88 s, CLS 0; 239 e2e en verde; JS propio ≈ 4.4 KB gzip.)*
+- **T3.10 · ✅ Acento vino de la guía de marca** (2026-10-25, branch `red-theme`) — D-10, RNF-06: `signal` pasa del amarillo al vino `#6A1E2B` (hover en burdeos `#4F111E`) con texto `chalk` encima; nuevo `signal-glow` `#E0707F` para foco, cursor y enlaces sobre acero; foco en vino oscuro en las secciones claras (`on-light`); resplandor vino en el CTA primario (única sombra del sistema); error sobre oscuro a naranja `#FFA057`. *(Tipografía de la guía, Momentum Grotesk, fuera de alcance: se queda Archivo. 275 e2e en verde, axe incluido.)*
 
 ### Fase 4 — QA y lanzamiento (→ M5)
 - **T4.1 · ✅ Completar la suite e2e** (sin JS, reduced motion, axe, WebKit) — RNF-06–08, RNF-11.
@@ -467,7 +468,7 @@ Cada tarea se cierra con el ciclo de §13 y su prueba e2e.
 - [ ] [[PENDIENTE]] Restricciones y políticas (edad mínima, salud, cupo, cancelaciones).
 - [ ] [[PENDIENTE]] Prueba social: testimonios, antes y después, número de alumnos.
 - [ ] [[PENDIENTE]] Logo.
-- [ ] [[PENDIENTE]] Paleta oficial: la define un diseñador externo (D-10); mientras tanto se usa una provisional.
+- [ ] [[PENDIENTE]] Paleta oficial: aplicada la de la guía de marca Vol. 1 (vino `#6A1E2B`, burdeos `#4F111E`); falta que el diseñador confirme los hex exactos (D-10).
 - [x] Tipografía: restricción de "elegante" levantada por el usuario en T1.2; se usa Archivo (§10, `DESIGN.md`).
 - [ ] [[PENDIENTE]] Logo en SVG oficial. Mientras tanto, `src/components/ui/Logo.astro` es un redibujo vectorial del de 150 px (también en `favicon.svg` y `og-image.jpg`).
 - [ ] [[PENDIENTE]] Preguntas frecuentes que recibe por DM.
@@ -509,7 +510,7 @@ Leyenda: 🔴 bloquea el inicio · 🟠 bloquea el diseño (T1.2) · 🟢 bloque
 | D-07 | ~~¿Dónde está publicado el sitio actual?~~ | ✅ **Resuelta: en Netlify**; se migra a Vercel (§11.1) | — |
 | D-08 | ~~¿El sitio de Netlify usa dominio propio?~~ | ✅ **Resuelta: no, usa `*.netlify.app`**. La migración es por redirección 301 (§11.1) | — |
 | D-09 | ¿Comprar un dominio propio (ej. `controlgravedad.mx`)? | Opcional, después de v1. Mejora la confianza y el SEO; en Vercel Hobby no cuesta conectarlo | — |
-| D-10 | Paleta de colores oficial | Paleta provisional propuesta en T1.2; se reemplaza por la del diseñador del coach cuando llegue (solo tokens) | Nada (el cambio llega después) |
+| D-10 | Paleta de colores oficial | Aplicada la guía de marca Vol. 1 (T3.10, 2026-10-25): acento vino en lugar del amarillo provisional. Falta confirmar los hex con el diseñador (solo tokens) | Nada (si cambian, solo tokens) |
 
 ## 19. Riesgos
 
@@ -541,3 +542,4 @@ Leyenda: 🔴 bloquea el inicio · 🟠 bloquea el diseño (T1.2) · 🟢 bloque
 | v0.8 | 2026-10-19 | T3.6: sistema de movimiento «Peso y control» (reemplaza la regla de un solo momento propio de `DESIGN.md`) |
 | v0.9 | 2026-10-24 | T3.7–T3.9: tres olas de movimiento y gis (marcas por semana, títulos marcados, nube de magnesia, línea entre pasos, ciclo interactivo, cinta de disciplinas, View Transitions, título con gravedad, foto con física, anotaciones en Kalam) |
 | v0.9.1 | 2026-10-24 | Contenido e imágenes demo con aviso visible de lo que falta (sin datos comerciales inventados); `[[PENDIENTE]]` conservados en comentarios |
+| v0.9.2 | 2026-10-25 | `nuevo-sitio` eliminada (era idéntica a `main`); el trabajo sigue en branches que salen de `main`. T3.10: acento vino de la guía de marca Vol. 1 en el branch `red-theme` (D-10 casi resuelta, faltan los hex confirmados) |

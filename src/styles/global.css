@@ -31,8 +31,8 @@
 }
 
 /*
- * Tokens de DESIGN.md («Gis y acero»). La paleta es provisional (spec D-10):
- * cambiarla es editar solo este bloque.
+ * Tokens de DESIGN.md («Gis y acero»). Acento vino de la guía de marca
+ * (Brand Guidelines Vol. 1, spec D-10): cambiarlo es editar solo este bloque.
  */
 @theme {
   /* Solo existen los colores de la marca. */
@@ -44,10 +44,11 @@
   --color-concrete-600: #4a4d50;
   --color-concrete-100: #d9d8d4;
   --color-chalk: #f3f2ee;
-  --color-signal: #ffcc00;
-  --color-signal-strong: #e6b800;
+  --color-signal: #6a1e2b;
+  --color-signal-strong: #4f111e;
+  --color-signal-glow: #e0707f;
   --color-whatsapp: #25d366;
-  --color-error-on-dark: #ff7a66;
+  --color-error-on-dark: #ffa057;
   --color-error-on-light: #b42318;
   --color-transparent: transparent;
   --color-current: currentColor;
@@ -116,6 +117,17 @@
   }
 
   --tap-min: 44px;
+
+  /* Resplandor vino del CTA primario: canto de 1 px (3:1+ sobre acero) y halo. */
+  --shadow-glow:
+    inset 0 0 0 1px var(--color-signal-glow),
+    0 10px 32px -10px
+      color-mix(in oklab, var(--color-signal-glow) 45%, transparent);
+}
+
+/* Secciones de concreto claro: el foco usa el vino oscuro (8:1), no el claro. */
+@utility on-light {
+  --focus-ring: var(--color-signal);
 }
 
 /* Grano de pizarrón/concreto: textura estática detrás del contenido. */
@@ -185,11 +197,11 @@
 
   ::selection {
     background-color: var(--color-signal);
-    color: var(--color-steel-950);
+    color: var(--color-chalk);
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-signal);
+    outline: 2px solid var(--focus-ring, var(--color-signal-glow));
     outline-offset: 3px;
   }
 
@@ -201,7 +213,7 @@
   input,
   textarea,
   select {
-    caret-color: var(--color-signal);
+    caret-color: var(--color-signal-glow);
   }
 
   h1,

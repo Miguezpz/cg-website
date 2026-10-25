@@ -10,7 +10,7 @@ Si la tarea **T0.0** del spec no está marcada como cerrada, **antes de hacer cu
 
 ## Estado
 
-- Branch de trabajo: `nuevo-sitio` (preview en Vercel). `main` es producción en Vercel y ya tiene el sitio nuevo; los cambios pasan a `main` solo cuando el usuario lo pide.
+- Branches de trabajo: salen de `main` (ej. `red-theme`, acento vino de la guía de marca). `nuevo-sitio` se eliminó el 2026-10-25. `main` es producción en Vercel; los cambios pasan a `main` solo cuando el usuario lo pide.
 - Progreso: ver §15 del spec (las tareas cerradas se marcan ahí).
 
 ## Comandos

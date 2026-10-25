@@ -221,13 +221,13 @@ const errorText = 'mt-2 text-label text-error-on-dark';
             name="privacy"
             required
             aria-describedby="f-privacy-error"
-            class="mt-0.5 size-5 shrink-0 accent-signal"
+            class="mt-0.5 size-5 shrink-0 accent-signal-glow"
           />
           <span class="text-concrete-400">
             {form.privacy.before}
             <a
               href="/privacidad/"
-              class="text-chalk underline hover:text-signal"
+              class="text-chalk underline hover:text-signal-glow"
             >
               {form.privacy.link}
             </a>
@@ -263,7 +263,7 @@ const errorText = 'mt-2 text-label text-error-on-dark';
           data-form-fallback
           hidden
           {...waAttrs({ source: 'contact' })}
-          class="mt-2 inline-flex min-h-11 items-center gap-2 font-semibold text-chalk underline hover:text-signal"
+          class="mt-2 inline-flex min-h-11 items-center gap-2 font-semibold text-chalk underline hover:text-signal-glow"
         >
           <Icon name="whatsapp" class="size-5" />
           {form.errorCta}

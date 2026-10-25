@@ -1,6 +1,6 @@
 # Design · Gis y acero
 
-> Dirección visual de Control Gravedad, elegida en T1.2 (2026-10-19). Los tokens viven 1:1 en `src/styles/global.css` (`@theme`). **La paleta es provisional (spec D-10):** cuando llegue la del diseñador, se cambian solo los valores de color de este documento y de `@theme`; ningún componente usa colores sueltos.
+> Dirección visual de Control Gravedad, elegida en T1.2 (2026-10-19). Los tokens viven 1:1 en `src/styles/global.css` (`@theme`). **El acento vino sale de la guía de marca** (*Brand Guidelines Vol. 1*, 2026-10-25, spec D-10); sus hex están por confirmar con el diseñador. Si cambian, se editan solo los valores de este documento y de `@theme`; ningún componente usa colores sueltos.
 >
 > Jerarquía: `spec-drive.md` > este documento > Impeccable > Emil. El contrato de dirección completo está en `.impeccable/surfaces/src-pages-index-astro.md`.
 
@@ -12,7 +12,9 @@ La página está hecha del material del entrenamiento, no de metáforas: **acero
 
 ## Color
 
-Estrategia **contenida**: neutros de acero y concreto más un solo acento. El amarillo **solo** señala acciones (CTA, foco, selección), nunca decora.
+Estrategia **contenida**: neutros de acero y concreto más un solo acento, el **vino** de la marca. El vino **solo** señala acciones (CTA, foco, selección), nunca decora.
+
+El vino de la guía (`#6A1E2B`) se lee muy bien con texto claro encima (10.2:1), pero casi no se separa del acero (1.68:1). Por eso tiene un tono claro, `signal-glow`, para todo lo que se dibuja **directamente sobre el acero** (foco, cursor de texto, checkbox, enlaces en hover y el canto del CTA). Sobre concreto, el foco usa el vino oscuro (utilidad `on-light`, 8:1). El negro absoluto y el blanco puro de la guía se interpretan como `steel-950` y `chalk`: en OLED se ven igual y evitan el corrido del negro puro al hacer scroll.
 
 | Token | Valor | Uso |
 |---|---|---|
@@ -23,10 +25,11 @@ Estrategia **contenida**: neutros de acero y concreto más un solo acento. El am
 | `concrete-100` | `#d9d8d4` | Fondo de las secciones claras |
 | `concrete-600` | `#4a4d50` | Texto secundario sobre claro (5.96:1) |
 | `chalk` | `#f3f2ee` | Texto principal sobre oscuro (17.1:1) y trazos de gis |
-| `signal` | `#ffcc00` | Acción primaria; texto `steel-950` encima (12.7:1) |
-| `signal-strong` | `#e6b800` | Hover/active de la acción primaria |
+| `signal` | `#6a1e2b` | *Deep Wine Red.* Acción primaria; texto `chalk` encima (10.2:1). Foco sobre concreto (8:1) |
+| `signal-strong` | `#4f111e` | *Deep Burgundy.* Hover/active de la acción primaria (texto `chalk`, 13.1:1) |
+| `signal-glow` | `#e0707f` | Vino claro para dibujar sobre acero: foco, cursor, checkbox, enlace en hover, canto y halo del CTA (6.2:1 sobre `steel-950`, 5.7:1 sobre `steel-900`) |
 | `whatsapp` | `#25d366` | **Solo** el botón flotante de WhatsApp (texto `steel-950`, 9.7:1) |
-| `error-on-dark` / `error-on-light` | `#ff7a66` / `#b42318` | Mensajes de error (7.5:1 / 5.9:1) |
+| `error-on-dark` / `error-on-light` | `#ffa057` / `#b42318` | Mensajes de error (9.5:1 / 5.9:1). El de oscuro es naranja para no confundirse con `signal-glow` |
 
 Tailwind solo conoce estos colores (`--color-*: initial`), así que un color suelto no compila.
 
@@ -50,7 +53,7 @@ Las cifras de precios usan `tabular-nums`.
 ## Material y forma
 
 - **Esquinas rectas** (`radius-none`). Los campos de formulario llevan `radius-input` (2 px).
-- **Cantos de metal:** bordes de 1–2 px en `steel-700`. No hay sombras decorativas; la profundidad sale del contraste entre `steel-950` y `steel-900`.
+- **Cantos de metal:** bordes de 1–2 px en `steel-700`. No hay sombras decorativas; la profundidad sale del contraste entre `steel-950` y `steel-900`. **Única excepción:** el resplandor vino del botón primario (`shadow-glow`), que pide la guía de marca («intense wine red glows») y que además le da al CTA el canto de 3:1 que el vino solo no tiene sobre el acero.
 - **Barra:** elemento horizontal de acero (2–6 px de alto) que cruza el ancho completo. Es el separador del sistema y el soporte del calendario Carga & Descarga.
 - **Gis:** trazos en SVG con un filtro de grano (`feTurbulence`) en color `chalk`. Sirven para subrayar, contar (marcas de 4+1) y señalar dónde van las manos. Su opacidad imita el polvo y su trazo es irregular, nunca un trazo vectorial limpio.
 - **Fotos:** con tratamiento real, sin duotono neón. Mientras no haya fotos, cada hueco tiene la proporción final, fondo `steel-900`, un canto `steel-700` y una etiqueta visible `[[PENDIENTE]]`.
@@ -58,10 +61,10 @@ Las cifras de precios usan `tabular-nums`.
 
 ## Componentes
 
-- **Botón primario:** fondo `signal`, texto `steel-950`, `text-label`, alto mínimo 52 px, ícono de WhatsApp a la izquierda. Hover: `signal-strong`. Active: `scale(0.97)` en 160 ms. Foco: contorno `signal` de 2 px con separación de 3 px. Disabled: 50 % de opacidad y `cursor: not-allowed`.
+- **Botón primario:** fondo `signal`, texto `chalk`, `text-label`, alto mínimo 52 px, ícono de WhatsApp a la izquierda, canto interior de 1 px y halo en `signal-glow` (`shadow-glow`). Hover: `signal-strong` (el halo no cambia: `box-shadow` no se anima). Active: `scale(0.97)` en 160 ms. Foco: contorno `signal-glow` de 2 px con separación de 3 px. Disabled: 50 % de opacidad y `cursor: not-allowed`.
 - **Botón secundario:** sin relleno, canto de 2 px en `chalk`, texto `chalk`. Hover: relleno `chalk` y texto `steel-950`.
 - **Botón flotante de WhatsApp:** círculo de 56 px en `whatsapp`, abajo a la derecha, respetando `safe-area-inset-bottom`.
-- **Enlace:** subrayado de 1 px separado 0.2em; hover en `chalk`.
+- **Enlace:** subrayado de 1 px separado 0.2em; hover en `chalk` (en el formulario, `signal-glow`).
 - **Planes:** filas sobre la barra, **no** tarjetas iguales. Cada fila lleva el nombre, el detalle y el precio tabular alineado a la derecha.
 
 ## Espacio y retícula
@@ -144,4 +147,4 @@ Las cifras de precios usan `tabular-nums`.
 
 ## Superficies del navegador
 
-Selección en `signal` con texto `steel-950`, cursor de texto `signal`, scrollbar en `steel-700` sobre `steel-950`, foco visible en `signal` y `color-scheme: dark`.
+Selección en `signal` con texto `chalk`, cursor de texto `signal-glow`, scrollbar en `steel-700` sobre `steel-950`, foco visible en `signal-glow` (en `signal` dentro de las secciones `on-light`) y `color-scheme: dark`.
