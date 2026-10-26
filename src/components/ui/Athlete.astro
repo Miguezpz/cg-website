@@ -1,5 +1,6 @@
 ---
-// Atleta de gis que hace un ejercicio con el scroll (src/lib/athletes.ts).
+// Atleta de gis que hace un ejercicio con el scroll o una sola vez al aparecer
+// (src/lib/athletes.ts).
 // Decorativo: sin JS o con movimiento reducido se ve en su pose fija.
 import { athletes, type Exercise, type Shape } from '../../lib/athlete-poses';
 
@@ -17,8 +18,8 @@ const filterId = `athlete-chalk-${exercise}`;
 
 const attrs = (shape: Shape) => {
   if (shape.kind === 'line') {
-    const { x1, y1, x2, y2, w } = shape;
-    return { x1, y1, x2, y2, 'stroke-width': w };
+    const { x1, y1, x2, y2, w, dash } = shape;
+    return { x1, y1, x2, y2, 'stroke-width': w, 'stroke-dasharray': dash };
   }
   if (shape.kind === 'circle') {
     const { cx, cy, r } = shape;

@@ -1,22 +1,30 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
+import Athlete from '../components/ui/Athlete.astro';
 import Button from '../components/ui/Button.astro';
 import { notFound } from '../data/home';
 import { site } from '../data/site';
 ---
 
 <SiteLayout title={`${notFound.title} · ${site.name}`} noindex>
-  <section class="mx-auto w-full max-w-content px-gutter py-section">
-    <p
-      class="text-[clamp(6rem,30vw,12rem)] leading-none font-bold text-concrete-400"
-      aria-hidden="true"
-    >
-      404
-    </p>
-    <h1 class="mt-4 text-h2 font-bold uppercase">{notFound.title}</h1>
-    <p class="mt-4 max-w-prose text-lede">{notFound.text}</p>
-    <Button variant="secondary" href="/" class="mt-8">
-      {notFound.back}
-    </Button>
+  <section class="mx-auto grid w-full max-w-content gap-x-12 px-gutter py-section md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
+    <div>
+      <p
+        class="text-[clamp(6rem,30vw,12rem)] leading-none font-bold text-concrete-400"
+        aria-hidden="true"
+      >
+        404
+      </p>
+      <h1 class="mt-4 text-h2 font-bold uppercase">{notFound.title}</h1>
+      <p class="mt-4 max-w-prose text-lede">{notFound.text}</p>
+      <Button variant="secondary" href="/" class="mt-8">
+        {notFound.back}
+      </Button>
+    </div>
+    <!-- Salta hacia la barra que no está (punteada) y cae: una sola vez. -->
+    <Athlete
+      exercise="jump"
+      class="mt-10 h-56 w-auto justify-self-end md:mt-0 md:h-80"
+    />
   </section>
 </SiteLayout>

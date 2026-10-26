@@ -126,9 +126,14 @@ Las cifras de precios usan `tabular-nums`.
 **Atletas de gis** (`src/lib/athlete-poses.ts` + `athletes.ts`, componente `Athlete`, 2026-10-26):
 
 - **Qué son:** siluetas atléticas de gis (relleno `chalk` al 55 %, grano suave con su propio filtro fijo en el espacio del dibujo) que hacen un ejercicio de calistenia. Son decoración: `aria-hidden`, sin texto.
-- **Cómo se mueven:** cada repetición avanza **con el scroll** mientras el atleta cruza la pantalla (3 dominadas de ida y vuelta); si el scroll se detiene, el atleta también. No hay bucles ni movimiento propio. Solo se calcula mientras está en pantalla (IntersectionObserver + `requestAnimationFrame`).
-- **Mecánica:** poses con cinemática inversa: las manos nunca se despegan de la barra. La misma función dibuja la pose fija en el build, así que sin JS o con movimiento reducido se ve el atleta quieto en el punto más alto.
-- **Dónde:** pocos (3–4 en todo el sitio), nunca dos en la misma pantalla y nunca junto a un CTA, el formulario o el Hero. Fase 1: dominadas junto al título de «Entrena online» (escritorio: colgado arriba a la derecha; móvil: al lado de la entrada).
+- **Cómo se mueven:** cada repetición avanza **con el scroll** mientras el atleta cruza la pantalla; si el scroll se detiene, el atleta también. No hay bucles ni movimiento propio. Solo se calcula mientras está en pantalla (IntersectionObserver + `requestAnimationFrame`). Excepción: en páginas sin scroll (404) el movimiento ocurre **una sola vez** cuando el atleta se ve al 60 %.
+- **Mecánica:** poses calculadas (cinemática inversa en las dominadas: las manos nunca se despegan de la barra). La misma función dibuja la pose fija en el build, así que sin JS o con movimiento reducido se ve el atleta quieto en su pose más expresiva.
+- **Dónde:** pocos, nunca dos en la misma pantalla y nunca junto a un CTA, el formulario o el Hero. Hoy son tres:
+  - **Dominadas** (él, de frente, 3 repeticiones): junto al título de «Entrena online».
+  - **Pistol squat** (ella, de perfil, 2 repeticiones): junto a «Carga & Descarga», porque la pistol es fuerza (semana de carga).
+  - **Salto a la barra que no está** (404, «Aquí no hay barra»): se agacha, salta hacia una barra punteada, no la alcanza y aterriza. Con movimiento reducido queda en el aire, estirándose.
+  - En escritorio cuelgan o se paran arriba a la derecha del título; en móvil, al lado del texto de entrada.
+  - **Descartado:** un cuarto atleta en la cinta de disciplinas. Está pegada al Hero, que ya tiene barra, magnesia, foto que se balancea y cinta en movimiento.
 - **Color:** gis, nunca vino (el vino es de acciones y significado).
 
 **Momentos con JS** (IntersectionObserver o WAAPI, una sola vez):
