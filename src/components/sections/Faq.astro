@@ -47,6 +47,14 @@ const { title, mark, items } = Astro.props;
             />
           </summary>
           <p class="faq-answer max-w-prose pb-6 text-concrete-600">{item.a}</p>
+          {item.link && (
+            <a
+              href={item.link.href}
+              class="-mt-3 mb-6 inline-flex min-h-11 items-center font-semibold underline underline-offset-[0.2em]"
+            >
+              {item.link.label}
+            </a>
+          )}
           {item.demo && (
             <DemoNote text={item.demo} tone="light" class="mb-6 max-w-prose" />
           )}

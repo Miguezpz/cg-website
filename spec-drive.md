@@ -69,7 +69,7 @@ Construir una **landing page de conversión** para **Control Gravedad**, la escu
 Orden de secciones = orden del embudo: **atención → autoridad → oferta → prueba → facilidad → objeciones → acción**.
 
 ### RF-01 · Header y navegación
-- Logo o nombre a la izquierda; enlaces ancla: Sobre mí · Servicios · Resultados · FAQ · Contacto; CTA "Contáctame" siempre visible.
+- Logo o nombre a la izquierda; enlaces ancla: Sobre mí · Servicios · Skills · Resultados · FAQ · Contacto; CTA "Contáctame" siempre visible.
 - Header *sticky* que gana fondo al hacer scroll.
 - En móvil: menú hamburguesa accesible.
 
@@ -101,7 +101,8 @@ Orden de secciones = orden del embudo: **atención → autoridad → oferta → 
 - Pestañas con radios nativos y `:has()`: funciona sin JS. Cada skill tiene su CTA de WhatsApp, que nombra el skill (`data-source="skills"`, `data-service="skill-<id>"`).
 - Las etapas son una progresión clásica de ejemplo, con aviso «Demo», hasta que el coach confirme las que usa (§17.1).
 
-- La meta se ejecuta una sola vez al verse y se queda en su posición. Cada etapa se puede elegir («¿En qué etapa vas?») y se agrega al mensaje de WhatsApp del skill (2026-10-26).
+- La meta se ejecuta una sola vez al verse y se queda en su posición, con un cronómetro de gis que cuenta 3 s mientras sostiene. Cada etapa se puede elegir («¿En qué etapa vas?») y se agrega al mensaje de WhatsApp del skill; además se propone en el formulario de contacto (objetivo «Aprender skills» y un mensaje), sin pisar lo que la persona ya eligió o escribió (2026-10-26).
+- Se llega desde el menú («Skills») y desde la respuesta de la FAQ «¿Qué skills puedo aprender?».
 
 **Aceptación:** se cambia de skill y de etapa con mouse, touch y flechas del teclado; los dibujos son decorativos (`aria-hidden`); con movimiento reducido no hay animación.
 
@@ -253,8 +254,10 @@ type FaqItem   = { q: string; a: string };
 | `whatsapp_click` | Clic en `[data-track=whatsapp]` | `source`, `service` |
 | `form_submit` | Envío exitoso | `goal` |
 | `social_click` | Clic en Instagram/TikTok | `network` |
+| `skill_view` | Elegir un skill en la ruta de skills | `skill` |
+| `skill_stage` | Elegir una etapa («¿En qué etapa vas?») | `skill`, `stage` (1–4) |
 
-- Un solo listener delegado en `document` (sin handlers por botón).
+- Un solo listener delegado en `document` (sin handlers por botón). Excepción: `skill_view` y `skill_stage` salen del cambio de radio de la ruta de skills.
 - `whatsapp_click` y `form_submit` se marcan como **eventos clave** en GA4.
 - GA4 se carga después de `load` o en la primera interacción para cumplir RNF-01 y RNF-03.
 
@@ -392,6 +395,7 @@ Cada tarea se cierra con el ciclo de §13 y su prueba e2e.
 
 - **T3.15 · ✅ Ruta de skills** (2026-10-26, sobre `main`) — RF-04.1, RNF-07: sección `#skills` con una escalera de 4 etapas por skill, dibujadas en gis con las proporciones de los atletas (`src/lib/skill-poses.ts`, poses fijas). En los levers y la plancha, el ángulo del brazo se calcula para que el centro de masa quede bajo la barra o sobre las manos. Las etapas suben desde su escalón al verse y al cambiar de skill. Se descartaron el front lever como separador (ya está en la escalera) y más magnesia (ya existe en el Hero y en los enlaces de WhatsApp).
 - **T3.16 · ✅ Meta en movimiento y etapa en WhatsApp** (2026-10-26, sobre `main`) — RF-04.1: la meta de cada skill se ejecuta una vez al verse (y al elegir otro skill) y termina en su pose fija; cada etapa es un radio y la elegida se agrega al mensaje de WhatsApp. Reglas en `DESIGN.md` (Ruta de skills).
+- **T3.17 · ✅ Ruta de skills conectada y medida** (2026-10-26, sobre `main`) — RF-01, RF-04.1, RF-09, §9.3: «Skills» en el menú; enlace desde la FAQ; eventos `skill_view` y `skill_stage` (sin PII); la etapa elegida se propone en el formulario de contacto; cronómetro de gis en la meta. Lighthouse local: 99/100/100/100 en `/` (LCP 2.0 s, CLS 0, TBT 0 ms) y 100/100/100/100 en `/privacidad`. *(Descartado: enlazar la cinta de disciplinas, porque se mueve con el scroll y repite cada palabra tres veces.)*
 
 ### Fase 4 — QA y lanzamiento (→ M5)
 - **T4.1 · ✅ Completar la suite e2e** (sin JS, reduced motion, axe, WebKit) — RNF-06–08, RNF-11.
@@ -599,3 +603,4 @@ Leyenda: 🔴 bloquea el inicio · 🟠 bloquea el diseño (T1.2) · 🟢 bloque
 | v0.10.10 | 2026-10-26 | T3.13: el codo del muscle-up ya no se voltea hacia la espalda al subir o bajar |
 | v0.11 | 2026-10-26 | RF-04.1 / T3.15: ruta de skills (escalera de 4 etapas por skill, con CTA de WhatsApp por skill) |
 | v0.11.1 | 2026-10-26 | T3.16: la meta de cada skill se ejecuta; «¿En qué etapa vas?» agrega la etapa al mensaje de WhatsApp (§9.1) |
+| v0.11.2 | 2026-10-26 | T3.17: «Skills» en el menú y la FAQ, eventos `skill_view`/`skill_stage` (§9.3), etapa propuesta en el formulario y cronómetro en la meta |

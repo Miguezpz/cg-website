@@ -24,6 +24,7 @@ interface Props {
   stageHint: string;
   waStage: string;
   waGoal: string;
+  formMessage: string;
   demo?: string;
   skills: Skill[];
 }
@@ -39,6 +40,7 @@ const {
   stageHint,
   waStage,
   waGoal,
+  formMessage,
   demo,
   skills,
 } = Astro.props;
@@ -79,7 +81,14 @@ const {
     {skills.map((skill) => {
       const ladder = skillLadders[skill.id];
       return (
-        <div class="skill-panel mt-4" data-skill={skill.id}>
+        <div
+          class="skill-panel mt-4"
+          data-skill={skill.id}
+          data-form-message={formMessage.replace(
+            '{interest}',
+            skill.waInterest,
+          )}
+        >
           <h3 class="sr-only">{skill.name}</h3>
           <!-- Escalera: cada etapa un escalón más arriba; la meta, en vino.
                Cada etapa es un radio: «¿en qué etapa vas?». -->
@@ -150,6 +159,17 @@ const {
                           ]}
                         >
                           {goal ? goalLabel : `${stageLabel} ${i + 1}`}
+                          {/* Cronómetro de gis: cuenta mientras la meta sostiene. */}
+                          {goal && (
+                            <span
+                              data-timer
+                              hidden
+                              aria-hidden="true"
+                              class="stage-timer ml-2 inline-block -rotate-2 text-[1.2rem] leading-none font-normal text-chalk normal-case"
+                            >
+                              0:00
+                            </span>
+                          )}
                         </span>
                         <span class="stage-name mt-1 block">
                           {skill.stages[i]}
@@ -224,6 +244,11 @@ const {
     text-underline-offset: 0.35em;
   }
 
+  /* El cronómetro va a mano, como las anotaciones de gis. */
+  .stage-timer {
+    font-family: var(--font-hand);
+  }
+
   /* Solo se ve la escalera del skill elegido. */
   @supports selector(:has(*)) {
     .skill-panel {
@@ -255,11 +280,14 @@ const {
 </style>
 
 <script>
+  import { track } from '../../lib/analytics';
   import { update } from '../../lib/athletes';
   import { skillLadders, type SkillId } from '../../lib/skill-poses';
 
   /** La meta empieza a moverse cuando su escalón ya casi subió. */
   const META_DELAY = 1000;
+  /** Segundos que cuenta el cronómetro mientras la meta sostiene. */
+  const HOLD_SECONDS = 3;
 
   const section = document.querySelector<HTMLElement>('[data-skills]');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -273,19 +301,33 @@ const {
       section?.querySelector<HTMLInputElement>('[name="skill"]:checked')?.value,
     );
 
-  /** La meta se ejecuta una vez y se queda sosteniendo la posición. */
+  /**
+   * La meta se ejecuta una vez y se queda sosteniendo la posición; mientras
+   * sostiene, el cronómetro cuenta unos segundos y se detiene.
+   */
   function play(target?: HTMLElement | null): void {
     const ladder = skillLadders[target?.dataset.skill as SkillId];
     const parts = target?.querySelector('[data-meta] [data-body]')?.children;
+    const timer = target?.querySelector<HTMLElement>('[data-timer]');
     if (!ladder || !parts) return;
     cancelAnimationFrame(frame);
     update(parts, ladder.meta(0));
+    if (timer) timer.hidden = true;
     let start = 0;
+    let held = 0;
     const tick = (now: number) => {
       start ||= now + META_DELAY;
       const p = Math.max(0, Math.min(1, (now - start) / ladder.duration));
       update(parts, ladder.meta(p));
-      if (p < 1) frame = requestAnimationFrame(tick);
+      if (p >= ladder.hold) held ||= now;
+      const seconds = held
+        ? Math.min(HOLD_SECONDS, Math.floor((now - held) / 1000))
+        : 0;
+      if (timer && held) {
+        timer.hidden = false;
+        timer.textContent = `0:0${seconds}`;
+      }
+      if (p < 1 || seconds < HOLD_SECONDS) frame = requestAnimationFrame(tick);
     };
     frame = requestAnimationFrame(tick);
   }
@@ -316,17 +358,31 @@ const {
   section?.addEventListener('change', (event) => {
     const input = event.target as HTMLInputElement;
     if (input.name === 'skill') {
+      track('skill_view', { skill: input.value });
       if (!animate) return;
       // Las etapas del nuevo skill suben y su meta se ejecuta.
       if (seen) play(panel(input.value));
       else reveal();
       return;
     }
-    // Etapa elegida: se agrega al mensaje de WhatsApp de ese skill.
-    const cta = input
-      .closest('[data-skill]')
-      ?.querySelector<HTMLAnchorElement>('a[data-track="whatsapp"]');
-    if (!cta) return;
+    // Etapa elegida: se agrega al mensaje de WhatsApp de ese skill y se
+    // propone en el formulario de contacto. A GA4 va solo skill y etapa.
+    const ladder = input.closest<HTMLElement>('[data-skill]');
+    const cta = ladder?.querySelector<HTMLAnchorElement>(
+      'a[data-track="whatsapp"]',
+    );
+    if (!ladder || !cta) return;
+    track('skill_stage', {
+      skill: ladder.dataset.skill ?? '',
+      stage: input.value,
+    });
+    document.dispatchEvent(
+      new CustomEvent('skill-interest', {
+        detail: {
+          message: `${ladder.dataset.formMessage} ${input.dataset.waNote}`,
+        },
+      }),
+    );
     const [url, text = ''] = cta.href.split('?text=');
     cta.dataset.waText ??= decodeURIComponent(text);
     cta.href = `${url}?text=${encodeURIComponent(

@@ -45,6 +45,8 @@ export interface FaqItem {
   a: string;
   /** Respuesta demo: qué falta confirmar. No se publica en el JSON-LD. */
   demo?: string;
+  /** Enlace después de la respuesta (no se publica en el JSON-LD). */
+  link?: { label: string; href: string };
 }
 
 export interface SocialLink {

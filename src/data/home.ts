@@ -3,6 +3,7 @@
 export const nav = [
   { label: 'Sobre mí', href: '/#sobre-mi' },
   { label: 'Servicios', href: '/#servicios' },
+  { label: 'Skills', href: '/#skills' },
   { label: 'Resultados', href: '/#resultados' },
   { label: 'FAQ', href: '/#faq' },
   { label: 'Contacto', href: '/#contacto' },
@@ -83,6 +84,8 @@ export const skillsSection = {
   /** Se agrega al mensaje de WhatsApp del skill al elegir una etapa. */
   waStage: 'Ahora voy en «{stage}».',
   waGoal: 'Ya llegué a «{stage}» y quiero seguir avanzando.',
+  /** Mensaje que se propone en el formulario de contacto al elegir etapa. */
+  formMessage: 'Me interesa {interest}.',
   demo: 'Progresiones de ejemplo. Falta: que el coach confirme las etapas que usa en cada skill.',
 } as const;
 
@@ -169,6 +172,8 @@ export const contact = {
     goal: {
       label: 'Objetivo',
       placeholder: 'Elige una opción',
+      /** Opción que se elige sola al marcar una etapa en la ruta de skills. */
+      skills: 'Aprender skills (muscle-up, parada de manos…)',
       options: [
         'Empezar desde cero',
         'Aprender skills (muscle-up, parada de manos…)',

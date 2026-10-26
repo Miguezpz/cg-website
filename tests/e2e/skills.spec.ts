@@ -114,6 +114,61 @@ test('la etapa elegida se agrega al mensaje de WhatsApp', async ({ page }) => {
   ).toHaveValue('4');
 });
 
+test('mientras la meta sostiene, el cronómetro cuenta hasta 0:03', async ({
+  page,
+}) => {
+  await page.goto('/');
+  const timer = page.locator(`${panel('handstand')} [data-timer]`);
+  await expect(timer).toBeHidden();
+  await page.locator(`${panel('handstand')} ol`).scrollIntoViewIfNeeded();
+  await expect(timer).toHaveText('0:03', { timeout: 9000 });
+  await expect(timer).toHaveAttribute('aria-hidden', 'true');
+});
+
+test('la etapa elegida se propone en el formulario sin pisar lo escrito', async ({
+  page,
+}) => {
+  await page.goto('/');
+  await page.locator('#skills .skill-tab', { hasText: 'Planche' }).click();
+  await page
+    .locator(`${panel('planche')} .stage-pick`, { hasText: 'Tuck avanzado' })
+    .click();
+  await expect(page.locator('#f-goal')).toHaveValue(
+    'Aprender skills (muscle-up, parada de manos…)',
+  );
+  await expect(page.locator('#f-message')).toHaveValue(
+    'Me interesa aprender la planche. Ahora voy en «Tuck avanzado».',
+  );
+  // Si cambia de etapa, la propuesta se actualiza…
+  await page
+    .locator(`${panel('planche')} .stage-pick`, { hasText: 'Etapa 1' })
+    .click();
+  await expect(page.locator('#f-message')).toHaveValue(
+    'Me interesa aprender la planche. Ahora voy en «Planche lean».',
+  );
+  // …pero lo que la persona escribe no se toca.
+  await page.locator('#f-message').fill('Tengo una lesión de hombro.');
+  await page
+    .locator(`${panel('planche')} .stage-pick`, { hasText: 'Tuck' })
+    .first()
+    .click();
+  await expect(page.locator('#f-message')).toHaveValue(
+    'Tengo una lesión de hombro.',
+  );
+});
+
+test('la FAQ y el menú llevan a la ruta de skills', async ({ page }) => {
+  await page.goto('/');
+  await expect(
+    page.locator('#faq a[href="#skills"]', {
+      hasText: 'Ver las etapas de cada skill',
+    }),
+  ).toHaveCount(1);
+  await expect(page.locator('a[data-nav-link][href="/#skills"]')).toHaveCount(
+    1,
+  );
+});
+
 test.describe('con movimiento reducido', () => {
   test.use({ reducedMotion: 'reduce' });
 
@@ -126,9 +181,12 @@ test.describe('con movimiento reducido', () => {
       .locator('ol:visible .stage-figure')
       .evaluateAll((svgs) => svgs.map((svg) => getComputedStyle(svg).clipPath));
     expect(clips).toEqual(['none', 'none', 'none', 'none']);
-    // La meta se queda en su pose fija.
+    // La meta se queda en su pose fija y no hay cronómetro.
     const still = await meta(page, 'handstand');
     await page.waitForTimeout(1500);
     expect(await meta(page, 'handstand')).toBe(still);
+    await expect(
+      page.locator(`${panel('handstand')} [data-timer]`),
+    ).toBeHidden();
   });
 });

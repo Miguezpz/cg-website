@@ -39,6 +39,8 @@ export type SkillLadder = {
   meta: (p: number) => Shape[];
   /** Duración de la meta, en ms. */
   duration: number;
+  /** Avance (0 → 1) en el que la meta ya sostiene la posición. */
+  hold: number;
 };
 
 type Leg = { knee: Point; ankle: Point; toe: Point };
@@ -298,7 +300,12 @@ function frame(stages: Stage[]): string {
  */
 function ladder(
   stages: Stage[],
-  goal: { fixed: Shape[]; pose: (p: number) => Joints; duration: number },
+  goal: {
+    fixed: Shape[];
+    pose: (p: number) => Joints;
+    duration: number;
+    hold: number;
+  },
 ): SkillLadder {
   const meta = (p: number) => draw(goal.pose(p), true);
   const all = [...stages, { fixed: goal.fixed, body: meta(1) }];
@@ -312,6 +319,7 @@ function ladder(
     stages: all,
     meta,
     duration: goal.duration,
+    hold: goal.hold,
   };
 }
 
@@ -335,6 +343,8 @@ const handstand = (() => {
     {
       fixed: [],
       duration: 2800,
+      // Ya parado de manos: lo que sigue son las correcciones.
+      hold: 0.45,
       // Desde la tijera junta las piernas y corrige el equilibrio con las
       // muñecas: el cuerpo, recto, se mece cada vez menos hasta quedar quieto.
       pose(p) {
@@ -372,6 +382,7 @@ const muscleup = ladder(
   {
     fixed: [bar()],
     duration: 2600,
+    hold: 0.82,
     // Una repetición: jalón lento al pecho, transición rápida con el pecho sobre
     // la barra, empuje y bloqueo arriba (brazos rectos, cuerpo vertical). En el
     // jalón el cuerpo hace un arco hacia atrás y el antebrazo queda casi
@@ -462,7 +473,7 @@ const frontlever = ladder(
     stage(hold('hang', [ADV_UP]), [bar()]),
     stage(hold('hang', [FULL, ADV_UP]), [bar()]),
   ],
-  { fixed: [bar()], duration: 2200, pose: extend('hang', TUCK_UP) },
+  { fixed: [bar()], duration: 2200, hold: 0.65, pose: extend('hang', TUCK_UP) },
 );
 
 const backlever = ladder(
@@ -471,7 +482,12 @@ const backlever = ladder(
     stage(hold('hang', [ADV_DOWN]), [bar()]),
     stage(hold('hang', [FULL, ADV_DOWN]), [bar()]),
   ],
-  { fixed: [bar()], duration: 2200, pose: extend('hang', TUCK_DOWN) },
+  {
+    fixed: [bar()],
+    duration: 2200,
+    hold: 0.65,
+    pose: extend('hang', TUCK_DOWN),
+  },
 );
 
 const planche = (() => {
@@ -496,6 +512,7 @@ const planche = (() => {
   return ladder([stage(lean, []), stage(tuck, []), stage(adv, [])], {
     fixed: [],
     duration: 2400,
+    hold: 0.65,
     // Del tuck a la plancha completa: la cadera baja mientras se extiende.
     pose: extend('support', TUCK_DOWN, [14, 2]),
   });
@@ -518,6 +535,7 @@ const pistol = (() => {
     {
       fixed: [],
       duration: 2400,
+      hold: 0.75,
       // De pie sobre una pierna, baja despacio hasta el fondo y se queda.
       pose: (p) =>
         squat(
