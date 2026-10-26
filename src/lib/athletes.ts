@@ -11,8 +11,7 @@ const ATTRS: Record<Shape['kind'], string[]> = {
   path: ['d'],
 };
 
-function apply(svg: SVGSVGElement, shapes: Shape[]): void {
-  const parts = svg.querySelector('[data-body]')?.children;
+function update(parts: HTMLCollection | undefined, shapes: Shape[]): void {
   if (!parts) return;
   shapes.forEach((shape, i) => {
     const el = parts[i];
@@ -21,6 +20,14 @@ function apply(svg: SVGSVGElement, shapes: Shape[]): void {
       el.setAttribute(attr, String(shape[attr as keyof typeof shape]));
     }
   });
+}
+
+/** Dibuja el cuerpo para un esfuerzo/avance `s`, y el equipo que se mueve. */
+function apply(svg: SVGSVGElement, s: number): void {
+  const rig = athletes[svg.dataset.athlete as Exercise];
+  if (!rig) return;
+  update(svg.querySelector('[data-body]')?.children, rig.pose(s));
+  if (rig.gear) update(svg.querySelector('[data-gear]')?.children, rig.gear(s));
 }
 
 /** Ms por repetición cuando un atleta de repeticiones se mueve una sola vez. */
@@ -32,7 +39,7 @@ function reps(svg: SVGSVGElement, travel: number): void {
   if (rig?.play !== 'scroll') return;
   // Cada repetición sube y baja con una curva suave (coseno).
   const phase = (travel * rig.reps) % 1;
-  apply(svg, rig.pose((1 - Math.cos(phase * 2 * Math.PI)) / 2));
+  apply(svg, (1 - Math.cos(phase * 2 * Math.PI)) / 2);
 }
 
 function drawScroll(svg: SVGSVGElement): void {
@@ -55,7 +62,7 @@ function playOnce(svg: SVGSVGElement): void {
   const tick = (now: number) => {
     start ||= now;
     const progress = Math.min(1, (now - start) / duration);
-    if (rig.play === 'once') apply(svg, rig.pose(progress));
+    if (rig.play === 'once') apply(svg, progress);
     // Al terminar la última repetición, `phase` vuelve a 0 (posición inicial).
     else reps(svg, progress === 1 ? 0 : progress);
     if (progress < 1) requestAnimationFrame(tick);

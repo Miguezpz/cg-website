@@ -25,10 +25,21 @@ const [minX, minY, width, height] = rig.viewBox.split(' ').map(Number);
 // figura, el grano «hervirá» al moverse.
 const filterId = `athlete-chalk-${exercise}`;
 
+// El «corte» que separa un brazo del torso va del color del fondo.
+const gapClass = tone === 'chalk' ? 'stroke-steel-950' : 'stroke-concrete-100';
+
 const attrs = (shape: Shape) => {
   if (shape.kind === 'line') {
-    const { x1, y1, x2, y2, w, dash } = shape;
-    return { x1, y1, x2, y2, 'stroke-width': w, 'stroke-dasharray': dash };
+    const { x1, y1, x2, y2, w, dash, gap } = shape;
+    return {
+      x1,
+      y1,
+      x2,
+      y2,
+      'stroke-width': w,
+      'stroke-dasharray': dash,
+      class: gap ? gapClass : undefined,
+    };
   }
   if (shape.kind === 'circle') {
     const { cx, cy, r, ring } = shape;
@@ -95,6 +106,19 @@ const attrs = (shape: Shape) => {
       ) : (
         <path {...attrs(shape)} />
       ),
+    )}
+    {rig.gear && (
+      <g data-gear>
+        {rig
+          .gear(rig.still)
+          .map((shape) =>
+            shape.kind === 'line' ? (
+              <line {...attrs(shape)} />
+            ) : (
+              <circle {...attrs(shape)} />
+            ),
+          )}
+      </g>
     )}
   </g>
   <g

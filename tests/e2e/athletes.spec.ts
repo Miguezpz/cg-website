@@ -32,16 +32,25 @@ test('las manos no se despegan de la barra ni de las anillas', async ({
     await page.locator(athlete(exercise)).scrollIntoViewIfNeeded();
     for (const step of [0, 90, 90]) {
       await page.evaluate((y) => scrollBy(0, y), step);
-      // La mano es el último círculo pequeño del cuerpo (en y = 0).
-      const hands = await page
-        .locator(`${athlete(exercise)} [data-body] > circle`)
-        .evaluateAll((els) =>
-          els
-            .filter((el) => Number(el.getAttribute('r')) < 4)
-            .map((el) => el.getAttribute('cy')),
+      const gap = await page.locator(athlete(exercise)).evaluate((svg) => {
+        const xy = (el: Element) =>
+          ['cx', 'cy'].map((a) => Number(el.getAttribute(a)));
+        // La mano es el círculo pequeño del cuerpo.
+        const hand = [...svg.querySelectorAll('[data-body] > circle')].find(
+          (el) => Number(el.getAttribute('r')) < 4,
         );
-      expect(hands.length).toBeGreaterThan(0);
-      expect(new Set(hands)).toEqual(new Set(['0']));
+        if (!hand) return Infinity;
+        const [hx, hy] = xy(hand);
+        // Con anilla (se mueve con la correa): la mano va pegada a ella.
+        const ring = svg.querySelector('[data-gear] > circle');
+        if (ring) {
+          const [rx, ry] = xy(ring);
+          return Math.hypot(hx - rx, hy - ry);
+        }
+        // Con barra fija: la mano está sobre ella (y = 0).
+        return Math.abs(hy);
+      });
+      expect(gap).toBeLessThan(7);
     }
   }
 });

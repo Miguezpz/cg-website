@@ -16,6 +16,8 @@ export type Shape =
       y2: number;
       w: number;
       dash?: string;
+      /** «Corte» del color del fondo que separa un brazo del torso. */
+      gap?: boolean;
     }
   | {
       kind: 'circle';
@@ -33,6 +35,8 @@ export type Rig = {
   still: number;
   /** Lo que no se mueve (la barra, el piso), en acero. */
   fixed: Shape[];
+  /** Equipo que se mueve con el atleta (anilla y correa), en acero. */
+  gear?: (s: number) => Shape[];
   /**
    * El cuerpo. Con `scroll`, `s` es el esfuerzo de una repetición (0 = inicio,
    * 1 = punto más alto). Con `once`, el avance del movimiento completo.
@@ -55,7 +59,13 @@ type Point = { x: number; y: number };
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 const round = (n: number) => Math.round(n * 10) / 10;
-const line = (a: Point, b: Point, w: number, dash?: string): Shape => ({
+const line = (
+  a: Point,
+  b: Point,
+  w: number,
+  dash?: string,
+  gap?: boolean,
+): Shape => ({
   kind: 'line',
   x1: round(a.x),
   y1: round(a.y),
@@ -63,7 +73,24 @@ const line = (a: Point, b: Point, w: number, dash?: string): Shape => ({
   y2: round(b.y),
   w,
   ...(dash && { dash }),
+  ...(gap && { gap }),
 });
+/**
+ * Brazo de perfil que pasa por encima del torso: primero un corte del color
+ * del fondo (como gis borrado) y encima el brazo, para que se lea.
+ */
+const arm = (
+  shoulder: Point,
+  elbowPt: Point,
+  wrist: Point,
+  upper: number,
+  fore: number,
+): Shape[] => [
+  line(shoulder, elbowPt, upper + 3, undefined, true),
+  line(elbowPt, wrist, fore + 3, undefined, true),
+  line(shoulder, elbowPt, upper),
+  line(elbowPt, wrist, fore),
+];
 const add = (p: Point, length: number, angle: number): Point => ({
   // Ángulo desde la vertical hacia abajo; positivo = hacia la derecha.
   x: p.x + length * Math.sin(angle),
@@ -118,6 +145,27 @@ function elbow(
   return options[0].x * outward > options[1].x * outward
     ? options[0]
     : options[1];
+}
+
+/**
+ * Codo que siempre dobla hacia el mismo lado de la línea muñeca → hombro
+ * (`side` = signo del producto cruz). Cuando el hombro rodea la anilla (abajo
+ * en el jalón, al lado en la transición, encima en el empuje), el codo gira con
+ * él en vez de saltar al otro lado: abajo al jalar, abajo y atrás al empujar.
+ */
+function elbowAround(
+  hand: Point,
+  shoulder: Point,
+  forearm: number,
+  upperArm: number,
+  side: 1 | -1,
+): Point {
+  const a = elbow(hand, shoulder, forearm, upperArm, 1);
+  const b = elbow(hand, shoulder, forearm, upperArm, -1);
+  const cross = (e: Point) =>
+    (shoulder.x - hand.x) * (e.y - hand.y) -
+    (shoulder.y - hand.y) * (e.x - hand.x);
+  return Math.sign(cross(a)) === side ? a : b;
 }
 
 // Proporciones atléticas, en unidades del viewBox (≈ 1 px a tamaño real).
@@ -258,7 +306,7 @@ const pistol: Rig = {
 
 /** 404: salta hacia una barra que no está (punteada) y vuelve al piso. */
 const jump: Rig = {
-  viewBox: '-50 -226 100 234',
+  viewBox: '-75 -226 150 234',
   play: 'once',
   duration: 1800,
   still: 0.5,
@@ -371,76 +419,155 @@ const dips: Rig = {
       line(hip, knee, 11),
       line(knee, ankle, 7.5),
       line(ankle, add(ankle, 5, deg(-80)), 4.5),
-      line(shoulder, elbowPt, 7.5),
-      line(elbowPt, hand, 6),
+      ...arm(shoulder, elbowPt, hand, 7.5, 6),
       circle(hand, 3.5),
     ];
   },
 };
 
+/*
+ * Muscle-up estricto en anillas, de perfil (él). Biomecánica (CrossFit, The
+ * Barbell Physio, Rocha et al.):
+ * - Agarre falso: la anilla va en la muñeca, no en los dedos, así que el
+ *   antebrazo útil es más corto y la mano se dobla por encima de la anilla.
+ * - Jalón (lento): la anilla baja hasta el pecho, por debajo de la axila, con
+ *   los codos pegados a las costillas y el cuerpo inclinado ~28° atrás, en
+ *   hueco (una línea de los hombros a los pies).
+ * - Transición (rápida): el torso se inclina al frente lo justo para pasar
+ *   sobre las anillas, que se quedan pegadas al pecho. Los codos no suben:
+ *   siguen bajando y jalando las anillas hacia abajo mientras el cuerpo sube.
+ * - Empuje continuo hasta bloquear los brazos, con el cuerpo vertical. Los
+ *   hombros siempre van detrás o encima de la anilla, nunca delante, así que
+ *   los codos apuntan abajo y atrás en todo el ascenso.
+ * - Las anillas cuelgan de correas: en equilibrio, el centro de masa queda en
+ *   la línea del anclaje a la anilla, así que la correa se inclina.
+ */
+const STRAP = 86;
+const FALSE_GRIP_FOREARM = 21;
+
+// Masa relativa de cada segmento (antropometría de Dempster, ambos lados).
+const MASS = {
+  head: 0.08,
+  trunk: 0.5,
+  upperArm: 0.056,
+  forearm: 0.044,
+  thigh: 0.2,
+  shin: 0.12,
+};
+
+function muscleupFrame(s: number): { body: Shape[]; gear: Shape[] } {
+  // Esfuerzo → tiempo real: el jalón ocupa casi la mitad y la transición es
+  // un tramo corto.
+  const shoulderRel = {
+    x: keys(s, [
+      [0, -2],
+      [0.4, -13],
+      [0.52, -9],
+      [0.64, -6],
+      [0.82, -3],
+      [1, -1],
+    ]),
+    y: keys(s, [
+      [0, 48.5],
+      [0.4, -4],
+      [0.52, -14],
+      [0.64, -24],
+      [0.82, -36],
+      [1, -47.5],
+    ]),
+  };
+  // Ángulo del tronco y de las piernas respecto a la vertical (+ = la parte de
+  // abajo va al frente): atrás en el jalón, al frente en la transición y
+  // vertical al bloquear.
+  const lean = deg(
+    keys(s, [
+      [0, 4],
+      [0.4, 28],
+      [0.52, -18],
+      [0.64, -20],
+      [0.82, -12],
+      [1, -5],
+    ]),
+  );
+  const legs = deg(
+    keys(s, [
+      [0, 8],
+      [0.4, 33],
+      [0.52, 18],
+      [0.64, 12],
+      [0.82, 6],
+      [1, 0],
+    ]),
+  );
+
+  // Pose relativa a la muñeca (que va en la anilla).
+  const wrist = { x: 0, y: 0 };
+  const shoulder = shoulderRel;
+  const elbowPt = elbowAround(
+    wrist,
+    shoulder,
+    FALSE_GRIP_FOREARM,
+    body.upperArm,
+    -1,
+  );
+  const hip = add(shoulder, body.torso, lean);
+  const head = add(shoulder, body.neck + body.head - 1, lean + Math.PI);
+  const knee = add(hip, body.thigh, legs);
+  const ankle = add(knee, body.shin, legs);
+  const mid = (a: Point, b: Point) => ({
+    x: (a.x + b.x) / 2,
+    y: (a.y + b.y) / 2,
+  });
+  const parts: [Point, number][] = [
+    [head, MASS.head],
+    [mid(shoulder, hip), MASS.trunk],
+    [mid(shoulder, elbowPt), MASS.upperArm],
+    [mid(elbowPt, wrist), MASS.forearm],
+    [mid(hip, knee), MASS.thigh],
+    [mid(knee, ankle), MASS.shin],
+  ];
+  const com = parts.reduce(
+    (acc, [p, m]) => ({ x: acc.x + p.x * m, y: acc.y + p.y * m }),
+    { x: 0, y: 0 },
+  );
+  // La correa apunta hacia el centro de masa (equilibrio de un péndulo).
+  const strap = Math.max(
+    -0.26,
+    Math.min(0.26, Math.atan2(com.x, Math.max(com.y, 4))),
+  );
+  const anchor = { x: 0, y: -STRAP };
+  const ring = add(anchor, STRAP, strap);
+  const at = (p: Point) => ({ x: p.x + ring.x, y: p.y + ring.y });
+
+  // Agarre falso: la mano se dobla por encima y al frente de la anilla.
+  const hand = at({ x: 3, y: -4 });
+  return {
+    gear: [
+      line(anchor, add(anchor, STRAP - 6.5, strap), 2.5),
+      circle(ring, 6.5, 2.5),
+    ],
+    body: [
+      line(at(hip), at(shoulder), 16),
+      line(at(shoulder), at(head), 7.5),
+      circle(at(head), body.head),
+      line(at(hip), at(knee), 11.5),
+      line(at(knee), at(ankle), 8),
+      line(at(ankle), add(at(ankle), 6, legs + deg(30)), 5),
+      ...arm(at(shoulder), at(elbowPt), at(wrist), 8.5, 7),
+      circle(hand, 3.6),
+    ],
+  };
+}
+
 /** Muscle-up en anillas de perfil (él): jalón, transición y empuje. */
 const muscleup: Rig = {
-  viewBox: '-44 -86 92 274',
+  viewBox: '-58 -92 138 276',
   play: 'scroll',
   reps: 2,
-  still: 0.55,
-  fixed: [
-    line({ x: 0, y: -86 }, { x: 0, y: -6.5 }, 2.5),
-    circle({ x: 0, y: 0 }, 6.5, 2.5),
-  ],
-  pose(s) {
-    const hand = { x: 0, y: 0 };
-    // Colgado → hombros a la altura de las anillas → pecho por encima
-    // (transición, codos atrás) → brazos rectos arriba.
-    const shoulder = {
-      x: keys(s, [
-        [0, -2],
-        [0.35, -4],
-        [0.55, 6],
-        [1, 1],
-      ]),
-      y: keys(s, [
-        [0, 51],
-        [0.35, 18],
-        [0.55, -10],
-        [1, -50],
-      ]),
-    };
-    const elbowPt = elbow(hand, shoulder, body.forearm, body.upperArm, -1);
-    // El cuerpo se ahueca al jalar y se inclina al frente en la transición.
-    const lean = deg(
-      keys(s, [
-        [0, 0],
-        [0.35, 6],
-        [0.55, -28],
-        [1, -4],
-      ]),
-    );
-    const hip = add(shoulder, body.torso, lean);
-    const head = add(shoulder, body.neck + body.head - 1, lean + Math.PI);
-    const legs = deg(
-      keys(s, [
-        [0, 4],
-        [0.35, 14],
-        [0.55, 10],
-        [1, 6],
-      ]),
-    );
-    const knee = add(hip, body.thigh, legs);
-    const ankle = add(knee, body.shin, legs - deg(4));
-
-    return [
-      line(hip, shoulder, 16),
-      line(shoulder, head, 7.5),
-      circle(head, body.head),
-      line(hip, knee, 11.5),
-      line(knee, ankle, 8),
-      line(ankle, add(ankle, 6, legs + deg(25)), 5),
-      line(shoulder, elbowPt, 8.5),
-      line(elbowPt, hand, 7),
-      circle(hand, 3.8),
-    ];
-  },
+  still: 0.6,
+  fixed: [],
+  gear: (s) => muscleupFrame(s).gear,
+  pose: (s) => muscleupFrame(s).body,
 };
 
 export const athletes: Record<Exercise, Rig> = {
