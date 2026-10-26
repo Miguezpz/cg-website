@@ -378,6 +378,7 @@ Cada tarea se cierra con el ciclo de §13 y su prueba e2e.
 - **T3.11 · ✅ Tipografía Readex Pro** (2026-10-25, branch `red-theme`) — RNF-05: Readex Pro Variable (Fontsource, latino, solo peso 160–700, 31 KB, precargada) reemplaza a Archivo (90 KB) a pedido del usuario. Sin eje de ancho: se quitan las utilidades `stretch-*`, los pesos 800–900 pasan a 700 y la escala de titulares se reduce (display `clamp(2.625rem, 12.5vw, 5.25rem)`, h2 `clamp(2rem, 8vw, 3.75rem)`) para que nada se desborde a 320 px. `og-image.jpg` regenerada con Readex. Kalam sigue como segunda familia.
 - **T3.12 · ✅ Más vino, en dos niveles** (2026-10-26, sobre `main`) — D-10: el relleno vino queda solo para acciones; el vino claro marca lo que significa algo (semanas de carga, números de los pasos, progreso de scroll, sección activa del menú) y un halo vino da profundidad a la foto del Hero y al cierre de Contacto. Regla en `DESIGN.md` (Color).
 - **T3.13 · Atletas de gis** (2026-10-26, sobre `main`) — RNF-07: siluetas de gis que hacen ejercicios ligados al scroll, en SVG + JS mínimo (sin canvas ni librerías; ADR-04/05). Por fases: ✅ **1)** dominadas junto a «Entrena online» (prototipo para validar el estilo); ✅ **2)** pistol squat junto a «Carga & Descarga» y, en la 404, un salto hacia la barra que no está (una sola vez, sin scroll); ✖ **3)** atleta en la cinta de disciplinas: descartado por saturar la zona del Hero. Reglas en `DESIGN.md` (Movimiento · Atletas de gis).
+- **T3.14 · ✅ Palabra clave en vino** (2026-10-26) — D-10: «gravedad» en el Hero y «hoy» en el cierre van en vino claro (se conserva al partir el título en letras). *(Lighthouse local tras T3.11–T3.14: 99/100/100/100 en `/`, LCP 1.9 s, CLS 0, TBT 0 ms; `/privacidad` 100/100/100/100.)*
 
 ### Fase 4 — QA y lanzamiento (→ M5)
 - **T4.1 · ✅ Completar la suite e2e** (sin JS, reduced motion, axe, WebKit) — RNF-06–08, RNF-11.
@@ -577,3 +578,4 @@ Leyenda: 🔴 bloquea el inicio · 🟠 bloquea el diseño (T1.2) · 🟢 bloque
 | v0.10.3 | 2026-10-26 | T3.12: más elementos vino según la guía de marca (vino en dos niveles: acción / significado y profundidad) |
 | v0.10.4 | 2026-10-26 | T3.13 fase 1: primer atleta de gis (dominadas ligadas al scroll) junto a «Entrena online» |
 | v0.10.5 | 2026-10-26 | T3.13 fase 2: pistol squat junto a «Carga & Descarga» y salto en la 404; fase 3 descartada |
+| v0.10.6 | 2026-10-26 | T3.14: palabra clave en vino en el Hero y el cierre; Lighthouse verificado |

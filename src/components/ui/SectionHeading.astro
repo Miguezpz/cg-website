@@ -5,6 +5,8 @@ import ChalkMark from './ChalkMark.astro';
 export interface HeadingMark {
   word: string;
   kind: 'circle' | 'underline' | 'double';
+  /** Además va en vino claro (DESIGN.md · Color: solo en momentos clave). */
+  accent?: boolean;
 }
 
 interface Props {
@@ -47,12 +49,22 @@ const markClass: Record<HeadingMark['kind'], string> = {
   {parts && mark ? (
     <>
       {parts[0]}
-      <span class="relative inline-block">
+      <span
+        class:list={[
+          'relative inline-block',
+          mark.accent && 'text-signal-glow',
+        ]}
+      >
         {parts[1]}
         <ChalkMark
           variant={mark.kind}
           draw
-          class={`pointer-events-none absolute [--chalk-delay:300ms] [--chalk-duration:700ms] ${markClass[mark.kind]}`}
+          class:list={[
+            'pointer-events-none absolute [--chalk-delay:300ms] [--chalk-duration:700ms]',
+            markClass[mark.kind],
+            // El gis sigue siendo gis aunque la palabra vaya en vino.
+            mark.accent && 'text-chalk',
+          ]}
         />
       </span>
       {parts[2]}

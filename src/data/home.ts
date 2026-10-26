@@ -10,6 +10,8 @@ export const nav = [
 
 export const hero = {
   title: 'Desafía la gravedad',
+  /** Palabra del título en vino claro. */
+  accent: 'gravedad',
   lede: 'Formamos deportistas hábiles y conscientes.',
   where: 'Calistenia online',
   primaryCta: 'Escríbeme por WhatsApp',
@@ -140,7 +142,7 @@ export const testimonialsSection = {
 
 export const contact = {
   title: 'Empieza hoy',
-  mark: { word: 'hoy', kind: 'circle' },
+  mark: { word: 'hoy', kind: 'circle', accent: true },
   text: 'Escríbeme por WhatsApp o déjame tus datos y te contacto.',
   whatsappCta: 'Escríbeme por WhatsApp',
   floatingLabel: 'Escríbeme por WhatsApp',

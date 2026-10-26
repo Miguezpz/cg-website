@@ -10,6 +10,8 @@ import { waAttrs } from '../../lib/whatsapp';
 
 interface Props {
   title: string;
+  /** Palabra del título en vino claro. */
+  accent?: string;
   lede: string;
   where: string;
   primaryCta: string;
@@ -26,6 +28,7 @@ interface Props {
 
 const {
   title,
+  accent,
   lede,
   where,
   primaryCta,
@@ -38,6 +41,17 @@ const {
   imagePosition = '50% 50%',
   imageDemo,
 } = Astro.props;
+
+// El título con su palabra clave en vino claro (DESIGN.md · Color).
+const at = accent ? title.toLowerCase().indexOf(accent.toLowerCase()) : -1;
+const titleParts =
+  at >= 0
+    ? [
+        title.slice(0, at),
+        title.slice(at, at + accent!.length),
+        title.slice(at + accent!.length),
+      ]
+    : undefined;
 
 // Partículas de magnesia que se sueltan de las marcas de agarre al cargar
 // (decorativas; posiciones fijas para que el HTML sea estable entre builds).
@@ -88,7 +102,17 @@ const dust = Array.from({ length: 14 }, (_, i) => {
     <div class="grid gap-x-16 gap-y-8 pt-6 lg:grid-cols-[minmax(0,1fr)_26rem] lg:grid-rows-[auto_1fr] lg:pt-0">
       <div class="lg:pt-14">
         <h1 id="hero-title" class="hero-lift text-display font-bold uppercase">
-          {title}
+          {titleParts ? (
+            <>
+              {titleParts[0]}
+              <span class="text-signal-glow" data-accent>
+                {titleParts[1]}
+              </span>
+              {titleParts[2]}
+            </>
+          ) : (
+            title
+          )}
         </h1>
         <p
           class="hero-rise mt-4 max-w-[22ch] text-lede text-chalk"

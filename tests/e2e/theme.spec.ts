@@ -45,3 +45,21 @@ test('los textos usan Readex Pro y la fuente carga', async ({ page }) => {
   });
   expect(loaded).toBe(true);
 });
+
+test('la palabra clave del Hero y del cierre va en vino claro', async ({
+  page,
+}) => {
+  await page.goto('/');
+  await expect(page.locator('#hero-title [data-accent]')).toHaveText(
+    /gravedad/i,
+  );
+  await expect(page.locator('#hero-title [data-accent]')).toHaveCSS(
+    'color',
+    WINE_GLOW,
+  );
+  await expect(
+    page.locator('#contacto-title span').filter({ hasText: /hoy/i }),
+  ).toHaveCSS('color', WINE_GLOW);
+  // El resto del título sigue en gis.
+  await expect(page.locator('#hero-title')).toHaveCSS('color', CHALK);
+});

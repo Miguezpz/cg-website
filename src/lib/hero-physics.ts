@@ -35,7 +35,10 @@ export function initHeroPhysics(): void {
 }
 
 function gravityTitle(title: HTMLElement): void {
-  const text = title.textContent?.trim() ?? '';
+  const text = title.textContent?.trim().replace(/\s+/g, ' ') ?? '';
+  // La palabra en vino conserva su color al partirse en letras.
+  const accent = title.querySelector<HTMLElement>('[data-accent]');
+  const accentWord = accent?.textContent?.trim().toLowerCase();
   let letters: {
     el: HTMLElement;
     cx: number;
@@ -53,6 +56,9 @@ function gravityTitle(title: HTMLElement): void {
       if (i) fragment.append(' ');
       const wordEl = document.createElement('span');
       wordEl.className = 'inline-block whitespace-nowrap';
+      if (accent && word.toLowerCase() === accentWord) {
+        wordEl.className += ` ${accent.className}`;
+      }
       wordEl.setAttribute('aria-hidden', 'true');
       for (const char of word) {
         const letter = document.createElement('span');
