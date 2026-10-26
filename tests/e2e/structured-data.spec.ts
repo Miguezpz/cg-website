@@ -20,14 +20,12 @@ test('JSON-LD con Person, Service y FAQPage sin contenido provisional (§9.4)', 
     (n: { '@type': string }) => n['@type'] === 'FAQPage',
   );
   expect(faq.mainEntity.length).toBeGreaterThan(0);
-  const presencial = data['@graph'].find(
-    (n: { '@type': string; name?: string }) =>
-      n['@type'] === 'Service' && n.name?.startsWith('Clases presenciales'),
+  // Solo online y sin precios publicados.
+  const services = data['@graph'].filter(
+    (n: { '@type': string }) => n['@type'] === 'Service',
   );
-  expect(presencial.areaServed.name).toBe('Morelia');
-  expect(presencial.offers.map((o: { price: string }) => o.price)).toEqual([
-    '60',
-    '360',
-    '500',
-  ]);
+  expect(services).toHaveLength(1);
+  expect(services[0].areaServed.name).toBe('México');
+  expect(services[0]).not.toHaveProperty('offers');
+  expect(raw).not.toMatch(/Morelia|presencial/i);
 });

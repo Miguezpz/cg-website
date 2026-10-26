@@ -5,7 +5,7 @@ test.describe('Momentos de firma', () => {
     page,
   }) => {
     await page.goto('/');
-    const note = page.getByText('los paquetes duran 30 días');
+    const note = page.getByText('el precio te lo paso por WhatsApp');
     const wrapper = note.locator('xpath=ancestor::*[@data-chalk][1]');
     // Kalam se aplica al acercarse a la pantalla, no al cargar (no compite con el LCP).
     await expect(wrapper).not.toHaveAttribute('data-near', '');

@@ -1,22 +1,13 @@
 import type { ImageMetadata } from 'astro';
 
-export type ServiceId = 'presencial' | 'rutina' | 'talleres';
-
-export interface Plan {
-  name: string;
-  price: string;
-  detail: string;
-  /** Clases por semana: se dibujan como marcas de gis junto al plan. */
-  perWeek?: number;
-}
+export type ServiceId = 'rutina';
 
 export interface Service {
   id: ServiceId;
   name: string;
   audience: string;
   includes: string[];
-  plans: Plan[];
-  /** Anotación a mano junto a los precios (informativa). */
+  /** Anotación a mano bajo el botón (informativa). */
   note?: string;
   /** Aviso de contenido demo: qué falta reunir para que sea real. */
   demo?: string;
@@ -43,6 +34,8 @@ export interface Testimonial {
   name: string;
   quote: string;
   achievement?: string;
+  /** De dónde sale la cita (ej. «Reseña en Google Maps»). */
+  source?: string;
   photo?: ImageMetadata;
 }
 

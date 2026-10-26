@@ -67,7 +67,7 @@ Las cifras de precios usan `tabular-nums`.
 - **Botón secundario:** sin relleno, canto de 2 px en `chalk`, texto `chalk`. Hover: relleno `chalk` y texto `steel-950`.
 - **Botón flotante de WhatsApp:** círculo de 56 px en `whatsapp`, abajo a la derecha, respetando `safe-area-inset-bottom`.
 - **Enlace:** subrayado de 1 px separado 0.2em; hover en `chalk` (en el formulario, `signal-glow`).
-- **Planes:** filas sobre la barra, **no** tarjetas iguales. Cada fila lleva el nombre, el detalle y el precio tabular alineado a la derecha.
+- **Servicio:** bloque sobre la barra, **no** tarjetas iguales: a la izquierda nombre, para quién es y qué incluye; a la derecha el CTA, una anotación de gis y el recuadro «¿Necesitas algo más personalizado?» (`steel-900` con canto `steel-700`). Sin precios publicados (spec §17.1.2).
 
 ## Espacio y retícula
 
@@ -92,18 +92,16 @@ Las cifras de precios usan `tabular-nums`.
 **Ligado al scroll** (CSS `animation-timeline`, sin JS):
 
 - `.ledge`: los títulos suben desde una cornisa invisible en su borde inferior (`translate` + `clip-path`).
-- `.rise`: listas, filas de precios, tarjetas, FAQ y formulario suben 1.5 rem mientras entran.
-- `.steel-bar` (componente `SteelBar`): las barras de 6 px de cada bloque se trazan al cruzar la parte baja de la pantalla. La inferior de la Oferta se traza de derecha a izquierda.
+- `.rise`: listas, tarjetas, FAQ y formulario suben 1.5 rem mientras entran.
+- `.steel-bar` (componente `SteelBar`): las barras de 6 px de cada bloque se trazan al cruzar la parte baja de la pantalla.
 - `.reveal-photo` + `.parallax`: la foto del coach se descubre hacia arriba desde su barra y se mueve más lento que la página.
 - `.hero-parallax` / `.hero-lift`: al salir de pantalla, la foto del Hero baja y el título se eleva.
-- `.chalk-underline`: el subrayado de gis de la Oferta se dibuja con el scroll.
 - `.scroll-progress`: una barra de gis de 2 px bajo el header indica cuánto llevas de página.
 
 **Gis vivo** (`src/lib/chalk.ts` + `ChalkMark`, 2026-10-24):
 
 - **Trazos a mano:** los SVG con `[data-chalk]` se dibujan la primera vez que entran en pantalla, trazo por trazo (110 ms de separación). Variantes: subrayado, doble subrayado, círculo, palomita, marcas de conteo y flechas.
-- **Títulos marcados:** cada sección marca una palabra con un trazo distinto (círculo en «precios» y «hoy», subrayado en «Augusto», «funciona» y «alumnos», doble en «Resultados» y «frecuentes»). El trazo usa el color del título (gis sobre acero, carbón sobre concreto).
-- **Clases por semana:** los paquetes muestran sus clases semanales como marcas de conteo (Paquete I `|||`, Paquete II `||||/`).
+- **Títulos marcados:** cada sección marca una palabra con un trazo distinto (círculo en «online» y «hoy», subrayado en «Augusto», «funciona» y «alumnos», doble en «Resultados» y «frecuentes»). El trazo usa el color del título (gis sobre acero, carbón sobre concreto).
 - **Nube de magnesia:** al tocar cualquier enlace de WhatsApp saltan 12 partículas desde el punto exacto y caen (WAAPI, < 1.2 s). Con teclado no hay nube.
 - **Palomitas:** cada campo bien llenado y el envío exitoso reciben una palomita de gis; la pregunta abierta de la FAQ se subraya (`.chalk-on-show`).
 - **Anotaciones a mano** (`ChalkNote`): primero se dibuja la flecha y luego el texto «se escribe» de izquierda a derecha.

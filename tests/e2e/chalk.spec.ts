@@ -1,26 +1,13 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Gis vivo', () => {
-  test('los paquetes muestran las clases por semana como marcas de gis', async ({
-    page,
-  }) => {
-    await page.goto('/');
-    const rows = page.locator('#servicios dl > div');
-    await expect(
-      rows.filter({ hasText: 'Paquete I' }).first().locator('.chalk-stroke'),
-    ).toHaveCount(3);
-    await expect(
-      rows.filter({ hasText: 'Paquete II' }).locator('.chalk-stroke'),
-    ).toHaveCount(5);
-  });
-
   test('los títulos llevan un trazo de gis sin cambiar su nombre accesible', async ({
     page,
   }) => {
     await page.goto('/');
     const heading = page.getByRole('heading', {
       level: 2,
-      name: 'Planes y precios',
+      name: 'Entrena online',
     });
     await expect(heading.locator('svg[data-chalk]')).toHaveCount(1);
   });

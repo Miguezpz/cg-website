@@ -6,18 +6,9 @@ import type { FaqItem, Service, Site } from '../data/types';
 const PENDING = '[[PENDIENTE]]';
 const isReal = (...texts: string[]) => texts.every((t) => !t.includes(PENDING));
 
+// Todo es online (2026-10-26); sin precios publicados no hay `offers`.
 const areaServed: Record<Service['id'], object> = {
-  presencial: {
-    '@type': 'City',
-    name: 'Morelia',
-    containedInPlace: { '@type': 'State', name: 'Michoacán' },
-  },
   rutina: { '@type': 'Country', name: 'México' },
-  talleres: {
-    '@type': 'City',
-    name: 'Morelia',
-    containedInPlace: { '@type': 'State', name: 'Michoacán' },
-  },
 };
 
 export function buildStructuredData({
@@ -67,15 +58,6 @@ export function buildStructuredData({
       description: s.audience,
       provider: { '@id': orgId },
       areaServed: areaServed[s.id],
-      offers: s.plans
-        .filter((p) => isReal(p.price, p.name))
-        .map((p) => ({
-          '@type': 'Offer',
-          name: p.name,
-          description: p.detail,
-          price: p.price.replace(/[^0-9.]/g, ''),
-          priceCurrency: 'MXN',
-        })),
     }));
 
   const faqPage = {

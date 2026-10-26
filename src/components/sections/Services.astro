@@ -1,7 +1,6 @@
 ---
 import type { Service } from '../../data/types';
 import Button from '../ui/Button.astro';
-import ChalkMark from '../ui/ChalkMark.astro';
 import ChalkNote from '../ui/ChalkNote.astro';
 import DemoNote from '../ui/DemoNote.astro';
 import SectionHeading, { type HeadingMark } from '../ui/SectionHeading.astro';
@@ -12,10 +11,12 @@ interface Props {
   title: string;
   mark?: HeadingMark;
   intro: string;
+  /** Puerta a algo más a la medida que la rutina: solo se pide por WhatsApp. */
+  custom: { title: string; text: string; cta: string; waInterest: string };
   services: Service[];
 }
 
-const { title, mark, intro, services } = Astro.props;
+const { title, mark, intro, custom, services } = Astro.props;
 ---
 
 <section id="servicios" aria-labelledby="servicios-title" class="py-section">
@@ -24,7 +25,7 @@ const { title, mark, intro, services } = Astro.props;
     <p class="mt-4 max-w-prose text-concrete-400">{intro}</p>
 
     <div class="mt-12 space-y-16 lg:space-y-20">
-      {services.map((service) => (
+      {services.map((service, i) => (
         <article
           aria-labelledby={`servicio-${service.id}`}
           class="relative grid gap-8 border-t-[6px] border-transparent pt-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:gap-16"
@@ -52,42 +53,46 @@ const { title, mark, intro, services } = Astro.props;
             {service.demo && <DemoNote text={service.demo} class="mt-6" />}
           </div>
 
-          <div class="flex flex-col">
-            {service.plans.length > 0 && (
-              <dl class="border-t border-steel-700">
-                {service.plans.map((plan) => (
-                  <div class="rise grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-4 border-b border-steel-700 py-4">
-                    <dt>
-                      <span class="block text-h3 font-bold">{plan.name}</span>
-                      <span class="mt-1 block text-label text-concrete-400 uppercase">
-                        {plan.detail}
-                      </span>
-                      {plan.perWeek && (
-                        <ChalkMark
-                          variant="tally"
-                          count={plan.perWeek}
-                          draw
-                          class="mt-2 h-7 w-auto text-chalk [--chalk-delay:200ms]"
-                        />
-                      )}
-                    </dt>
-                    <dd class="text-[2.5rem] leading-none font-bold tabular-nums">
-                      {plan.price}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-            )}
-            {service.note && (
-              <ChalkNote text={service.note} arrow="up" class="mt-2 self-end" />
-            )}
+          <div class="flex flex-col lg:items-start lg:pt-2">
             <Button
               icon="whatsapp"
-              class="mt-6 self-start"
+              class="self-start"
               {...waAttrs({ service, source: 'services' })}
             >
               {service.cta}
             </Button>
+            {service.note && (
+              <ChalkNote
+                text={service.note}
+                arrow="up"
+                class="mt-1 ml-10 [--chalk-delay:200ms]"
+              />
+            )}
+            {/* Después del último servicio: la puerta a algo más a la medida. */}
+            {i === services.length - 1 && (
+              <aside
+                id="a-medida"
+                aria-labelledby="a-medida-title"
+                class="rise mt-10 border border-steel-700 bg-steel-900 p-6 sm:p-8 lg:mt-auto"
+              >
+                <h3 id="a-medida-title" class="text-h3 font-bold">
+                  {custom.title}
+                </h3>
+                <p class="mt-3 max-w-prose text-concrete-400">{custom.text}</p>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  icon="whatsapp"
+                  class="mt-6"
+                  {...waAttrs({
+                    service: { id: 'a-medida', waInterest: custom.waInterest },
+                    source: 'services',
+                  })}
+                >
+                  {custom.cta}
+                </Button>
+              </aside>
+            )}
           </div>
         </article>
       ))}

@@ -63,6 +63,11 @@ const { title, mark, swipeHint, demo, testimonials } = Astro.props;
                     {item.achievement}
                   </span>
                 )}
+                {item.source && (
+                  <span class="block text-label text-concrete-400">
+                    {item.source}
+                  </span>
+                )}
               </span>
             </figcaption>
           </figure>

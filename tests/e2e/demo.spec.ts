@@ -6,8 +6,8 @@ test.describe('Contenido demo', () => {
   }) => {
     await page.goto('/');
     await expect(page.locator('main')).not.toContainText('[[PENDIENTE]]');
+    // Cada vez hay menos avisos: el contenido real los va reemplazando.
     const notes = page.locator('.demo-note');
-    expect(await notes.count()).toBeGreaterThanOrEqual(8);
     for (const text of await notes.allTextContents()) {
       expect(text).toMatch(/^\s*Demo/);
       expect(text).toMatch(/Falta|Confirmar|confirmar/);

@@ -6,8 +6,8 @@
 |---|---|
 | Marca / escuela | **Control Gravedad** |
 | Coach | **César Augusto** (en redes: "Chesare Mozart") |
-| Modalidad | **Presencial en Morelia, Michoacán** y **online** |
-| Branch | `nuevo-sitio` |
+| Modalidad | **Solo online** (desde 2026-10-26). Lo presencial existe solo a petición y **no se publica** (§17.1.2) |
+| Branch | ramas que salen de `main` (`main` = producción) |
 | Versión | v0.9 (borrador) |
 | Punto de partida | Proyecto desde cero. No se reutiliza código, estilos ni estructura del branch `main` |
 | Idioma del sitio | Español (`es-MX`) |
@@ -45,7 +45,7 @@ Construir una **landing page de conversión** para **Control Gravedad**, la escu
 | Principiante (18–40 años) | Ponerse en forma sin gimnasio | "No tengo fuerza / nunca he entrenado" | Cómo funciona, FAQ, Testimonios de principiantes |
 | Intermedio | Aprender skills (muscle-up, handstand, front lever) | "¿Realmente me vas a hacer progresar?" | Sobre el coach, Resultados |
 | Ocupado / remoto | Entrenar con guía desde casa | "No tengo tiempo / no vivo cerca" | Servicios (Rutina personalizada), FAQ |
-| Todos | Saber cuánto cuesta y si vale la pena | "Seguro es caro" | Oferta de entrada (clase muestra gratis), Servicios (precios publicados) |
+| Todos | Saber cuánto cuesta y si vale la pena | "Seguro es caro" | Servicios y FAQ: el precio se pide por WhatsApp (no se publica, §17.1.2) |
 | Todos | Entrenar sin lesionarse | "Me voy a lastimar" | Cómo funciona (método Carga & Descarga), FAQ |
 
 **Mensaje central:** formar deportistas *hábiles y conscientes* con un método propio, **Carga & Descarga**, que alterna semanas de fuerza con semanas de técnica, movilidad y descanso (§17.1.1). Disciplinas: Calistenia, Streetlifting, Movilidad, Skills Movements y Funcional. Tono: motivacional y cercano; el sitio lo traduce a un registro elegante (§10).
@@ -77,22 +77,21 @@ Orden de secciones = orden del embudo: **atención → autoridad → oferta → 
 
 ### RF-02 · Hero
 - Imagen a pantalla completa (o video con *poster*, ver D-03); título orientado a beneficio; subtítulo de 1 línea.
-- CTA primario **"Agenda tu clase de prueba"** → WhatsApp; CTA secundario "Ver resultados" → `#resultados`.
+- CTA primario **"Escríbeme por WhatsApp"** → WhatsApp; CTA secundario "Ver la rutina" → `#servicios`; enlace "¿Necesitas algo más personalizado? Escríbeme" → `#a-medida` (2026-10-26).
 - 2–3 indicadores de autoridad (ej. "+X alumnos", "X años").
 
 **Aceptación:** título y CTA primario visibles sin scroll a 375×667; el elemento LCP es una imagen con `fetchpriority="high"` (nunca el video).
 
 ### RF-03 · Sobre el coach (`#sobre-mi`)
 - Foto profesional, historia breve (≤ 120 palabras), al menos 3 credenciales (certificaciones, años, logros).
-- Credencial confirmada: **organizador de Gravedad Zero**, evento de calistenia en Morelia (10 de enero de 2026; participantes `[[PENDIENTE]]`). El resto de la historia y credenciales: `[[PENDIENTE]]`.
+- Credencial confirmada: **organizador de Gravedad Zero**, evento de calistenia en Morelia (10 de enero de 2026; participantes `[[PENDIENTE]]`). En el sitio no se nombra la ciudad (§17.1.2). El resto de la historia y credenciales: `[[PENDIENTE]]`.
 - Nombre visible del coach: **César Augusto**; "Chesare Mozart" solo como referencia a sus redes.
 
 ### RF-04 · Servicios (`#servicios`)
-- Tarjetas (precios en MXN, publicados el 2024-12-18; vigencia `[[PENDIENTE]]`):
-  - **Clases presenciales (Morelia):** Clase individual $60 · Paquete I $360 (3 clases/semana, 30 días) · Paquete II $500 (5 clases/semana, 30 días).
-  - **Rutina personalizada (online):** $860. 2 rutinas en PDF para 4 semanas (carga y descarga), ejercicios explicados, imágenes demostrativas y glosario; entrega por correo en 7–12 días.
-  - **Talleres:** temas, frecuencia y precio `[[PENDIENTE]]`. Si no llegan antes del lanzamiento, la tarjeta se oculta.
-- Cada tarjeta: nombre, para quién es, qué incluye (3–5 puntos), precio(s) y CTA.
+- **Sin precios publicados** (decisión del coach, 2026-10-26): el precio se comparte por WhatsApp. Ni el sitio ni el JSON-LD publican precios.
+- Un solo servicio, **Rutina personalizada (online):** 2 rutinas en PDF para 4 semanas (carga y descarga), ejercicios explicados, imágenes demostrativas y glosario; entrega por correo en 7–12 días.
+- Bloque **"¿Necesitas algo más personalizado?"** (`#a-medida`) con CTA a WhatsApp: es la única puerta a un entrenamiento más a la medida (incluido lo presencial, que el coach decide caso por caso y **no** se menciona en el sitio).
+- ~~Clases presenciales (Morelia)~~ y ~~Talleres~~: retirados el 2026-10-26.
 - Pago por transferencia SPEI; los datos bancarios se envían por WhatsApp y **nunca** se publican en el sitio.
 
 **Aceptación:** cada CTA abre WhatsApp con un mensaje prellenado **distinto** que nombra el servicio (ver §9.1).
@@ -104,20 +103,21 @@ Orden de secciones = orden del embudo: **atención → autoridad → oferta → 
 **Aceptación:** funciona con mouse, touch y flechas del teclado; tiene `aria-label` y `aria-valuetext` ("Mostrando 50% antes"); cada imagen tiene un `alt` descriptivo; sin JS se ven ambas fotos lado a lado.
 
 ### RF-06 · Testimonios (`#testimonios`)
-- 3–6 testimonios con foto, nombre, cita y logro. Carrusel con *scroll-snap* en móvil y cuadrícula en escritorio.
+- 3–6 testimonios con nombre, cita y, si los hay, logro y foto. Carrusel con *scroll-snap* en móvil y cuadrícula en escritorio.
+- Hoy son reseñas de Google Maps recortadas sin cambiar palabras, con la atribución «Reseña en Google Maps», nombre con apellido abreviado (ej. «Roberto G.») y **sin** foto de perfil (2026-10-26). Requieren el permiso de cada persona antes de compartir el sitio (§17.1.1, pendientes).
 
 **Aceptación:** todo el contenido es legible y navegable sin JS.
 
 ### RF-07 · Cómo funciona
-- Tres pasos: **Escríbeme** → **Clase muestra gratis** → **Tu plan a la medida**.
+- Tres pasos: **Escríbeme** (te comparto precio y detalles) → **Recibe tu rutina** → **Entrena a tu ritmo** (2026-10-26).
 - Presenta el método **Carga & Descarga** (semana de carga: fuerza, resistencia y técnica pulcra; semana de descarga: biomecánica, movilidad, elasticidad y descanso).
 
-### RF-08 · Oferta de entrada
-- Bloque destacado con la oferta: **Clase muestra GRATIS**, sujeta a disponibilidad de horario y espacio en la clase (D-02). Ese límite es la urgencia honesta; no se inventan otras. CTA a WhatsApp.
+### RF-08 · ~~Oferta de entrada~~ (retirada el 2026-10-26)
+- La clase muestra gratis era presencial; al quedar el servicio solo online, el usuario decidió quitar la oferta de entrada (D-02). No se sustituye por otra.
 
 ### RF-09 · Preguntas frecuentes (`#faq`)
-- 6–8 preguntas con `<details>`/`<summary>` nativos. Deben cubrir: experiencia previa, ubicación, precios, formas de pago (SPEI), duración, equipo, edad y modalidad online (Rutina personalizada).
-- Respuestas ya disponibles: precios, pago y Rutina personalizada (§17.1.1). Las demás: `[[PENDIENTE]]`.
+- 6–8 preguntas con `<details>`/`<summary>` nativos. Deben cubrir: experiencia previa, precio (se pide por WhatsApp), formas de pago (SPEI), qué se recibe y cuándo, skills, equipo, edad y salud, y algo más personalizado.
+- Respuestas ya disponibles: precio, pago, Rutina personalizada (con seguimiento y renovación mensual), skills, edad y salud, y algo más personalizado. Las demás: `[[PENDIENTE]]`.
 
 **Aceptación:** funciona sin JS; las mismas preguntas se emiten como JSON-LD `FAQPage`.
 
@@ -130,7 +130,7 @@ Orden de secciones = orden del embudo: **atención → autoridad → oferta → 
 **Aceptación:** un envío real llega al email del coach; la confirmación aparece sin recargar; con JS desactivado, el formulario se envía igual (POST nativo) y redirige a una página de gracias; los errores de validación se anuncian a lectores de pantalla (`aria-live`).
 
 ### RF-11 · Footer
-- Nombre, redes, zona de servicio ("Morelia, Michoacán · Online"), © año actual (calculado en build) y enlace a `/privacidad`.
+- Nombre, redes, zona de servicio ("Online"), © año actual (calculado en build) y enlace a `/privacidad`.
 
 ### RF-12 · Botón flotante de WhatsApp
 - Fijo abajo a la derecha, con `aria-label`, y respeta `env(safe-area-inset-bottom)` en iOS.
@@ -153,7 +153,7 @@ Orden de secciones = orden del embudo: **atención → autoridad → oferta → 
 | RNF-06 | WCAG 2.2 AA: contraste ≥ 4.5:1, navegable con teclado, foco visible, un solo `<h1>`, landmarks, objetivos táctiles ≥ 44 px | `web-design-guidelines` + axe en e2e (T4.1) |
 | RNF-07 | `prefers-reduced-motion` desactiva animaciones no esenciales | e2e con `reducedMotion: 'reduce'` |
 | RNF-08 | Mejora progresiva: sin JS, todo el contenido se ve y los CTAs y el formulario funcionan | e2e con `javaScriptEnabled: false` |
-| RNF-09 | SEO: `title`/`description` únicos con marca + keyword local (ej. "Control Gravedad · Clases de calistenia en Morelia y online con César Augusto"), canónica, OG/Twitter 1200×630, `sitemap.xml`, `robots.txt`, JSON-LD | Rich Results Test + Lighthouse SEO |
+| RNF-09 | SEO: `title`/`description` únicos con marca + keyword local (ej. "Control Gravedad · Calistenia online con César Augusto"), canónica, OG/Twitter 1200×630, `sitemap.xml`, `robots.txt`, JSON-LD | Rich Results Test + Lighthouse SEO |
 | RNF-10 | Seguridad: cabeceras CSP, `X-Content-Type-Options`, `Referrer-Policy` y `Permissions-Policy` vía `vercel.json`; sin secretos en el repo | securityheaders.com sobre la URL de preview |
 | RNF-11 | Compatibilidad: últimas 2 versiones de Chrome, Safari (incl. iOS), Firefox y Edge; breakpoints 375 / 768 / 1280 px | e2e en Chromium + WebKit; dispositivo real en T4.4 |
 | RNF-12 | Privacidad: el aviso declara la analítica; no se envían datos del formulario a GA4 (sin PII en eventos) | Revisión de `analytics.ts` |
@@ -231,7 +231,7 @@ type FaqItem   = { q: string; a: string };
 ### 9.1 WhatsApp
 - `waLink({ service, source })` → `https://wa.me/<PUBLIC_WHATSAPP_NUMBER>?text=<encodeURIComponent(msg)>`.
 - Mensaje base: *"Hola, vi tu página web y me interesa {servicio}."* Así el coach sabe que el contacto viene de la web.
-- Todos los enlaces llevan `data-track="whatsapp"` y `data-source="hero|services|offer|contact|floating"` para la analítica.
+- Todos los enlaces llevan `data-track="whatsapp"` y `data-source="hero|services|contact|floating"` para la analítica, y `data-service` con el servicio (`rutina`, `a-medida` o `general`).
 
 ### 9.2 Formulario (Web3Forms)
 - `<form method="POST" action="https://api.web3forms.com/submit">` con `access_key` (pública por diseño), `redirect` → `/gracias` (fallback sin JS) y `botcheck` (honeypot).
@@ -249,7 +249,7 @@ type FaqItem   = { q: string; a: string };
 - GA4 se carga después de `load` o en la primera interacción para cumplir RNF-01 y RNF-03.
 
 ### 9.4 SEO y datos estructurados
-- JSON-LD: `Person` (el coach) + `Service` por servicio con `areaServed` (presencial: Morelia, Michoacán; online: México) + `FAQPage`. Se usa `LocalBusiness` solo si hay una dirección física pública (D-06).
+- JSON-LD: `Person` (el coach) + `Service` por servicio con `areaServed` (online: México), **sin `offers`** porque no se publican precios + `FAQPage`. Se usa `LocalBusiness` solo si hay una dirección física pública (D-06).
 - `site` definido en `astro.config.mjs` (necesario para la canónica y el sitemap).
 
 ## 10. Diseño visual
@@ -386,6 +386,7 @@ Cada tarea se cierra con el ciclo de §13 y su prueba e2e.
 - **T4.6 · `check:content` en verde** (sin `[[PENDIENTE]]`).
 - **T4.7 · Producción en Vercel:** ~~desactivar los builds de Netlify (§11.1 paso 1)~~ (hecho), pasar `nuevo-sitio` → `main` según D-05, `PUBLIC_SITE_URL=https://controlgravedad.vercel.app` y GA4 verificado en producción. *(Publicación anticipada el 2026-10-19 a petición del usuario, con contenido provisional visible. Pendiente para cerrarla: T4.6, `PUBLIC_GA_ID` y la key de Web3Forms.)*
 - **T4.8 · Retiro del sitio de Netlify** (§11.1 pasos 2–5) — *dep.* T4.7. **Listo cuando** la URL `*.netlify.app` redirige (301) a la nueva, las bios de las redes apuntan a la nueva URL y el sitemap está enviado a Search Console. **→ M5**
+- **T4.9 · ✅ Solo online y sin precios** (2026-10-26, branch `solo-online`) — RF-02, RF-04, RF-07–RF-09, RF-11, §9.4: notas del coach (§17.1.2). Fuera clases presenciales, Talleres, la oferta de clase muestra gratis, los precios (también del JSON-LD) y toda mención de Morelia en la landing y el SEO; un solo servicio (Rutina personalizada) con el precio por WhatsApp; bloque "¿Necesitas algo más personalizado?" (`#a-medida`) enlazado desde el Hero y la FAQ; pasos de "Cómo funciona" reescritos; `og-image.jpg` regenerada. e2e: la home no muestra precios, "presencial", "Morelia" ni "clase muestra".
 
 ## 16. Definición de "terminado"
 
@@ -449,30 +450,53 @@ Cada tarea se cierra con el ciclo de §13 y su prueba e2e.
 - Todos los entrenamientos presenciales los imparte un coach capacitado.
 - La modalidad "online" es la Rutina personalizada (no hay asesoría en vivo, salvo que se indique otra cosa).
 
+> La tabla anterior es lo publicado en Instagram en 2024. Lo vigente para el sitio está en §17.1.2.
+
+#### 17.1.2 Notas del coach (2026-10-26)
+
+- **No publicar precios:** la persona interesada debe escribirle para conocerlos.
+- **Ya no da clases presenciales en Morelia; solo online.** Se quita del sitio todo lo que diga que hay clases presenciales, y Morelia ya no aparece (salvo en el aviso de privacidad, como domicilio del responsable).
+- Sí entrena en persona caso por caso (por ejemplo, yendo al gimnasio del alumno), pero **no quiere que se publique**: el sitio solo invita a escribirle "si necesitas algo más personalizado".
+- FAQ "¿Necesito equipo?": se quita "El equipo de la clase lo pone el coach". Se quita "¿Puedo entrenar si no vivo en Morelia?".
+- Decisiones del usuario sobre lo que esto deja abierto: se retira la oferta de entrada (clase muestra gratis), el único servicio publicado es la Rutina personalizada y Talleres se retira.
+- **Respuestas del coach (2026-10-26, segunda tanda):**
+  - Skills que enseña: parada de manos, muscle-up, front lever, planche, back lever y pistol squat.
+  - Pago por SPEI. El plan vence a los 30 días; **sí** incluye seguimiento después de enviar la rutina y **sí** se renueva cada mes.
+  - Talleres: fuera hasta nuevo aviso; el coach avisará cuando haya.
+  - Edad: a partir de 15 años; menores con permiso de un adulto.
+  - Salud: César envía un Google Form donde pide el estado de salud y las lesiones (fuera del sitio).
+
 **Pagos:** transferencia SPEI, con nombre y apellido en el concepto y captura del comprobante. La CLABE **no** se publica en el sitio ni en el repo; se comparte por WhatsApp.
 
 **Gravedad Zero** ([@gravedadzero_mx](https://www.instagram.com/gravedadzero_mx)): evento de calistenia organizado por el coach en Morelia el 2026-01-10 (exhibición, aprendizaje y comunidad). No hay ediciones próximas. Se usa como credencial en RF-03, no como evento.
 
 **Contenido demo (2026-10-24, a pedido del usuario):** lo que falta se rellenó con texto e imágenes de ejemplo. Cada pieza muestra un aviso visible «Demo» (`DemoNote`) con lo que hay que reunir o desarrollar. Las fotos son de stock CC0/dominio público (`src/assets/demo/CREDITOS.md`). No se inventaron precios, certificaciones ni años de experiencia. El contenido demo no se publica en el JSON-LD, y los `[[PENDIENTE]]` siguen en comentarios de `src/data/` para que `check:content` bloquee el lanzamiento hasta tener lo real.
 
-**Pendientes de T0.0**
+**Pendientes de T0.0** (lista revisada el 2026-10-26)
+
+*Antes de compartir el sitio:*
+- [ ] [[PENDIENTE]] **Permiso de uso de las reseñas de Google Maps** (Roberto González, Sofía Hernández y Asdrubal Ramirez): el coach les escribe, les muestra el recorte exacto que se publica y guarda la respuesta (captura del chat). Si alguien dice que no, se quita su reseña de `src/data/testimonials.ts`. Hasta entonces, la sección muestra el aviso «Demo».
+- [ ] [[PENDIENTE]] Historia, años de experiencia y certificaciones del coach.
+- [ ] [[PENDIENTE]] ¿Qué necesita el alumno para entrenar (barra, paralelas, ligas…)? Hoy la FAQ dice solo "Ropa cómoda, agua y toalla" (demo).
+- [ ] [[PENDIENTE]] Fotos: la del Hero en alta resolución (≥ 1600 × 2000 px) y fotos reales de antes y después (con consentimiento escrito).
+- [ ] [[PENDIENTE]] Aviso de privacidad: nombre del responsable, fecha y validación del texto.
+- [ ] [[PENDIENTE]] Formulario de salud del coach (Google Form): agregarle aviso de privacidad y casilla de consentimiento expreso, porque pide datos sensibles (LFPDPPP).
+
+*Cuando estén:*
 - [ ] [[PENDIENTE]] Número de participantes de Gravedad Zero (el usuario lo consulta con el coach).
-- [x] Nombre del coach en el sitio: **César Augusto** (T1.1).
-- [ ] [[PENDIENTE]] ¿Siguen vigentes los precios de dic. 2024?
-- [ ] [[PENDIENTE]] ¿"Clase individual" es una clase suelta en grupo o una clase privada 1 a 1?
-- [ ] [[PENDIENTE]] CTA de la Rutina personalizada: ¿WhatsApp o correo?
-- [ ] [[PENDIENTE]] Talleres: temas, frecuencia y precio.
-- [ ] [[PENDIENTE]] Skills que enseña (handstand, muscle-up, front lever…).
-- [ ] [[PENDIENTE]] Horarios de las clases presenciales.
-- [ ] [[PENDIENTE]] Ubicación en Morelia y si se puede publicar (D-06).
-- [ ] [[PENDIENTE]] Historia, años de experiencia, certificaciones y logros del coach.
-- [ ] [[PENDIENTE]] Restricciones y políticas (edad mínima, salud, cupo, cancelaciones).
-- [ ] [[PENDIENTE]] Prueba social: testimonios, antes y después, número de alumnos.
-- [ ] [[PENDIENTE]] Logo.
-- [ ] [[PENDIENTE]] Paleta oficial: aplicada la de la guía de marca Vol. 1 (vino `#6A1E2B`, burdeos `#4F111E`); falta que el diseñador confirme los hex exactos (D-10).
-- [x] Tipografía: restricción de "elegante" levantada por el usuario en T1.2; se usó Archivo y desde el 2026-10-25 Readex Pro, a pedido del usuario (§10, `DESIGN.md`).
+- [ ] [[PENDIENTE]] Talleres: el coach avisa cuando haya; mientras, no se publican.
+- [ ] [[PENDIENTE]] Más testimonios (idealmente de alumnos de la rutina online) para llegar a 4–6 (RF-06).
 - [ ] [[PENDIENTE]] Logo en SVG oficial. Mientras tanto, `src/components/ui/Logo.astro` es un redibujo vectorial del de 150 px (también en `favicon.svg` y `og-image.jpg`).
+- [ ] [[PENDIENTE]] Paleta oficial: aplicada la de la guía de marca Vol. 1 (vino `#6A1E2B`, burdeos `#4F111E`); falta que el diseñador confirme los hex exactos (D-10).
 - [ ] [[PENDIENTE]] Preguntas frecuentes que recibe por DM.
+
+*Resueltos:*
+- [x] Nombre del coach en el sitio: **César Augusto** (T1.1).
+- [x] Precios, clase individual, horarios y ubicación en Morelia: ya no aplican (solo online, sin precios publicados; §17.1.2).
+- [x] Skills, edad mínima y salud: respondidos el 2026-10-26 (§17.1.2).
+- [x] CTA de la Rutina personalizada: WhatsApp.
+- [x] Tipografía: restricción de "elegante" levantada por el usuario en T1.2; se usó Archivo y desde el 2026-10-25 Readex Pro, a pedido del usuario (§10, `DESIGN.md`).
+- [x] Prueba social: 3 reseñas de Google Maps (falta su permiso, arriba).
 
 ### 17.2 Assets y datos restantes
 
@@ -481,7 +505,7 @@ Leyenda: 🔴 bloquea el inicio · 🟠 bloquea el diseño (T1.2) · 🟢 bloque
 | | Elemento | Especificación |
 |---|---|---|
 | ✅ | Nombre del coach / marca | **César Augusto** · escuela **Control Gravedad** |
-| ✅ | Ciudad / zona de servicio | **Morelia, Michoacán (presencial) + online** |
+| ✅ | Ciudad / zona de servicio | **Online** (2026-10-26; antes Morelia presencial + online) |
 | ✅ | Información de la marca desde Instagram | §17.1.1 (T0.0) |
 | 🟠 | Foto o video del Hero | Foto ≥ 2400×1600 px (horizontal) **y** ≥ 1080×1920 px (vertical). Video: 10–20 s, sin audio, 1080p |
 | 🟠 | Fotos profesionales del coach | ≥ 1600 px por el lado mayor, buena luz y fondo limpio |
@@ -491,10 +515,10 @@ Leyenda: 🔴 bloquea el inicio · 🟠 bloquea el diseño (T1.2) · 🟢 bloque
 | ✅ | Instagram y TikTok | @controlgravedad en ambas |
 | ✅ | Email que recibe los formularios | controlgravedad@gmail.com |
 | 🟢 | Historia, certificaciones y logros | ≤ 120 palabras + lista |
-| 🟢 | Servicios: qué incluye cada uno y precios | Recibidos (RF-04); faltan talleres y confirmar vigencia |
+| ✅ | Servicios | Solo la Rutina personalizada, sin precio publicado (RF-04, §17.1.2) |
 | 🟢 | Fotos de antes/después | Mismo encuadre, pose y luz; vertical 4:5; **consentimiento escrito** de cada alumno |
 | 🟢 | Testimonios | Nombre, foto (opcional), texto y autorización de uso |
-| ✅ | Oferta de entrada | Clase muestra gratis (D-02) |
+| ✅ | Oferta de entrada | Ninguna: la clase muestra gratis se retiró el 2026-10-26 (D-02) |
 | 🟢 | Datos para el aviso de privacidad | Nombre del responsable y email de contacto ARCO |
 | 🟢 | Cuenta de GA4 | ¿Ya existe? ¿Quién la administra? |
 
@@ -503,7 +527,7 @@ Leyenda: 🔴 bloquea el inicio · 🟠 bloquea el diseño (T1.2) · 🟢 bloque
 | ID | Pregunta | Default propuesto | Bloquea |
 |---|---|---|---|
 | D-01 | ~~¿Mostrar precios?~~ | ✅ **Resuelta: sí**, ya son públicos en Instagram (vigencia `[[PENDIENTE]]`) | — |
-| D-02 | ~~¿Cuál es la oferta de entrada?~~ | ✅ **Resuelta: Clase muestra gratis**, sujeta a disponibilidad | — |
+| D-02 | ~~¿Cuál es la oferta de entrada?~~ | ✅ **Resuelta: ninguna.** Era la clase muestra gratis (presencial); se retiró el 2026-10-26 al quedar el servicio solo online | — |
 | D-03 | ¿Hero con video o imagen? | Imagen; video solo en escritorio si hay buen material | T2.2 |
 | D-04 | ~~¿Vercel Pro u otro hosting?~~ | ✅ **Resuelta: Vercel Hobby (gratuito)** | — |
 | D-05 | ~~Branch de producción~~ | ✅ **Resuelta (2026-10-19):** `main` es producción en Vercel y ya contiene el sitio nuevo (*fast-forward* desde `nuevo-sitio`). Se sigue desarrollando en `nuevo-sitio` (preview) y los cambios pasan a `main` solo cuando el usuario lo pide | — |
@@ -545,3 +569,6 @@ Leyenda: 🔴 bloquea el inicio · 🟠 bloquea el diseño (T1.2) · 🟢 bloque
 | v0.9.1 | 2026-10-24 | Contenido e imágenes demo con aviso visible de lo que falta (sin datos comerciales inventados); `[[PENDIENTE]]` conservados en comentarios |
 | v0.9.2 | 2026-10-25 | `nuevo-sitio` eliminada (era idéntica a `main`); el trabajo sigue en branches que salen de `main`. T3.10: acento vino de la guía de marca Vol. 1 en el branch `red-theme` (D-10 casi resuelta, faltan los hex confirmados) |
 | v0.9.3 | 2026-10-25 | T3.11: tipografía Readex Pro en lugar de Archivo (branch `red-theme`) |
+| v0.10 | 2026-10-26 | Notas del coach (§17.1.2): **solo online y sin precios publicados**. Se retiran clases presenciales, Talleres y la oferta de entrada (D-02); RF-02/04/07/08/09/11 y §9 actualizados (T4.9) |
+| v0.10.1 | 2026-10-26 | Segunda tanda de respuestas del coach (§17.1.2): skills que enseña, seguimiento y renovación mensual de la rutina, edad (15+, menores con permiso) y formulario de salud |
+| v0.10.2 | 2026-10-26 | Testimonios: 3 reseñas reales de Google Maps (recortadas, con atribución, sin foto); su permiso de uso queda pendiente. Lista de pendientes de §17.1 revisada |

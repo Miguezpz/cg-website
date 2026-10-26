@@ -50,12 +50,13 @@ test.describe('Secciones de la landing', () => {
     ).toHaveCount(4);
   });
 
-  test('la oferta lleva a WhatsApp con su propio origen (RF-08)', async ({
+  test('solo online: sin precios, sin clases presenciales y sin Morelia', async ({
     page,
   }) => {
-    await expect(
-      page.locator('a[data-track="whatsapp"][data-source="offer"]'),
-    ).toHaveCount(1);
+    const text = await page.locator('body').innerText();
+    expect(text).not.toMatch(/\$\s?\d/);
+    expect(text).not.toMatch(/presencial|Morelia|clase muestra|paquete/i);
+    await expect(page).not.toHaveTitle(/Morelia/);
   });
 
   test('FAQ con 6–8 preguntas nativas que se abren (RF-09)', async ({
@@ -76,7 +77,7 @@ test.describe('Secciones de la landing', () => {
     await expect(footer).toContainText(
       `© ${new Date().getFullYear()} Control Gravedad`,
     );
-    await expect(footer).toContainText('Morelia, Michoacán · Online');
+    await expect(footer).toContainText('Online');
     await expect(
       footer.getByRole('link', { name: 'Aviso de privacidad' }),
     ).toHaveAttribute('href', '/privacidad/');

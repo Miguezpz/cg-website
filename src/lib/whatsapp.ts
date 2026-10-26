@@ -1,18 +1,24 @@
 import { site } from '../data/site';
-import type { Service } from '../data/types';
+
+/** Lo que se ofrece en el enlace: un servicio o el bloque «a la medida». */
+interface WaInterest {
+  id: string;
+  /** Lo que completa «Hola, vi tu página web y me interesa …». */
+  waInterest: string;
+}
 
 /** Dónde está el enlace; se envía a GA4 como `source` (spec §9.1). */
-export type WaSource = 'hero' | 'services' | 'offer' | 'contact' | 'floating';
+export type WaSource = 'hero' | 'services' | 'contact' | 'floating';
 
-const DEFAULT_INTEREST = 'la clase muestra gratis';
+const DEFAULT_INTEREST = 'entrenar contigo';
 
-export function waMessage(service?: Pick<Service, 'waInterest'>): string {
+export function waMessage(service?: Pick<WaInterest, 'waInterest'>): string {
   return `Hola, vi tu página web y me interesa ${service?.waInterest ?? DEFAULT_INTEREST}.`;
 }
 
 export function waLink({
   service,
-}: { service?: Pick<Service, 'waInterest'> } = {}): string {
+}: { service?: Pick<WaInterest, 'waInterest'> } = {}): string {
   return `https://wa.me/${site.whatsappNumber}?text=${encodeURIComponent(waMessage(service))}`;
 }
 
@@ -21,14 +27,14 @@ export function waAttrs({
   service,
   source,
 }: {
-  service?: Pick<Service, 'id' | 'waInterest'>;
+  service?: WaInterest;
   source: WaSource;
 }) {
   return {
     href: waLink({ service }),
     'data-track': 'whatsapp',
     'data-source': source,
-    'data-service': service?.id ?? 'clase-muestra',
+    'data-service': service?.id ?? 'general',
     target: '_blank',
     rel: 'noopener',
   } as const;

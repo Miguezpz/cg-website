@@ -4,9 +4,7 @@ test('SEO base: título, descripción, canónica y Open Graph', async ({
   page,
 }) => {
   await page.goto('/');
-  await expect(page).toHaveTitle(
-    /Control Gravedad · Clases de calistenia en Morelia/,
-  );
+  await expect(page).toHaveTitle(/Control Gravedad · Calistenia online/);
   await expect(page.locator('meta[name="description"]')).toHaveAttribute(
     'content',
     /Carga & Descarga/,
@@ -44,7 +42,7 @@ test('el CTA de WhatsApp genera el enlace con el mensaje prellenado', async ({
   const url = new URL(href!);
   expect(url.origin + url.pathname).toBe('https://wa.me/524433019533');
   expect(url.searchParams.get('text')).toBe(
-    'Hola, vi tu página web y me interesa la clase muestra gratis.',
+    'Hola, vi tu página web y me interesa entrenar contigo.',
   );
-  await expect(cta).toHaveAttribute('data-service', 'clase-muestra');
+  await expect(cta).toHaveAttribute('data-service', 'general');
 });

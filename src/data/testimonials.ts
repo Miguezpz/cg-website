@@ -1,24 +1,28 @@
 import type { Testimonial } from './types';
 
-// [[PENDIENTE]] Testimonios reales con autorización de uso (spec §17.2).
-// Los de abajo son de ejemplo: la sección muestra un aviso «Demo».
+// Reseñas públicas de Google Maps de la antigua sede (2024–2025), recortadas
+// sin cambiar palabras (… = texto omitido). Se quitó lo que habla del lugar
+// físico. Nombre con apellido abreviado, sin fotos de perfil ni logros
+// inventados.
+// [[PENDIENTE]] Autorización de uso de cada persona (spec §17.1.2, pendientes).
+const googleMaps = 'Reseña en Google Maps';
+
 export const testimonials: Testimonial[] = [
   {
-    name: 'Alumna principiante (ejemplo)',
+    name: 'Roberto G.',
     quote:
-      'Nunca había hecho una dominada. En pocas semanas ya entrenaba con el grupo sin sentirme fuera de lugar.',
-    achievement: 'Primera dominada',
+      'César es un excelente coach, que te brinda todas las herramientas para superar tus propios límites, te impulsa constantemente además de acompañarte siempre…',
+    source: googleMaps,
   },
   {
-    name: 'Alumno intermedio (ejemplo)',
+    name: 'Sofía H.',
     quote:
-      'Las semanas de descarga cambiaron todo: dejé de lesionarme y por fin salió el muscle-up.',
-    achievement: 'Primer muscle-up',
+      '…gracias a los coaches con su entrenamiento tan personalizado he logrado progresar atléticamente como nunca lo había hecho. Recomendadísimo.',
+    source: googleMaps,
   },
   {
-    name: 'Alumno online (ejemplo)',
-    quote:
-      'La rutina llegó clarísima, con cada ejercicio explicado. La sigo desde casa a mi ritmo.',
-    achievement: 'Rutina personalizada',
+    name: 'Asdrubal R.',
+    quote: 'Excelente comunidad para aprender calistenia.',
+    source: googleMaps,
   },
 ];

@@ -8,7 +8,7 @@ export const privacy = {
     {
       heading: 'Responsable',
       body: [
-        'El responsable (nombre por confirmar), que opera la escuela de calistenia Control Gravedad en Morelia, Michoacán, es responsable del tratamiento de tus datos personales.',
+        'El responsable (nombre por confirmar), con domicilio en Morelia, Michoacán, que opera la escuela de calistenia en línea Control Gravedad, es responsable del tratamiento de tus datos personales.',
         'Correo de contacto: controlgravedad@gmail.com.',
       ],
     },
@@ -21,7 +21,7 @@ export const privacy = {
     {
       heading: 'Para qué usamos tus datos',
       body: [
-        'Únicamente para contactarte, responder tus dudas y darte información sobre las clases, la clase muestra y los demás servicios de Control Gravedad.',
+        'Únicamente para contactarte, responder tus dudas y darte información sobre la rutina personalizada y los demás servicios de Control Gravedad.',
       ],
     },
     {

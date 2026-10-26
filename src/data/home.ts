@@ -11,14 +11,14 @@ export const nav = [
 export const hero = {
   title: 'Desafía la gravedad',
   lede: 'Formamos deportistas hábiles y conscientes.',
-  where: 'Calistenia en Morelia y online',
-  primaryCta: 'Agenda tu clase muestra gratis',
-  note: 'sin costo · sujeta a cupo',
-  secondaryCta: { label: 'Ver planes y precios', href: '#servicios' },
+  where: 'Calistenia online',
+  primaryCta: 'Escríbeme por WhatsApp',
+  note: 'precio y detalles por WhatsApp',
+  secondaryCta: { label: 'Ver la rutina', href: '#servicios' },
   onlineLink: {
-    question: '¿No estás en Morelia?',
-    label: 'Rutina personalizada',
-    href: '#servicio-rutina',
+    question: '¿Necesitas algo más personalizado?',
+    label: 'Escríbeme',
+    href: '#a-medida',
   },
   indicators: [
     { value: '5', label: 'disciplinas' },
@@ -41,12 +41,12 @@ export const about = {
   role: 'Coach y fundador de Control Gravedad',
   // [[PENDIENTE]] Historia real del coach (máx. 120 palabras).
   story: [
-    'La calistenia me enseñó que la fuerza se construye con técnica, paciencia y constancia. Fundé Control Gravedad para entrenar así a más personas en Morelia: con un método que alterna semanas de carga y de descarga para progresar sin lastimarte.',
+    'La calistenia me enseñó que la fuerza se construye con técnica, paciencia y constancia. Fundé Control Gravedad para entrenar así a más personas, estén donde estén: con un método que alterna semanas de carga y de descarga para progresar sin lastimarte.',
   ],
   demo: 'Historia de ejemplo. Falta: la historia real del coach (máx. 120 palabras), sus años de experiencia y sus certificaciones.',
   credentials: [
     'Creador del método Carga & Descarga',
-    'Organizador de Gravedad Zero, evento de calistenia en Morelia (enero 2026)',
+    'Organizador de Gravedad Zero, evento de calistenia (enero 2026)',
     'Calistenia, streetlifting, movilidad, skills y entrenamiento funcional',
     // [[PENDIENTE]] Años de experiencia y certificaciones reales.
     'Años de experiencia y certificaciones: por confirmar',
@@ -56,11 +56,16 @@ export const about = {
 } as const;
 
 export const servicesSection = {
-  title: 'Planes y precios',
-  mark: { word: 'precios', kind: 'circle' },
+  title: 'Entrena online',
+  mark: { word: 'online', kind: 'circle' },
   intro:
-    'Precios en pesos mexicanos. Se paga por transferencia SPEI; te enviamos los datos por WhatsApp.',
-  ctaPrefix: 'Quiero',
+    'Escríbeme por WhatsApp con tu nivel y tu meta, y te comparto el precio y los detalles.',
+  custom: {
+    title: '¿Necesitas algo más personalizado?',
+    text: 'Si buscas algo distinto a la rutina, escríbeme, cuéntame qué necesitas y vemos cómo te puedo ayudar.',
+    cta: 'Escríbeme',
+    waInterest: 'algo más personalizado',
+  },
 } as const;
 
 export const howItWorks = {
@@ -69,15 +74,15 @@ export const howItWorks = {
   steps: [
     {
       title: 'Escríbeme',
-      text: 'Mándame un WhatsApp con tu nivel y lo que quieres lograr.',
+      text: 'Mándame un WhatsApp con tu nivel y lo que quieres lograr; te comparto el precio y los detalles.',
     },
     {
-      title: 'Clase muestra gratis',
-      text: 'Entrenas una clase con el grupo, sin costo, para conocer el método.',
+      title: 'Recibe tu rutina',
+      text: 'En 7 a 12 días te llegan por correo 2 rutinas en PDF hechas para tu nivel.',
     },
     {
-      title: 'Tu plan a la medida',
-      text: 'Eliges el paquete o la rutina que mejor se adapta a tu tiempo y a tu meta.',
+      title: 'Entrena a tu ritmo',
+      text: 'Alternas semanas de carga y de descarga durante 4 semanas, donde tú entrenes.',
     },
   ],
   method: {
@@ -112,13 +117,6 @@ export const tape = {
   ],
 } as const;
 
-export const offer = {
-  title: 'Tu primera clase es gratis',
-  text: 'Ven a una clase muestra, conoce el método y decide sin compromiso.',
-  note: 'Sujeta a disponibilidad de horario y espacio dentro de la clase.',
-  cta: 'Agenda tu clase muestra gratis',
-} as const;
-
 export const faqSection = {
   title: 'Preguntas frecuentes',
   mark: { word: 'frecuentes', kind: 'double' },
@@ -137,28 +135,28 @@ export const testimonialsSection = {
   title: 'Lo que dicen los alumnos',
   mark: { word: 'alumnos', kind: 'underline' },
   swipeHint: 'Desliza para ver más',
-  demo: 'Testimonios de ejemplo. Falta: testimonios reales con nombre, logro, foto opcional y autorización de uso.',
+  demo: 'Reseñas reales de Google Maps. Falta: la autorización de uso de cada persona.',
 } as const;
 
 export const contact = {
   title: 'Empieza hoy',
   mark: { word: 'hoy', kind: 'circle' },
   text: 'Escríbeme por WhatsApp o déjame tus datos y te contacto.',
-  whatsappCta: 'Agenda tu clase muestra gratis',
+  whatsappCta: 'Escríbeme por WhatsApp',
   floatingLabel: 'Escríbeme por WhatsApp',
   form: {
     title: 'Déjame tus datos',
     name: { label: 'Nombre', placeholder: 'Tu nombre…' },
-    phone: { label: 'WhatsApp o teléfono', placeholder: '443 123 4567…' },
+    phone: { label: 'WhatsApp o teléfono', placeholder: '55 1234 5678…' },
     goal: {
       label: 'Objetivo',
       placeholder: 'Elige una opción',
       options: [
         'Empezar desde cero',
-        'Aprender skills (muscle-up, handstand…)',
+        'Aprender skills (muscle-up, parada de manos…)',
         'Ganar fuerza (streetlifting)',
         'Mejorar mi movilidad',
-        'Rutina personalizada (online)',
+        'Rutina personalizada',
         'Otro',
       ],
     },

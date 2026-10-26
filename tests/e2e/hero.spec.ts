@@ -19,24 +19,27 @@ test.describe('Hero (RF-02)', () => {
     await expect(img).toHaveAttribute('alt', /.+/);
   });
 
-  test('ofrece una entrada directa a la rutina online', async ({ page }) => {
+  test('ofrece una entrada a algo más personalizado', async ({ page }) => {
     await page.goto('/');
     const link = page.locator(
-      'section[aria-labelledby="hero-title"] a[href="#servicio-rutina"]',
+      'section[aria-labelledby="hero-title"] a[href="#a-medida"]',
     );
-    await expect(link).toContainText('Rutina personalizada');
+    await expect(link).toContainText('¿Necesitas algo más personalizado?');
     await link.click();
-    await expect(page.locator('#servicio-rutina')).toBeInViewport();
+    await expect(page.locator('#a-medida')).toBeInViewport();
+    await expect(
+      page.locator('#a-medida a[data-track="whatsapp"]'),
+    ).toHaveAttribute('data-service', 'a-medida');
   });
 
   test('los CTA generales usan un solo texto', async ({ page }) => {
     await page.goto('/');
-    for (const source of ['hero', 'offer', 'contact']) {
+    for (const source of ['hero', 'contact']) {
       await expect(
         page
           .locator(`main a[data-track="whatsapp"][data-source="${source}"]`)
           .first(),
-      ).toHaveText('Agenda tu clase muestra gratis');
+      ).toHaveText('Escríbeme por WhatsApp');
     }
   });
 });
