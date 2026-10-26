@@ -2,6 +2,19 @@ import { test, expect, type Page } from '@playwright/test';
 
 const API = 'https://api.web3forms.com/submit';
 
+/**
+ * Abre la home y espera a que el script del formulario tome el control (pone
+ * `novalidate`). Si se envía antes, valida el navegador (mejora progresiva) y
+ * la prueba mediría otra cosa.
+ */
+async function openForm(page: Page) {
+  await page.goto('/');
+  await expect(page.locator('form[data-contact-form]')).toHaveAttribute(
+    'novalidate',
+    '',
+  );
+}
+
 async function fillValid(page: Page) {
   const form = page.locator('form[data-contact-form]');
   await form.getByLabel('Nombre').fill('Ana Prueba');
@@ -15,7 +28,7 @@ test.describe('Formulario de contacto con JS (RF-10)', () => {
   test('marca los errores, los anuncia y enfoca el primero', async ({
     page,
   }) => {
-    await page.goto('/');
+    await openForm(page);
     const form = page.locator('form[data-contact-form]');
     await form.getByRole('button', { name: 'Enviar' }).click();
     await expect(form.getByLabel('Nombre')).toBeFocused();
@@ -36,7 +49,7 @@ test.describe('Formulario de contacto con JS (RF-10)', () => {
       await new Promise((r) => setTimeout(r, 300));
       await route.fulfill({ json: { success: true } });
     });
-    await page.goto('/');
+    await openForm(page);
     const form = await fillValid(page);
     const submit = form.locator('[type="submit"]');
     await submit.click();
@@ -55,7 +68,7 @@ test.describe('Formulario de contacto con JS (RF-10)', () => {
     await page.route(API, (route) =>
       route.fulfill({ status: 400, json: { success: false } }),
     );
-    await page.goto('/');
+    await openForm(page);
     const form = await fillValid(page);
     await form.locator('[type="submit"]').click();
     await expect(form.getByRole('status')).toContainText('No se pudo enviar');
