@@ -4,6 +4,7 @@ import Hero from '../components/sections/Hero.astro';
 import About from '../components/sections/About.astro';
 import DisciplineTape from '../components/sections/DisciplineTape.astro';
 import Services from '../components/sections/Services.astro';
+import Skills from '../components/sections/Skills.astro';
 import Results from '../components/sections/Results.astro';
 import Testimonials from '../components/sections/Testimonials.astro';
 import HowItWorks from '../components/sections/HowItWorks.astro';
@@ -16,6 +17,7 @@ import heroImage from '../assets/hero/hollow-back.jpg';
 import coachPhoto from '../assets/coach/cesar-augusto.png';
 import { site } from '../data/site';
 import { services } from '../data/services';
+import { skills } from '../data/skills';
 import { results } from '../data/results';
 import { testimonials } from '../data/testimonials';
 import { faq } from '../data/faq';
@@ -27,6 +29,7 @@ import {
   howItWorks,
   resultsSection,
   servicesSection,
+  skillsSection,
   tape,
   testimonialsSection,
 } from '../data/home';
@@ -51,6 +54,7 @@ const structuredData = buildStructuredData({
   <DisciplineTape {...tape} />
   <About {...about} photo={coachPhoto} />
   <Services {...servicesSection} services={services} />
+  <Skills {...skillsSection} skills={skills} />
   <Results {...resultsSection} results={results} />
   <Testimonials {...testimonialsSection} testimonials={testimonials} />
   <HowItWorks {...howItWorks} />

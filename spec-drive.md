@@ -96,6 +96,13 @@ Orden de secciones = orden del embudo: **atención → autoridad → oferta → 
 
 **Aceptación:** cada CTA abre WhatsApp con un mensaje prellenado **distinto** que nombra el servicio (ver §9.1).
 
+### RF-04.1 · Ruta de skills (`#skills`)
+- Entre Servicios y Resultados (2026-10-26). Una escalera de 4 etapas dibujadas en gis por cada skill que enseña el coach (parada de manos, muscle-up, front lever, planche, back lever y pistol squat); la última etapa es la meta.
+- Pestañas con radios nativos y `:has()`: funciona sin JS. Cada skill tiene su CTA de WhatsApp, que nombra el skill (`data-source="skills"`, `data-service="skill-<id>"`).
+- Las etapas son una progresión clásica de ejemplo, con aviso «Demo», hasta que el coach confirme las que usa (§17.1).
+
+**Aceptación:** se cambia de skill con mouse, touch y flechas del teclado; los dibujos son decorativos (`aria-hidden`); con movimiento reducido no hay animación.
+
 ### RF-05 · Resultados: antes y después (`#resultados`)
 - 2–4 casos con slider comparativo, más el nombre o inicial, el tiempo de entrenamiento y un logro concreto.
 - Slider implementado con `<input type="range">` + `clip-path` (accesible por diseño, sin librerías).
@@ -231,7 +238,7 @@ type FaqItem   = { q: string; a: string };
 ### 9.1 WhatsApp
 - `waLink({ service, source })` → `https://wa.me/<PUBLIC_WHATSAPP_NUMBER>?text=<encodeURIComponent(msg)>`.
 - Mensaje base: *"Hola, vi tu página web y me interesa {servicio}."* Así el coach sabe que el contacto viene de la web.
-- Todos los enlaces llevan `data-track="whatsapp"` y `data-source="hero|services|contact|floating"` para la analítica, y `data-service` con el servicio (`rutina`, `a-medida` o `general`).
+- Todos los enlaces llevan `data-track="whatsapp"` y `data-source="hero|services|skills|contact|floating"` para la analítica, y `data-service` con el servicio (`rutina`, `a-medida`, `skill-<id>` o `general`).
 
 ### 9.2 Formulario (Web3Forms)
 - `<form method="POST" action="https://api.web3forms.com/submit">` con `access_key` (pública por diseño), `redirect` → `/gracias` (fallback sin JS) y `botcheck` (honeypot).
@@ -380,6 +387,8 @@ Cada tarea se cierra con el ciclo de §13 y su prueba e2e.
 - **T3.13 · Atletas de gis** (2026-10-26, sobre `main`) — RNF-07: siluetas de gis que hacen ejercicios ligados al scroll, en SVG + JS mínimo (sin canvas ni librerías; ADR-04/05). Por fases: ✅ **1)** dominadas junto a «Entrena online» (prototipo para validar el estilo); ✅ **2)** salto hacia la barra que no está en la 404 (una sola vez, sin scroll); ✖ **3)** atleta en la cinta de disciplinas: descartado por saturar la zona del Hero; ✅ **4)** a pedido del usuario, fondos en paralelas (ella) junto a «Lo que dicen los alumnos» y muscle-up en anillas (él, en carbón) bajo «Preguntas frecuentes»; el muscle-up sigue la biomecánica del muscle-up estricto (ver `DESIGN.md`). Para cumplir «nunca dos en la misma pantalla» (prueba e2e), la pistol squat pasó de «Carga & Descarga» a /gracias, donde se mueve una sola vez. Reglas en `DESIGN.md` (Movimiento · Atletas de gis).
 - **T3.14 · ✅ Palabra clave en vino** (2026-10-26) — D-10: «gravedad» en el Hero y «hoy» en el cierre van en vino claro (se conserva al partir el título en letras). *(Lighthouse local tras T3.11–T3.14: 99/100/100/100 en `/`, LCP 1.9 s, CLS 0, TBT 0 ms; `/privacidad` 100/100/100/100.)*
 
+- **T3.15 · ✅ Ruta de skills** (2026-10-26, sobre `main`) — RF-04.1, RNF-07: sección `#skills` con una escalera de 4 etapas por skill, dibujadas en gis con las proporciones de los atletas (`src/lib/skill-poses.ts`, poses fijas). En los levers y la plancha, el ángulo del brazo se calcula para que el centro de masa quede bajo la barra o sobre las manos. Las etapas suben desde su escalón al verse y al cambiar de skill. Se descartaron el front lever como separador (ya está en la escalera) y más magnesia (ya existe en el Hero y en los enlaces de WhatsApp).
+
 ### Fase 4 — QA y lanzamiento (→ M5)
 - **T4.1 · ✅ Completar la suite e2e** (sin JS, reduced motion, axe, WebKit) — RNF-06–08, RNF-11.
 - **T4.2 · ✅ Lighthouse CI con aserciones ≥ 95** — RNF-01, RNF-02. *(Bloqueante en CI: 4 categorías ≥ 95, LCP < 2.5 s, CLS < 0.1, TBT < 200 ms en `/` y `/privacidad`. Local: 100/100/100/100, LCP 1.7 s, CLS 0. JS propio ≈ 2.3 KB gzip, RNF-03.)*
@@ -492,6 +501,7 @@ Cada tarea se cierra con el ciclo de §13 y su prueba e2e.
 - [ ] [[PENDIENTE]] Logo en SVG oficial. Mientras tanto, `src/components/ui/Logo.astro` es un redibujo vectorial del de 150 px (también en `favicon.svg` y `og-image.jpg`).
 - [ ] [[PENDIENTE]] Paleta oficial: aplicada la de la guía de marca Vol. 1 (vino `#6A1E2B`, burdeos `#4F111E`); falta que el diseñador confirme los hex exactos (D-10).
 - [ ] [[PENDIENTE]] Preguntas frecuentes que recibe por DM.
+- [ ] [[PENDIENTE]] Ruta de skills: que el coach confirme las 4 etapas de cada skill (hoy son una progresión clásica, con aviso «Demo»; `src/data/skills.ts`).
 
 *Resueltos:*
 - [x] Nombre del coach en el sitio: **César Augusto** (T1.1).
@@ -583,3 +593,4 @@ Leyenda: 🔴 bloquea el inicio · 🟠 bloquea el diseño (T1.2) · 🟢 bloque
 | v0.10.8 | 2026-10-26 | T3.13: muscle-up en anillas más realista (agarre falso, jalón al pecho inclinado atrás, transición rápida, correa que sigue el centro de masa) |
 | v0.10.9 | 2026-10-26 | T3.13: en el muscle-up las anillas se quedan en el pecho y los codos siguen bajando hasta el bloqueo; brazos legibles sobre el torso |
 | v0.10.10 | 2026-10-26 | T3.13: el codo del muscle-up ya no se voltea hacia la espalda al subir o bajar |
+| v0.11 | 2026-10-26 | RF-04.1 / T3.15: ruta de skills (escalera de 4 etapas por skill, con CTA de WhatsApp por skill) |

@@ -2,7 +2,8 @@
 // Atleta de gis que hace un ejercicio con el scroll o una sola vez al aparecer
 // (src/lib/athletes.ts).
 // Decorativo: sin JS o con movimiento reducido se ve en su pose fija.
-import { athletes, type Exercise, type Shape } from '../../lib/athlete-poses';
+import { athletes, type Exercise } from '../../lib/athlete-poses';
+import ChalkShapes from './ChalkShapes.astro';
 
 interface Props {
   exercise: Exercise;
@@ -27,28 +28,6 @@ const filterId = `athlete-chalk-${exercise}`;
 
 // El «corte» que separa un brazo del torso va del color del fondo.
 const gapClass = tone === 'chalk' ? 'stroke-steel-950' : 'stroke-concrete-100';
-
-const attrs = (shape: Shape) => {
-  if (shape.kind === 'line') {
-    const { x1, y1, x2, y2, w, dash, gap } = shape;
-    return {
-      x1,
-      y1,
-      x2,
-      y2,
-      'stroke-width': w,
-      'stroke-dasharray': dash,
-      class: gap ? gapClass : undefined,
-    };
-  }
-  if (shape.kind === 'circle') {
-    const { cx, cy, r, ring } = shape;
-    return ring
-      ? { cx, cy, r, fill: 'none', 'stroke-width': ring }
-      : { cx, cy, r };
-  }
-  return { d: shape.d };
-};
 ---
 
 <svg
@@ -98,26 +77,10 @@ const attrs = (shape: Shape) => {
     fill="currentColor"
     stroke-linecap="round"
   >
-    {rig.fixed.map((shape) =>
-      shape.kind === 'line' ? (
-        <line {...attrs(shape)} />
-      ) : shape.kind === 'circle' ? (
-        <circle {...attrs(shape)} />
-      ) : (
-        <path {...attrs(shape)} />
-      ),
-    )}
+    <ChalkShapes shapes={rig.fixed} />
     {rig.gear && (
       <g data-gear>
-        {rig
-          .gear(rig.still)
-          .map((shape) =>
-            shape.kind === 'line' ? (
-              <line {...attrs(shape)} />
-            ) : (
-              <circle {...attrs(shape)} />
-            ),
-          )}
+        <ChalkShapes shapes={rig.gear(rig.still)} />
       </g>
     )}
   </g>
@@ -132,17 +95,7 @@ const attrs = (shape: Shape) => {
     stroke-linejoin="round"
     filter={`url(#${filterId})`}
   >
-    {rig
-      .pose(rig.still)
-      .map((shape) =>
-        shape.kind === 'line' ? (
-          <line {...attrs(shape)} />
-        ) : shape.kind === 'circle' ? (
-          <circle {...attrs(shape)} stroke="none" />
-        ) : (
-          <path {...attrs(shape)} />
-        ),
-      )}
+    <ChalkShapes shapes={rig.pose(rig.still)} gapClass={gapClass} body />
   </g>
 </svg>
 

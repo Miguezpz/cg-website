@@ -70,6 +70,17 @@ export const servicesSection = {
   },
 } as const;
 
+export const skillsSection = {
+  title: 'Tu ruta de skills',
+  mark: { word: 'skills', kind: 'underline' },
+  intro:
+    'Ningún skill sale de golpe: se sube por etapas. Empiezas en la tuya y la rutina te lleva a la siguiente.',
+  legend: 'Elige un skill para ver sus etapas',
+  stageLabel: 'Etapa',
+  goalLabel: 'Meta',
+  demo: 'Progresiones de ejemplo. Falta: que el coach confirme las etapas que usa en cada skill.',
+} as const;
+
 export const howItWorks = {
   title: 'Cómo funciona',
   mark: { word: 'funciona', kind: 'underline' },

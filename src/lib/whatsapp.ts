@@ -8,7 +8,7 @@ interface WaInterest {
 }
 
 /** Dónde está el enlace; se envía a GA4 como `source` (spec §9.1). */
-export type WaSource = 'hero' | 'services' | 'contact' | 'floating';
+export type WaSource = 'hero' | 'services' | 'skills' | 'contact' | 'floating';
 
 const DEFAULT_INTEREST = 'entrenar contigo';
 

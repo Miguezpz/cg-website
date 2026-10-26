@@ -1,0 +1,214 @@
+---
+// Ruta de skills (DESIGN.md · Ruta de skills): cada skill es una escalera de
+// cuatro etapas dibujadas en gis. Las pestañas son radios nativos + :has(),
+// así que funciona sin JS (sin :has() se ven todas las escaleras).
+import type { Skill } from '../../data/types';
+import Button from '../ui/Button.astro';
+import ChalkShapes from '../ui/ChalkShapes.astro';
+import DemoNote from '../ui/DemoNote.astro';
+import SectionHeading, { type HeadingMark } from '../ui/SectionHeading.astro';
+import SteelBar from '../ui/SteelBar.astro';
+import { skillLadders } from '../../lib/skill-poses';
+import { waAttrs } from '../../lib/whatsapp';
+
+interface Props {
+  title: string;
+  mark?: HeadingMark;
+  intro: string;
+  legend: string;
+  stageLabel: string;
+  goalLabel: string;
+  demo?: string;
+  skills: Skill[];
+}
+
+const { title, mark, intro, legend, stageLabel, goalLabel, demo, skills } =
+  Astro.props;
+---
+
+<section
+  id="skills"
+  aria-labelledby="skills-title"
+  class="relative border-t-[6px] border-transparent py-section"
+  data-skills
+>
+  <SteelBar />
+  <div class="mx-auto w-full max-w-content px-gutter">
+    <SectionHeading id="skills-title" title={title} mark={mark} />
+    <p class="mt-4 max-w-prose text-concrete-400">{intro}</p>
+    {demo && <DemoNote text={demo} class="mt-5 max-w-prose" />}
+
+    <fieldset class="mt-8">
+      <legend class="sr-only">{legend}</legend>
+      <div class="flex flex-wrap gap-2">
+        {skills.map((skill, i) => (
+          <label class="skill-tab inline-flex min-h-11 cursor-pointer items-center border-2 border-steel-700 px-4 text-label font-semibold uppercase outline-offset-4 outline-signal-glow transition-[background-color,border-color,color] duration-fast ease-out-expo has-[:checked]:border-chalk has-[:checked]:bg-chalk has-[:checked]:text-steel-950 has-[:focus-visible]:outline-2">
+            <input
+              type="radio"
+              name="skill"
+              value={skill.id}
+              checked={i === 0}
+              class="sr-only"
+            />
+            {skill.name}
+          </label>
+        ))}
+      </div>
+    </fieldset>
+
+    {skills.map((skill) => {
+      const ladder = skillLadders[skill.id];
+      return (
+        <div class="skill-panel mt-10" data-skill={skill.id}>
+          <h3 class="sr-only">{skill.name}</h3>
+          <!-- Escalera: cada etapa un escalón más arriba; la meta, en vino. -->
+          <ol class="grid grid-cols-2 items-end gap-x-4 gap-y-10 md:grid-cols-4 md:gap-x-6">
+            {ladder.stages.map((stage, i) => {
+              const goal = i === ladder.stages.length - 1;
+              return (
+                <li class="stage" style={`--i: ${i}`}>
+                  <svg
+                    viewBox={ladder.viewBox}
+                    preserveAspectRatio="xMidYMax meet"
+                    aria-hidden="true"
+                    focusable="false"
+                    class="stage-figure block h-28 w-full sm:h-36 lg:h-44"
+                  >
+                    <g
+                      class="text-steel-700"
+                      stroke="currentColor"
+                      fill="currentColor"
+                      stroke-linecap="round"
+                    >
+                      <ChalkShapes shapes={stage.fixed} />
+                    </g>
+                    <g
+                      class="text-chalk"
+                      opacity="0.8"
+                      stroke="currentColor"
+                      fill="currentColor"
+                      stroke-width="4"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      filter="url(#chalk-figure)"
+                    >
+                      <ChalkShapes
+                        shapes={stage.body}
+                        gapClass="stroke-steel-950"
+                        body
+                      />
+                    </g>
+                  </svg>
+                  <span
+                    class:list={[
+                      'block h-1.5',
+                      goal ? 'bg-signal-glow' : 'bg-steel-700',
+                    ]}
+                    aria-hidden="true"
+                  />
+                  <p class="mt-3 text-label font-semibold uppercase">
+                    <span
+                      class:list={[
+                        'block tabular-nums',
+                        goal ? 'text-signal-glow' : 'text-concrete-400',
+                      ]}
+                    >
+                      {goal ? goalLabel : `${stageLabel} ${i + 1}`}
+                    </span>
+                    <span class="mt-1 block">{skill.stages[i]}</span>
+                  </p>
+                </li>
+              );
+            })}
+          </ol>
+          <Button
+            variant="secondary"
+            size="sm"
+            icon="whatsapp"
+            class="mt-10"
+            {...waAttrs({
+              service: {
+                id: `skill-${skill.id}`,
+                waInterest: skill.waInterest,
+              },
+              source: 'skills',
+            })}
+          >
+            {skill.cta}
+          </Button>
+        </div>
+      );
+    })}
+  </div>
+</section>
+
+<style>
+  /* Escalera: cada etapa sube un escalón (de dos en dos en móvil). */
+  @media (max-width: 47.99rem) {
+    .stage:nth-child(even) {
+      margin-bottom: 1.25rem;
+    }
+  }
+  @media (min-width: 48rem) {
+    .stage {
+      margin-bottom: calc(var(--i) * 1.5rem);
+    }
+  }
+
+  @media (any-hover: hover) and (pointer: fine) {
+    .skill-tab:not(:has(:checked)):hover {
+      border-color: var(--color-concrete-400);
+    }
+  }
+
+  /* Solo se ve la escalera del skill elegido. */
+  @supports selector(:has(*)) {
+    .skill-panel {
+      display: none;
+    }
+    [data-skills]:has([value='handstand']:checked) [data-skill='handstand'],
+    [data-skills]:has([value='muscleup']:checked) [data-skill='muscleup'],
+    [data-skills]:has([value='frontlever']:checked) [data-skill='frontlever'],
+    [data-skills]:has([value='planche']:checked) [data-skill='planche'],
+    [data-skills]:has([value='backlever']:checked) [data-skill='backlever'],
+    [data-skills]:has([value='pistol']:checked) [data-skill='pistol'] {
+      display: block;
+    }
+  }
+
+  /* Las etapas suben desde su escalón, una tras otra: la primera vez que se
+     ven y cada vez que se elige otro skill (al mostrarse, la animación
+     vuelve a empezar). */
+  @media (prefers-reduced-motion: no-preference) {
+    [data-skills][data-animate] .stage-figure {
+      clip-path: inset(0 0 100% 0);
+    }
+    [data-skills][data-animate][data-seen] .stage-figure {
+      clip-path: none;
+      animation: ledge 640ms var(--ease-out-expo) both;
+      animation-delay: calc(var(--i) * 110ms + 120ms);
+    }
+  }
+</style>
+
+<script>
+  const section = document.querySelector<HTMLElement>('[data-skills]');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (section && !reduce && 'IntersectionObserver' in window) {
+    section.toggleAttribute('data-animate', true);
+    const seen = () => {
+      section.toggleAttribute('data-seen', true);
+      observer.disconnect();
+    };
+    // Se observan todas las escaleras: solo la del skill elegido se ve.
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) seen();
+      },
+      { threshold: 0.3 },
+    );
+    section.querySelectorAll('ol').forEach((ol) => observer.observe(ol));
+    // Si eligen otro skill antes, sus etapas suben de inmediato.
+    section.addEventListener('change', seen, { once: true });
+  }
+</script>

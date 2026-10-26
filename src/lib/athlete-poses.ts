@@ -55,11 +55,11 @@ export type Rig = {
     }
 );
 
-type Point = { x: number; y: number };
+export type Point = { x: number; y: number };
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 const round = (n: number) => Math.round(n * 10) / 10;
-const line = (
+export const line = (
   a: Point,
   b: Point,
   w: number,
@@ -79,7 +79,7 @@ const line = (
  * Brazo de perfil que pasa por encima del torso: primero un corte del color
  * del fondo (como gis borrado) y encima el brazo, para que se lea.
  */
-const arm = (
+export const arm = (
   shoulder: Point,
   elbowPt: Point,
   wrist: Point,
@@ -91,17 +91,17 @@ const arm = (
   line(shoulder, elbowPt, upper),
   line(elbowPt, wrist, fore),
 ];
-const add = (p: Point, length: number, angle: number): Point => ({
+export const add = (p: Point, length: number, angle: number): Point => ({
   // Ángulo desde la vertical hacia abajo; positivo = hacia la derecha.
   x: p.x + length * Math.sin(angle),
   y: p.y + length * Math.cos(angle),
 });
-const deg = (d: number) => (d * Math.PI) / 180;
+export const deg = (d: number) => (d * Math.PI) / 180;
 const smooth = (t: number) => t * t * (3 - 2 * t);
 /** 0 → 1 entre `from` y `to` (suave), fijo fuera de ese tramo. */
 const span = (p: number, from: number, to: number) =>
   smooth(Math.min(1, Math.max(0, (p - from) / (to - from))));
-const circle = (c: Point, r: number, ring?: number): Shape => ({
+export const circle = (c: Point, r: number, ring?: number): Shape => ({
   kind: 'circle',
   cx: round(c.x),
   cy: round(c.y),
@@ -153,7 +153,7 @@ function elbow(
  * en el jalón, al lado en la transición, encima en el empuje), el codo gira con
  * él en vez de saltar al otro lado: abajo al jalar, abajo y atrás al empujar.
  */
-function elbowAround(
+export function elbowAround(
   hand: Point,
   shoulder: Point,
   forearm: number,
@@ -169,7 +169,7 @@ function elbowAround(
 }
 
 // Proporciones atléticas, en unidades del viewBox (≈ 1 px a tamaño real).
-const body = {
+export const body = {
   head: 8.5,
   neck: 6,
   shoulder: 15,
@@ -446,7 +446,7 @@ const STRAP = 86;
 const FALSE_GRIP_FOREARM = 21;
 
 // Masa relativa de cada segmento (antropometría de Dempster, ambos lados).
-const MASS = {
+export const MASS = {
   head: 0.08,
   trunk: 0.5,
   upperArm: 0.056,

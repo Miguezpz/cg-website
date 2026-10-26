@@ -1,0 +1,47 @@
+---
+// Figuras de un dibujo de gis (src/lib/athlete-poses.ts) como elementos SVG,
+// en el mismo orden: el navegador los anima actualizando sus atributos.
+import type { Shape } from '../../lib/athlete-poses';
+
+interface Props {
+  shapes: Shape[];
+  /** Clase del «corte» del color del fondo que separa un brazo del torso. */
+  gapClass?: string;
+  /** Cuerpo: los círculos (cabeza, manos) van sin contorno. */
+  body?: boolean;
+}
+
+const { shapes, gapClass, body = false } = Astro.props;
+
+const attrs = (shape: Shape) => {
+  if (shape.kind === 'line') {
+    const { x1, y1, x2, y2, w, dash, gap } = shape;
+    return {
+      x1,
+      y1,
+      x2,
+      y2,
+      'stroke-width': w,
+      'stroke-dasharray': dash,
+      class: gap ? gapClass : undefined,
+    };
+  }
+  if (shape.kind === 'circle') {
+    const { cx, cy, r, ring } = shape;
+    return ring
+      ? { cx, cy, r, fill: 'none', 'stroke-width': ring }
+      : { cx, cy, r, stroke: body ? 'none' : undefined };
+  }
+  return { d: shape.d };
+};
+---
+
+{shapes.map((shape) =>
+  shape.kind === 'line' ? (
+    <line {...attrs(shape)} />
+  ) : shape.kind === 'circle' ? (
+    <circle {...attrs(shape)} />
+  ) : (
+    <path {...attrs(shape)} />
+  ),
+)}

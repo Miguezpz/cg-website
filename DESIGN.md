@@ -139,6 +139,14 @@ Las cifras de precios usan `tabular-nums`.
 - **Descartados:** el atleta en la cinta de disciplinas (satura la zona del Hero) y los de «Resultados» y «Cómo funciona» (quedaban a menos de una pantalla de otro atleta).
 - **Color:** gis, nunca vino (el vino es de acciones y significado).
 
+**Ruta de skills** (`src/lib/skill-poses.ts`, sección `Skills`, 2026-10-26):
+
+- **Qué es:** por cada skill, una escalera de 4 etapas dibujadas en gis (relleno `chalk` al 80 %, filtro compartido `#chalk-figure`), con las mismas proporciones y trazos que los atletas. Él, de perfil, mirando a la derecha. Son poses **fijas**, no atletas animados, así que no cuentan para la regla de «uno por pantalla».
+- **Escalera:** cada etapa está sobre su escalón de acero (`steel-700`, 6 px), un escalón más arriba que la anterior (en móvil, de dos en dos). El escalón es el piso: no se dibuja otro. La meta lleva el escalón y su etiqueta en vino claro (`signal-glow`), porque significa algo.
+- **Biomecánica:** en el front lever, el back lever y la plancha, el ángulo del brazo se calcula para que el centro de masa (Dempster) quede en la vertical de las manos. Por eso en el tuck los brazos van casi verticales y en la posición completa se inclinan mucho más. En la plancha, el tuck avanzado lleva el muslo atrás para que la rodilla no toque el piso.
+- **Pestañas:** radios nativos con aspecto de chip (canto `steel-700`; el elegido, relleno `chalk` con texto `steel-950`, nunca vino, porque el vino relleno es solo para acciones). Solo se ve la escalera elegida, con `:has()`, sin JS; sin `:has()` se ven todas.
+- **Movimiento:** las etapas suben desde su escalón una tras otra (`ledge`, 640 ms, 110 ms entre etapas) la primera vez que se ven y cada vez que se elige otro skill. Con movimiento reducido, quietas.
+
 **Momentos con JS** (IntersectionObserver o WAAPI, una sola vez):
 
 - Ciclo Carga & Descarga: las marcas de gis se dibujan (`duration-draw` 900 ms) y después se trazan las barras de cada semana.
