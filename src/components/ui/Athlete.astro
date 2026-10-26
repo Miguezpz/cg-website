@@ -1,0 +1,115 @@
+---
+// Atleta de gis que hace un ejercicio con el scroll (src/lib/athletes.ts).
+// Decorativo: sin JS o con movimiento reducido se ve en su pose fija.
+import { athletes, type Exercise, type Shape } from '../../lib/athlete-poses';
+
+interface Props {
+  exercise: Exercise;
+  class?: string;
+}
+
+const { exercise, class: className } = Astro.props;
+const rig = athletes[exercise];
+const [minX, minY, width, height] = rig.viewBox.split(' ').map(Number);
+// Textura de gis fija en el espacio del dibujo: si siguiera a la caja de cada
+// figura, el grano «hervirá» al moverse.
+const filterId = `athlete-chalk-${exercise}`;
+
+const attrs = (shape: Shape) => {
+  if (shape.kind === 'line') {
+    const { x1, y1, x2, y2, w } = shape;
+    return { x1, y1, x2, y2, 'stroke-width': w };
+  }
+  if (shape.kind === 'circle') {
+    const { cx, cy, r } = shape;
+    return { cx, cy, r };
+  }
+  return { d: shape.d };
+};
+---
+
+<svg
+  viewBox={rig.viewBox}
+  class={className}
+  aria-hidden="true"
+  focusable="false"
+  data-athlete={exercise}
+>
+  <defs>
+    <filter
+      id={filterId}
+      filterUnits="userSpaceOnUse"
+      x={minX}
+      y={minY}
+      width={width}
+      height={height}
+    >
+      <feTurbulence
+        type="fractalNoise"
+        baseFrequency="0.9"
+        numOctaves="3"
+        seed="7"
+        result="noise"
+      ></feTurbulence>
+      <feDisplacementMap
+        in="SourceGraphic"
+        in2="noise"
+        scale="3"
+        xChannelSelector="R"
+        yChannelSelector="G"
+        result="rough"
+      ></feDisplacementMap>
+      <feColorMatrix
+        in="noise"
+        type="matrix"
+        values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.1 1.45"
+        result="grain"
+      ></feColorMatrix>
+      <feComposite in="rough" in2="grain" operator="in"></feComposite>
+    </filter>
+  </defs>
+  <g
+    class="text-steel-700"
+    stroke="currentColor"
+    fill="currentColor"
+    stroke-linecap="round"
+  >
+    {rig.fixed.map((shape) =>
+      shape.kind === 'line' ? (
+        <line {...attrs(shape)} />
+      ) : shape.kind === 'circle' ? (
+        <circle {...attrs(shape)} />
+      ) : (
+        <path {...attrs(shape)} />
+      ),
+    )}
+  </g>
+  <g
+    data-body
+    class="text-chalk"
+    opacity="0.55"
+    stroke="currentColor"
+    fill="currentColor"
+    stroke-width="4"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    filter={`url(#${filterId})`}
+  >
+    {rig
+      .pose(rig.still)
+      .map((shape) =>
+        shape.kind === 'line' ? (
+          <line {...attrs(shape)} />
+        ) : shape.kind === 'circle' ? (
+          <circle {...attrs(shape)} stroke="none" />
+        ) : (
+          <path {...attrs(shape)} />
+        ),
+      )}
+  </g>
+</svg>
+
+<script>
+  import { initAthletes } from '../../lib/athletes';
+  initAthletes();
+</script>

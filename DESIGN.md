@@ -123,6 +123,14 @@ Las cifras de precios usan `tabular-nums`.
 - **El título siente la gravedad:** al pasar el puntero, las letras cercanas se hunden (hasta 0.14em) y se inclinan como una cuerda; vuelven con un resorte. Se parten en letras al primer contacto, con `aria-label` en el `h1`.
 - **La foto colgante responde:** en escritorio se balancea hacia el puntero (±2.2°) y, al salir, oscila como un péndulo hasta detenerse.
 
+**Atletas de gis** (`src/lib/athlete-poses.ts` + `athletes.ts`, componente `Athlete`, 2026-10-26):
+
+- **Qué son:** siluetas atléticas de gis (relleno `chalk` al 55 %, grano suave con su propio filtro fijo en el espacio del dibujo) que hacen un ejercicio de calistenia. Son decoración: `aria-hidden`, sin texto.
+- **Cómo se mueven:** cada repetición avanza **con el scroll** mientras el atleta cruza la pantalla (3 dominadas de ida y vuelta); si el scroll se detiene, el atleta también. No hay bucles ni movimiento propio. Solo se calcula mientras está en pantalla (IntersectionObserver + `requestAnimationFrame`).
+- **Mecánica:** poses con cinemática inversa: las manos nunca se despegan de la barra. La misma función dibuja la pose fija en el build, así que sin JS o con movimiento reducido se ve el atleta quieto en el punto más alto.
+- **Dónde:** pocos (3–4 en todo el sitio), nunca dos en la misma pantalla y nunca junto a un CTA, el formulario o el Hero. Fase 1: dominadas junto al título de «Entrena online» (escritorio: colgado arriba a la derecha; móvil: al lado de la entrada).
+- **Color:** gis, nunca vino (el vino es de acciones y significado).
+
 **Momentos con JS** (IntersectionObserver o WAAPI, una sola vez):
 
 - Ciclo Carga & Descarga: las marcas de gis se dibujan (`duration-draw` 900 ms) y después se trazan las barras de cada semana.
