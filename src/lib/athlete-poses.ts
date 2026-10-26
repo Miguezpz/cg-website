@@ -110,7 +110,7 @@ export const circle = (c: Point, r: number, ring?: number): Shape => ({
 });
 
 /** Valor en `s` a partir de fotogramas clave [s, valor], con tramos suaves. */
-function keys(s: number, frames: [number, number][]): number {
+export function keys(s: number, frames: [number, number][]): number {
   if (s <= frames[0][0]) return frames[0][1];
   for (let i = 1; i < frames.length; i++) {
     const [s1, v1] = frames[i];

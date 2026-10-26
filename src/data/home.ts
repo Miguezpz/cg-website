@@ -78,6 +78,11 @@ export const skillsSection = {
   legend: 'Elige un skill para ver sus etapas',
   stageLabel: 'Etapa',
   goalLabel: 'Meta',
+  stageLegend: '¿En qué etapa vas?',
+  stageHint: 'toca la etapa en la que vas',
+  /** Se agrega al mensaje de WhatsApp del skill al elegir una etapa. */
+  waStage: 'Ahora voy en «{stage}».',
+  waGoal: 'Ya llegué a «{stage}» y quiero seguir avanzando.',
   demo: 'Progresiones de ejemplo. Falta: que el coach confirme las etapas que usa en cada skill.',
 } as const;
 

@@ -11,7 +11,10 @@ const ATTRS: Record<Shape['kind'], string[]> = {
   path: ['d'],
 };
 
-function update(parts: HTMLCollection | undefined, shapes: Shape[]): void {
+export function update(
+  parts: HTMLCollection | undefined,
+  shapes: Shape[],
+): void {
   if (!parts) return;
   shapes.forEach((shape, i) => {
     const el = parts[i];

@@ -5,6 +5,9 @@
 // se calcula para que el centro de masa quede justo bajo la barra o sobre las
 // manos, como en el equilibrio real. Por eso en el tuck los brazos van casi
 // verticales y en la posición completa se inclinan mucho más.
+//
+// La meta (la última etapa) además se ejecuta: llega a su posición una sola
+// vez al verse y la sostiene. Su pose final es la que se dibuja fija.
 
 import {
   add,
@@ -13,6 +16,7 @@ import {
   circle,
   deg,
   elbowAround,
+  keys,
   line,
   MASS,
   type Point,
@@ -25,7 +29,17 @@ export type SkillId =
 export type Stage = { fixed: Shape[]; body: Shape[] };
 
 /** Las etapas de un skill comparten `viewBox`: la barra y el piso se alinean. */
-export type SkillLadder = { viewBox: string; stages: Stage[] };
+export type SkillLadder = {
+  viewBox: string;
+  stages: Stage[];
+  /**
+   * La meta ejecutándose: el cuerpo para un avance `p` (0 → 1), siempre con
+   * las mismas figuras. `meta(1)` es la pose fija de la última etapa.
+   */
+  meta: (p: number) => Shape[];
+  /** Duración de la meta, en ms. */
+  duration: number;
+};
 
 type Leg = { knee: Point; ankle: Point; toe: Point };
 type Joints = {
@@ -224,14 +238,16 @@ function squat(depth: number, free: boolean, reach = 0): Joints {
   };
 }
 
-function draw(j: Joints): Shape[] {
+/** Con `both`, la pierna de atrás siempre se dibuja (encimada si no está). */
+function draw(j: Joints, both = false): Shape[] {
+  const far = j.far ?? (both ? j.near : undefined);
   const limb = (g: Leg) => [
     line(j.hip, g.knee, 11.5),
     line(g.knee, g.ankle, 8),
     line(g.ankle, g.toe, 5),
   ];
   return [
-    ...(j.far ? limb(j.far) : []),
+    ...(far ? limb(far) : []),
     line(j.hip, j.shoulder, 16),
     line(j.shoulder, j.head, 7.5),
     circle(j.head, body.head),
@@ -276,53 +292,187 @@ function frame(stages: Stage[]): string {
   return [x, y, w, h].map((n) => Math.round(n)).join(' ');
 }
 
-function ladder(stages: Stage[]): SkillLadder {
-  return { viewBox: frame(stages), stages };
+/**
+ * Las tres primeras etapas y la meta: su equipo fijo, su movimiento (pose para
+ * un avance 0 → 1, que termina quieta en la posición) y su duración.
+ */
+function ladder(
+  stages: Stage[],
+  goal: { fixed: Shape[]; pose: (p: number) => Joints; duration: number },
+): SkillLadder {
+  const meta = (p: number) => draw(goal.pose(p), true);
+  const all = [...stages, { fixed: goal.fixed, body: meta(1) }];
+  // La caja también contiene cada momento del movimiento.
+  const frames = Array.from({ length: 21 }, (_, i) => ({
+    fixed: [],
+    body: meta(i / 20),
+  }));
+  return {
+    viewBox: frame([...all, ...frames]),
+    stages: all,
+    meta,
+    duration: goal.duration,
+  };
 }
 
 const handstand = (() => {
   const pike = inverted(0, 90);
   const wall = inverted(4, 176);
   const wallX = wall.hip.x + 13;
-  return ladder([
-    // Pies en un cajón a la altura de la cadera: el peso pasa a los hombros.
-    stage(pike, [
-      box(pike.near.ankle.x - 16, pike.near.ankle.x + 10, pike.hip.y + 5),
-    ]),
-    // Pecho a la pared: el cuerpo se alinea sin tener que equilibrarse.
-    stage(wall, [
-      line({ x: wallX, y: 4 }, { x: wallX, y: wall.near.toe.y - 14 }, 5),
-    ]),
-    // Tijera: ya sin pared, las piernas abiertas ayudan a corregir.
-    stage(inverted(0, 148, 212), []),
-    stage(inverted(0, 180), []),
-  ]);
+  return ladder(
+    [
+      // Pies en un cajón a la altura de la cadera: el peso pasa a los hombros.
+      stage(pike, [
+        box(pike.near.ankle.x - 16, pike.near.ankle.x + 10, pike.hip.y + 5),
+      ]),
+      // Pecho a la pared: el cuerpo se alinea sin tener que equilibrarse.
+      stage(wall, [
+        line({ x: wallX, y: 4 }, { x: wallX, y: wall.near.toe.y - 14 }, 5),
+      ]),
+      // Tijera: ya sin pared, las piernas abiertas ayudan a corregir.
+      stage(inverted(0, 148, 212), []),
+    ],
+    {
+      fixed: [],
+      duration: 2800,
+      // Desde la tijera junta las piernas y corrige el equilibrio con las
+      // muñecas: el cuerpo, recto, se mece cada vez menos hasta quedar quieto.
+      pose(p) {
+        const lean = keys(p, [
+          [0, 0],
+          [0.45, 0],
+          [0.56, 2.2],
+          [0.68, -1.6],
+          [0.8, 0.8],
+          [0.9, -0.3],
+          [1, 0],
+        ]);
+        const open =
+          32 *
+          keys(p, [
+            [0, 1],
+            [0.1, 1],
+            [0.42, 0],
+          ]);
+        return inverted(lean, 180 - lean - open, 180 - lean + open);
+      },
+    },
+  );
 })();
 
-const muscleup = ladder([
-  // Dominada al pecho: la barra llega abajo de la clavícula.
-  stage(onBar({ x: -12, y: 6 }, 14, 18), [bar()]),
-  // Fondo en barra recta: abajo, con el pecho sobre la barra.
-  stage(onBar({ x: -4, y: -22 }, -14, 10, 14), [bar()]),
-  // Transición: el pecho pasa por encima de la barra, los codos atrás.
-  stage(onBar({ x: -12, y: 2 }, -42, 34, 22), [bar()]),
-  // Arriba, brazos bloqueados y el cuerpo vertical.
-  stage(onBar({ x: -3, y: -51 }, 2, 6), [bar()]),
-]);
+const muscleup = ladder(
+  [
+    // Dominada al pecho: la barra llega abajo de la clavícula.
+    stage(onBar({ x: -12, y: 6 }, 14, 18), [bar()]),
+    // Fondo en barra recta: abajo, con el pecho sobre la barra.
+    stage(onBar({ x: -4, y: -22 }, -14, 10, 14), [bar()]),
+    // Transición: el pecho pasa por encima de la barra, los codos atrás.
+    stage(onBar({ x: -12, y: 2 }, -42, 34, 22), [bar()]),
+  ],
+  {
+    fixed: [bar()],
+    duration: 2600,
+    // Una repetición: jalón lento al pecho, transición rápida con el pecho sobre
+    // la barra, empuje y bloqueo arriba (brazos rectos, cuerpo vertical). En el
+    // jalón el cuerpo hace un arco hacia atrás y el antebrazo queda casi
+    // vertical: el codo baja hacia las costillas, no se va al frente.
+    pose(p) {
+      const at = (frames: [number, number][]) => keys(p, frames);
+      return onBar(
+        {
+          x: at([
+            [0, -2],
+            [0.14, -16],
+            [0.26, -20],
+            [0.36, -12],
+            [0.47, -12],
+            [0.6, -4],
+            [0.82, -3],
+          ]),
+          y: at([
+            [0, 50],
+            [0.14, 40],
+            [0.26, 22],
+            [0.36, 6],
+            [0.47, 2],
+            [0.6, -22],
+            [0.82, -51],
+          ]),
+        },
+        at([
+          [0, 2],
+          [0.14, 8],
+          [0.26, 16],
+          [0.36, 14],
+          [0.47, -42],
+          [0.6, -14],
+          [0.82, 2],
+        ]),
+        at([
+          [0, 4],
+          [0.14, 10],
+          [0.26, 22],
+          [0.36, 18],
+          [0.47, 34],
+          [0.6, 10],
+          [0.82, 6],
+        ]),
+        at([
+          [0, 4],
+          [0.14, 8],
+          [0.26, 20],
+          [0.36, 18],
+          [0.47, 22],
+          [0.6, 14],
+          [0.82, 6],
+        ]),
+      );
+    },
+  },
+);
 
-const frontlever = ladder([
-  stage(hold('hang', [TUCK_UP]), [bar()]),
-  stage(hold('hang', [ADV_UP]), [bar()]),
-  stage(hold('hang', [FULL, ADV_UP]), [bar()]),
-  stage(hold('hang', [FULL]), [bar()]),
-]);
+/**
+ * De `from` a la posición completa: las piernas se extienden desde el tuck
+ * (las rodillas pasan por el tuck avanzado) y el ángulo del brazo se vuelve a
+ * calcular en cada momento, así que se inclina conforme el cuerpo se alarga.
+ */
+function extend(
+  grip: 'hang' | 'support',
+  from: [number, number],
+  tilt: [number, number] = [0, 0],
+) {
+  return (p: number) => {
+    const t = keys(p, [
+      [0, 0],
+      [0.15, 0],
+      [0.65, 1],
+    ]);
+    const mix = (a: number, b: number) => a + (b - a) * t;
+    return hold(
+      grip,
+      [[mix(from[0], FULL[0]), mix(from[1], FULL[1])]],
+      mix(...tilt),
+    );
+  };
+}
 
-const backlever = ladder([
-  stage(hold('hang', [TUCK_DOWN]), [bar()]),
-  stage(hold('hang', [ADV_DOWN]), [bar()]),
-  stage(hold('hang', [FULL, ADV_DOWN]), [bar()]),
-  stage(hold('hang', [FULL]), [bar()]),
-]);
+const frontlever = ladder(
+  [
+    stage(hold('hang', [TUCK_UP]), [bar()]),
+    stage(hold('hang', [ADV_UP]), [bar()]),
+    stage(hold('hang', [FULL, ADV_UP]), [bar()]),
+  ],
+  { fixed: [bar()], duration: 2200, pose: extend('hang', TUCK_UP) },
+);
+
+const backlever = ladder(
+  [
+    stage(hold('hang', [TUCK_DOWN]), [bar()]),
+    stage(hold('hang', [ADV_DOWN]), [bar()]),
+    stage(hold('hang', [FULL, ADV_DOWN]), [bar()]),
+  ],
+  { fixed: [bar()], duration: 2200, pose: extend('hang', TUCK_DOWN) },
+);
 
 const planche = (() => {
   // Lean: en posición de lagartija, los hombros se adelantan a las manos.
@@ -343,30 +493,43 @@ const planche = (() => {
   };
   const tuck = hold('support', [TUCK_DOWN], 14);
   const adv = hold('support', [ADV_PLANCHE], 4);
-  const full = hold('support', [FULL], 2);
-  return ladder([
-    stage(lean, []),
-    stage(tuck, []),
-    stage(adv, []),
-    stage(full, []),
-  ]);
+  return ladder([stage(lean, []), stage(tuck, []), stage(adv, [])], {
+    fixed: [],
+    duration: 2400,
+    // Del tuck a la plancha completa: la cadera baja mientras se extiende.
+    pose: extend('support', TUCK_DOWN, [14, 2]),
+  });
 })();
 
 const pistol = (() => {
   const deep = squat(1, false);
   const toBox = squat(0.72, true);
   const helped = squat(1, true, -8);
-  const full = squat(1, true);
   const post = helped.hand.x + 1;
-  return ladder([
-    // Sentadilla profunda con las dos piernas.
-    stage(deep, []),
-    // Pistol hasta un cajón: se baja solo hasta donde se controla.
-    stage(toBox, [box(toBox.hip.x - 18, toBox.hip.x + 8, toBox.hip.y + 9)]),
-    // Con apoyo: una mano en un poste quita el problema del equilibrio.
-    stage(helped, [line({ x: post, y: 4 }, { x: post, y: -150 }, 4)]),
-    stage(full, []),
-  ]);
+  return ladder(
+    [
+      // Sentadilla profunda con las dos piernas.
+      stage(deep, []),
+      // Pistol hasta un cajón: se baja solo hasta donde se controla.
+      stage(toBox, [box(toBox.hip.x - 18, toBox.hip.x + 8, toBox.hip.y + 9)]),
+      // Con apoyo: una mano en un poste quita el problema del equilibrio.
+      stage(helped, [line({ x: post, y: 4 }, { x: post, y: -150 }, 4)]),
+    ],
+    {
+      fixed: [],
+      duration: 2400,
+      // De pie sobre una pierna, baja despacio hasta el fondo y se queda.
+      pose: (p) =>
+        squat(
+          keys(p, [
+            [0, 0],
+            [0.12, 0],
+            [0.75, 1],
+          ]),
+          true,
+        ),
+    },
+  );
 })();
 
 export const skillLadders: Record<SkillId, SkillLadder> = {
