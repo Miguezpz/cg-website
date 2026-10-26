@@ -136,3 +136,17 @@ test.describe('Páginas secundarias (RF-13)', () => {
     ).toHaveAttribute('href', '/');
   });
 });
+
+test('las reseñas de Google Maps llevan el logo de Google (RF-06)', async ({
+  page,
+}) => {
+  await page.goto('/');
+  const cards = page.locator('#testimonios figure');
+  const google = cards.filter({ hasText: 'Reseña en Google Maps' });
+  await expect(google).not.toHaveCount(0);
+  for (const card of await google.all()) {
+    const logo = card.locator('[data-google-logo]');
+    await expect(logo).toBeVisible();
+    await expect(logo).toHaveAttribute('aria-hidden', 'true');
+  }
+});

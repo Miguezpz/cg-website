@@ -37,6 +37,8 @@ export interface Testimonial {
   achievement?: string;
   /** De dónde sale la cita (ej. «Reseña en Google Maps»). */
   source?: string;
+  /** Plataforma de la reseña: muestra su logo junto a `source`. */
+  platform?: 'google';
   photo?: ImageMetadata;
 }
 

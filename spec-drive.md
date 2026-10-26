@@ -114,7 +114,7 @@ Orden de secciones = orden del embudo: **atención → autoridad → oferta → 
 
 ### RF-06 · Testimonios (`#testimonios`)
 - 3–6 testimonios con nombre, cita y, si los hay, logro y foto. Carrusel con *scroll-snap* en móvil y cuadrícula en escritorio.
-- Hoy son reseñas de Google Maps recortadas sin cambiar palabras, con la atribución «Reseña en Google Maps», nombre con apellido abreviado (ej. «Roberto G.») y **sin** foto de perfil (2026-10-26). Requieren el permiso de cada persona antes de compartir el sitio (§17.1.1, pendientes).
+- Hoy son reseñas de Google Maps recortadas sin cambiar palabras, con la atribución «Reseña en Google Maps» junto a la «G» de Google (2026-10-26), nombre con apellido abreviado (ej. «Roberto G.») y **sin** foto de perfil (2026-10-26). Requieren el permiso de cada persona antes de compartir el sitio (§17.1.1, pendientes).
 
 **Aceptación:** todo el contenido es legible y navegable sin JS.
 
@@ -604,3 +604,4 @@ Leyenda: 🔴 bloquea el inicio · 🟠 bloquea el diseño (T1.2) · 🟢 bloque
 | v0.11 | 2026-10-26 | RF-04.1 / T3.15: ruta de skills (escalera de 4 etapas por skill, con CTA de WhatsApp por skill) |
 | v0.11.1 | 2026-10-26 | T3.16: la meta de cada skill se ejecuta; «¿En qué etapa vas?» agrega la etapa al mensaje de WhatsApp (§9.1) |
 | v0.11.2 | 2026-10-26 | T3.17: «Skills» en el menú y la FAQ, eventos `skill_view`/`skill_stage` (§9.3), etapa propuesta en el formulario y cronómetro en la meta |
+| v0.11.3 | 2026-10-26 | RF-06: logo de Google junto a cada reseña de Google Maps |

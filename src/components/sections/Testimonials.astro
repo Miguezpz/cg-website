@@ -3,6 +3,7 @@ import type { Testimonial } from '../../data/types';
 import Athlete from '../ui/Athlete.astro';
 import { Image } from 'astro:assets';
 import DemoNote from '../ui/DemoNote.astro';
+import GoogleLogo from '../ui/GoogleLogo.astro';
 import Icon from '../ui/Icon.astro';
 import SectionHeading, { type HeadingMark } from '../ui/SectionHeading.astro';
 import SteelBar from '../ui/SteelBar.astro';
@@ -78,7 +79,10 @@ const { title, mark, swipeHint, demo, testimonials } = Astro.props;
                   </span>
                 )}
                 {item.source && (
-                  <span class="block text-label text-concrete-400">
+                  <span class="mt-1 flex items-center gap-2 text-label text-concrete-400">
+                    {item.platform === 'google' && (
+                      <GoogleLogo class="size-6" />
+                    )}
                     {item.source}
                   </span>
                 )}

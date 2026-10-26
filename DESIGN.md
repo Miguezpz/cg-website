@@ -63,6 +63,7 @@ Las cifras de precios usan `tabular-nums`.
 - **Gis:** trazos en SVG con un filtro de grano (`feTurbulence`) en color `chalk`. Sirven para subrayar, contar (marcas de 4+1) y señalar dónde van las manos. Su opacidad imita el polvo y su trazo es irregular, nunca un trazo vectorial limpio.
 - **Fotos:** con tratamiento real, sin duotono neón. Mientras no haya fotos, cada hueco tiene la proporción final, fondo `steel-900`, un canto `steel-700` y una etiqueta visible `[[PENDIENTE]]`.
 - **Íconos:** SVG propios de trazo uniforme (WhatsApp, Instagram, TikTok, menú). No se usan emojis ni glifos Unicode como íconos.
+- **Logos de terceros:** la «G» de Google junto a cada reseña de Google Maps (`GoogleLogo`, 2026-10-26) conserva sus cuatro colores oficiales, que no son parte de la paleta ni se usan en nada más. Va sobre un círculo `chalk` de 24 px para leerse sobre el acero, y es decorativa: el texto «Reseña en Google Maps» ya lo dice.
 
 ## Componentes
 

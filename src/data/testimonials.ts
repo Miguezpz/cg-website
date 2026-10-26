@@ -13,16 +13,19 @@ export const testimonials: Testimonial[] = [
     quote:
       'César es un excelente coach, que te brinda todas las herramientas para superar tus propios límites, te impulsa constantemente además de acompañarte siempre…',
     source: googleMaps,
+    platform: 'google',
   },
   {
     name: 'Sofía H.',
     quote:
       '…gracias a los coaches con su entrenamiento tan personalizado he logrado progresar atléticamente como nunca lo había hecho. Recomendadísimo.',
     source: googleMaps,
+    platform: 'google',
   },
   {
     name: 'Asdrubal R.',
     quote: 'Excelente comunidad para aprender calistenia.',
     source: googleMaps,
+    platform: 'google',
   },
 ];
