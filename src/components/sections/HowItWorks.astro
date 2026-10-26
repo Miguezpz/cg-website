@@ -40,7 +40,7 @@ const weekLabel = Object.fromEntries(
       {steps.map((step, i) => (
         <li class="rise relative grid grid-cols-[3rem_minmax(0,1fr)] gap-x-4 border-t border-steel-700 pt-5 md:block">
           <span
-            class="ledge row-span-2 block text-[3.5rem] leading-none font-bold text-concrete-400 tabular-nums"
+            class="ledge row-span-2 block text-[3.5rem] leading-none font-bold text-signal-glow tabular-nums"
             aria-hidden="true"
           >
             {i + 1}
@@ -132,7 +132,7 @@ const weekLabel = Object.fromEntries(
                     class="h-10 w-auto self-start text-chalk sm:h-14"
                   />
                   <span
-                    class="mt-3 h-1.5 bg-steel-700 data-[kind=carga]:bg-chalk"
+                    class="mt-3 h-1.5 bg-steel-700 data-[kind=carga]:bg-signal-glow"
                     data-kind={kind}
                     aria-hidden="true"
                   />
@@ -188,7 +188,11 @@ const weekLabel = Object.fromEntries(
     text-decoration-thickness: 2px;
     text-underline-offset: 0.35em;
   }
-  [data-method]:has(input[value='carga']:checked) [data-week-info='carga'],
+  /* La carga es la semana intensa: lleva el vino; la descarga, el gis. */
+  [data-method]:has(input[value='carga']:checked) [data-week-info='carga'] {
+    border-color: var(--color-signal-glow);
+    background-color: var(--color-steel-900);
+  }
   [data-method]:has(input[value='descarga']:checked)
     [data-week-info='descarga'] {
     border-color: var(--color-chalk);

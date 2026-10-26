@@ -119,6 +119,27 @@
     inset 0 0 0 1px var(--color-signal-glow),
     0 10px 32px -10px
       color-mix(in oklab, var(--color-signal-glow) 45%, transparent);
+  /* Halo de profundidad de la foto del Hero (no la recorta su overflow). */
+  --shadow-depth: 0 24px 140px 10px
+    color-mix(in oklab, var(--color-signal) 55%, transparent);
+}
+
+/* Profundidad (nunca en acciones): halo vino detrás de un bloque, sobre acero. */
+@utility glow-depth {
+  isolation: isolate;
+  position: relative;
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -25% -15%;
+    z-index: -1;
+    pointer-events: none;
+    background: radial-gradient(
+      closest-side,
+      color-mix(in oklab, var(--color-signal) 45%, transparent),
+      transparent
+    );
+  }
 }
 
 /* Secciones de concreto claro: el foco usa el vino oscuro (8:1), no el claro. */

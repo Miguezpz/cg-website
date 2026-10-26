@@ -12,7 +12,10 @@ La página está hecha del material del entrenamiento, no de metáforas: **acero
 
 ## Color
 
-Estrategia **contenida**: neutros de acero y concreto más un solo acento, el **vino** de la marca. El vino **solo** señala acciones (CTA, foco, selección), nunca decora.
+Estrategia **contenida**: neutros de acero y concreto más un solo acento, el **vino** de la marca, en **dos niveles** (2026-10-26, guía de marca: «intense wine red glows… for highlights and depth on dark surfaces»):
+
+1. **Vino relleno (`signal`) = acción.** Solo botones, selección y el foco sobre concreto. Ningún otro elemento lleva un relleno vino, para que el CTA siga siendo lo único vino y sólido de la pantalla.
+2. **Vino claro y halo = significado y profundidad.** `signal-glow` en trazos finos y cifras que **significan** algo (las semanas de carga, los números de los pasos, el progreso de scroll y la sección activa del menú), y un halo vino difuso (`glow-depth`, `shadow-depth`) detrás de los dos momentos clave: la foto del Hero y el cierre «Empieza hoy». Nunca en texto de lectura ni en más bloques.
 
 El vino de la guía (`#6A1E2B`) se lee muy bien con texto claro encima (10.2:1), pero casi no se separa del acero (1.68:1). Por eso tiene un tono claro, `signal-glow`, para todo lo que se dibuja **directamente sobre el acero** (foco, cursor de texto, checkbox, enlaces en hover y el canto del CTA). Sobre concreto, el foco usa el vino oscuro (utilidad `on-light`, 8:1). El negro absoluto y el blanco puro de la guía se interpretan como `steel-950` y `chalk`: en OLED se ven igual y evitan el corrido del negro puro al hacer scroll.
 
@@ -55,7 +58,7 @@ Las cifras de precios usan `tabular-nums`.
 ## Material y forma
 
 - **Esquinas rectas** (`radius-none`). Los campos de formulario llevan `radius-input` (2 px).
-- **Cantos de metal:** bordes de 1–2 px en `steel-700`. No hay sombras decorativas; la profundidad sale del contraste entre `steel-950` y `steel-900`. **Única excepción:** el resplandor vino del botón primario (`shadow-glow`), que pide la guía de marca («intense wine red glows») y que además le da al CTA el canto de 3:1 que el vino solo no tiene sobre el acero.
+- **Cantos de metal:** bordes de 1–2 px en `steel-700`. No hay sombras decorativas; la profundidad sale del contraste entre `steel-950` y `steel-900`. **Excepciones, todas en vino** (guía de marca, «intense wine red glows»): el resplandor del botón primario (`shadow-glow`), que además le da al CTA el canto de 3:1 que el vino solo no tiene sobre el acero; el halo de la foto del Hero (`shadow-depth`), y el halo radial detrás del cierre de Contacto (utilidad `glow-depth`).
 - **Barra:** elemento horizontal de acero (2–6 px de alto) que cruza el ancho completo. Es el separador del sistema y el soporte del calendario Carga & Descarga.
 - **Gis:** trazos en SVG con un filtro de grano (`feTurbulence`) en color `chalk`. Sirven para subrayar, contar (marcas de 4+1) y señalar dónde van las manos. Su opacidad imita el polvo y su trazo es irregular, nunca un trazo vectorial limpio.
 - **Fotos:** con tratamiento real, sin duotono neón. Mientras no haya fotos, cada hueco tiene la proporción final, fondo `steel-900`, un canto `steel-700` y una etiqueta visible `[[PENDIENTE]]`.
@@ -96,7 +99,7 @@ Las cifras de precios usan `tabular-nums`.
 - `.steel-bar` (componente `SteelBar`): las barras de 6 px de cada bloque se trazan al cruzar la parte baja de la pantalla.
 - `.reveal-photo` + `.parallax`: la foto del coach se descubre hacia arriba desde su barra y se mueve más lento que la página.
 - `.hero-parallax` / `.hero-lift`: al salir de pantalla, la foto del Hero baja y el título se eleva.
-- `.scroll-progress`: una barra de gis de 2 px bajo el header indica cuánto llevas de página.
+- `.scroll-progress`: una barra vino claro (`signal-glow`) de 2 px bajo el header indica cuánto llevas de página.
 
 **Gis vivo** (`src/lib/chalk.ts` + `ChalkMark`, 2026-10-24):
 
@@ -131,7 +134,7 @@ Las cifras de precios usan `tabular-nums`.
 - Presión: `scale(0.97)` en 160 ms.
 - Botón primario: el ícono de WhatsApp «suena» al pasar el puntero (`animate-ring`, 520 ms).
 - Botón secundario: la tiza se llena desde abajo (200 ms).
-- Menú de escritorio: un indicador se desliza bajo la sección activa (`--duration-nav` 300 ms, `--ease-in-out-strong`).
+- Menú de escritorio: un indicador vino claro se desliza bajo la sección activa (`--duration-nav` 300 ms, `--ease-in-out-strong`).
 - FAQ: abren y cierran con altura animada (`::details-content` + `interpolate-size`, 280 ms) y la respuesta sube al abrir.
 - Menú móvil: entra en 200 ms con `@starting-style` y los enlaces escalonados 40 ms; se cierra al instante.
 - Mensajes del formulario: suben al aparecer.
