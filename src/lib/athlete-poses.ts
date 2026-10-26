@@ -5,7 +5,7 @@
 // Cada ejercicio devuelve siempre las mismas figuras en el mismo orden, para
 // que el navegador solo actualice sus atributos.
 
-export type Exercise = 'pullup' | 'pistol' | 'jump';
+export type Exercise = 'pullup' | 'pistol' | 'jump' | 'dips' | 'muscleup';
 
 export type Shape =
   | {
@@ -17,7 +17,14 @@ export type Shape =
       w: number;
       dash?: string;
     }
-  | { kind: 'circle'; cx: number; cy: number; r: number }
+  | {
+      kind: 'circle';
+      cx: number;
+      cy: number;
+      r: number;
+      /** Grosor del aro: el círculo va hueco (una anilla). */
+      ring?: number;
+    }
   | { kind: 'path'; d: string };
 
 export type Rig = {
@@ -67,12 +74,24 @@ const smooth = (t: number) => t * t * (3 - 2 * t);
 /** 0 → 1 entre `from` y `to` (suave), fijo fuera de ese tramo. */
 const span = (p: number, from: number, to: number) =>
   smooth(Math.min(1, Math.max(0, (p - from) / (to - from))));
-const circle = (c: Point, r: number): Shape => ({
+const circle = (c: Point, r: number, ring?: number): Shape => ({
   kind: 'circle',
   cx: round(c.x),
   cy: round(c.y),
   r,
+  ...(ring && { ring }),
 });
+
+/** Valor en `s` a partir de fotogramas clave [s, valor], con tramos suaves. */
+function keys(s: number, frames: [number, number][]): number {
+  if (s <= frames[0][0]) return frames[0][1];
+  for (let i = 1; i < frames.length; i++) {
+    const [s1, v1] = frames[i];
+    const [s0, v0] = frames[i - 1];
+    if (s <= s1) return lerp(v0, v1, smooth((s - s0) / (s1 - s0)));
+  }
+  return frames[frames.length - 1][1];
+}
 
 /**
  * Codo de un brazo de dos segmentos (cinemática inversa): parte de la mano,
@@ -313,4 +332,121 @@ const jump: Rig = {
   },
 };
 
-export const athletes: Record<Exercise, Rig> = { pullup, pistol, jump };
+/** Fondos en paralelas de perfil (ella): rodillas dobladas, pies atrás. */
+const dips: Rig = {
+  viewBox: '-50 -74 100 176',
+  play: 'scroll',
+  reps: 3,
+  still: 0.85,
+  fixed: [
+    line({ x: -34, y: 0 }, { x: -34, y: 96 }, 4),
+    line({ x: 34, y: 0 }, { x: 34, y: 96 }, 4),
+    line({ x: -44, y: 0 }, { x: 44, y: 0 }, 5),
+    line({ x: -46, y: 98.5 }, { x: 46, y: 98.5 }, 3),
+  ],
+  pose(s) {
+    // De brazos rectos arriba a los hombros cerca de la barra, con el tronco
+    // inclinado al frente y los codos hacia atrás.
+    const hand = { x: 0, y: 0 };
+    const shoulder = { x: lerp(-1, 4, s), y: lerp(-46, -10, s) };
+    const elbowPt = elbow(hand, shoulder, her.forearm, her.upperArm, -1);
+    const lean = deg(lerp(-2, -22, s));
+    const hip = add(shoulder, her.torso, lean);
+    const head = add(shoulder, her.neck + her.head - 1, lean + Math.PI);
+    const knee = add(hip, her.thigh, deg(lerp(8, 15, s)));
+    const ankle = add(knee, her.shin, deg(lerp(-87, -80, s)));
+    const tail = { x: head.x - 6, y: head.y - 3 };
+
+    return [
+      circle(add(hip, 4, lean - deg(90)), 8),
+      line(hip, shoulder, 14),
+      line(shoulder, head, 6.5),
+      circle(head, her.head),
+      line(tail, { x: tail.x - 5, y: tail.y + 4 }, 5),
+      line(
+        { x: tail.x - 5, y: tail.y + 4 },
+        { x: tail.x - 7, y: tail.y + 12 },
+        3.5,
+      ),
+      line(hip, knee, 11),
+      line(knee, ankle, 7.5),
+      line(ankle, add(ankle, 5, deg(-80)), 4.5),
+      line(shoulder, elbowPt, 7.5),
+      line(elbowPt, hand, 6),
+      circle(hand, 3.5),
+    ];
+  },
+};
+
+/** Muscle-up en anillas de perfil (él): jalón, transición y empuje. */
+const muscleup: Rig = {
+  viewBox: '-44 -86 92 274',
+  play: 'scroll',
+  reps: 2,
+  still: 0.55,
+  fixed: [
+    line({ x: 0, y: -86 }, { x: 0, y: -6.5 }, 2.5),
+    circle({ x: 0, y: 0 }, 6.5, 2.5),
+  ],
+  pose(s) {
+    const hand = { x: 0, y: 0 };
+    // Colgado → hombros a la altura de las anillas → pecho por encima
+    // (transición, codos atrás) → brazos rectos arriba.
+    const shoulder = {
+      x: keys(s, [
+        [0, -2],
+        [0.35, -4],
+        [0.55, 6],
+        [1, 1],
+      ]),
+      y: keys(s, [
+        [0, 51],
+        [0.35, 18],
+        [0.55, -10],
+        [1, -50],
+      ]),
+    };
+    const elbowPt = elbow(hand, shoulder, body.forearm, body.upperArm, -1);
+    // El cuerpo se ahueca al jalar y se inclina al frente en la transición.
+    const lean = deg(
+      keys(s, [
+        [0, 0],
+        [0.35, 6],
+        [0.55, -28],
+        [1, -4],
+      ]),
+    );
+    const hip = add(shoulder, body.torso, lean);
+    const head = add(shoulder, body.neck + body.head - 1, lean + Math.PI);
+    const legs = deg(
+      keys(s, [
+        [0, 4],
+        [0.35, 14],
+        [0.55, 10],
+        [1, 6],
+      ]),
+    );
+    const knee = add(hip, body.thigh, legs);
+    const ankle = add(knee, body.shin, legs - deg(4));
+
+    return [
+      line(hip, shoulder, 16),
+      line(shoulder, head, 7.5),
+      circle(head, body.head),
+      line(hip, knee, 11.5),
+      line(knee, ankle, 8),
+      line(ankle, add(ankle, 6, legs + deg(25)), 5),
+      line(shoulder, elbowPt, 8.5),
+      line(elbowPt, hand, 7),
+      circle(hand, 3.8),
+    ];
+  },
+};
+
+export const athletes: Record<Exercise, Rig> = {
+  pullup,
+  pistol,
+  jump,
+  dips,
+  muscleup,
+};

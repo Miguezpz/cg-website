@@ -23,28 +23,41 @@ function apply(svg: SVGSVGElement, shapes: Shape[]): void {
   });
 }
 
-function drawScroll(svg: SVGSVGElement): void {
+/** Ms por repetición cuando un atleta de repeticiones se mueve una sola vez. */
+const REP_MS = 1100;
+
+/** Pose de un atleta de repeticiones según el avance total (0 → 1). */
+function reps(svg: SVGSVGElement, travel: number): void {
   const rig = athletes[svg.dataset.athlete as Exercise];
   if (rig?.play !== 'scroll') return;
-  const rect = svg.getBoundingClientRect();
-  // 0 cuando asoma por abajo, 1 cuando sale por arriba.
-  const travel = Math.min(
-    1,
-    Math.max(0, (innerHeight - rect.top) / (innerHeight + rect.height)),
-  );
   // Cada repetición sube y baja con una curva suave (coseno).
   const phase = (travel * rig.reps) % 1;
   apply(svg, rig.pose((1 - Math.cos(phase * 2 * Math.PI)) / 2));
 }
 
+function drawScroll(svg: SVGSVGElement): void {
+  const rect = svg.getBoundingClientRect();
+  // 0 cuando asoma por abajo, 1 cuando sale por arriba.
+  reps(
+    svg,
+    Math.min(
+      1,
+      Math.max(0, (innerHeight - rect.top) / (innerHeight + rect.height)),
+    ),
+  );
+}
+
 function playOnce(svg: SVGSVGElement): void {
   const rig = athletes[svg.dataset.athlete as Exercise];
-  if (rig?.play !== 'once') return;
+  if (!rig) return;
+  const duration = rig.play === 'once' ? rig.duration : rig.reps * REP_MS;
   let start = 0;
   const tick = (now: number) => {
     start ||= now;
-    const progress = Math.min(1, (now - start) / rig.duration);
-    apply(svg, rig.pose(progress));
+    const progress = Math.min(1, (now - start) / duration);
+    if (rig.play === 'once') apply(svg, rig.pose(progress));
+    // Al terminar la última repetición, `phase` vuelve a 0 (posición inicial).
+    else reps(svg, progress === 1 ? 0 : progress);
     if (progress < 1) requestAnimationFrame(tick);
   };
   requestAnimationFrame(tick);
@@ -69,7 +82,7 @@ export function initAthletes(): void {
     (entries) => {
       for (const entry of entries) {
         const svg = entry.target as SVGSVGElement;
-        if (athletes[svg.dataset.athlete as Exercise]?.play === 'once') {
+        if (svg.dataset.play === 'once') {
           // Empieza cuando se ve bien, no cuando apenas asoma.
           if (entry.intersectionRatio < 0.6) continue;
           observer.unobserve(svg);

@@ -6,10 +6,19 @@ import { athletes, type Exercise, type Shape } from '../../lib/athlete-poses';
 
 interface Props {
   exercise: Exercise;
+  /** Gis sobre acero; carbón sobre las secciones de concreto. */
+  tone?: 'chalk' | 'charcoal';
+  /** Repeticiones una sola vez al verse, no con el scroll (páginas cortas). */
+  once?: boolean;
   class?: string;
 }
 
-const { exercise, class: className } = Astro.props;
+const {
+  exercise,
+  tone = 'chalk',
+  once = false,
+  class: className,
+} = Astro.props;
 const rig = athletes[exercise];
 const [minX, minY, width, height] = rig.viewBox.split(' ').map(Number);
 // Textura de gis fija en el espacio del dibujo: si siguiera a la caja de cada
@@ -22,8 +31,10 @@ const attrs = (shape: Shape) => {
     return { x1, y1, x2, y2, 'stroke-width': w, 'stroke-dasharray': dash };
   }
   if (shape.kind === 'circle') {
-    const { cx, cy, r } = shape;
-    return { cx, cy, r };
+    const { cx, cy, r, ring } = shape;
+    return ring
+      ? { cx, cy, r, fill: 'none', 'stroke-width': ring }
+      : { cx, cy, r };
   }
   return { d: shape.d };
 };
@@ -35,6 +46,7 @@ const attrs = (shape: Shape) => {
   aria-hidden="true"
   focusable="false"
   data-athlete={exercise}
+  data-play={once || rig.play === 'once' ? 'once' : 'scroll'}
 >
   <defs>
     <filter
@@ -70,7 +82,7 @@ const attrs = (shape: Shape) => {
     </filter>
   </defs>
   <g
-    class="text-steel-700"
+    class={tone === 'chalk' ? 'text-steel-700' : 'text-concrete-600'}
     stroke="currentColor"
     fill="currentColor"
     stroke-linecap="round"
@@ -87,8 +99,8 @@ const attrs = (shape: Shape) => {
   </g>
   <g
     data-body
-    class="text-chalk"
-    opacity="0.55"
+    class={tone === 'chalk' ? 'text-chalk' : 'text-steel-950'}
+    opacity={tone === 'chalk' ? 0.55 : 0.5}
     stroke="currentColor"
     fill="currentColor"
     stroke-width="4"

@@ -1,5 +1,6 @@
 ---
 import type { FaqItem } from '../../data/types';
+import Athlete from '../ui/Athlete.astro';
 import ChalkMark from '../ui/ChalkMark.astro';
 import DemoNote from '../ui/DemoNote.astro';
 import SectionHeading, { type HeadingMark } from '../ui/SectionHeading.astro';
@@ -19,7 +20,16 @@ const { title, mark, items } = Astro.props;
   class="on-light grain bg-concrete-100 py-section text-steel-950"
 >
   <div class="mx-auto grid w-full max-w-content gap-10 px-gutter lg:grid-cols-[minmax(0,0.7fr)_minmax(0,1fr)] lg:gap-16">
-    <SectionHeading id="faq-title" title={title} mark={mark} />
+    <!-- Muscle-up en anillas, en carbón (sección de concreto). Móvil: junto al
+         título. Escritorio: cuelga en el espacio bajo el título. -->
+    <div class="flex items-start justify-between gap-4 lg:block">
+      <SectionHeading id="faq-title" title={title} mark={mark} />
+      <Athlete
+        exercise="muscleup"
+        tone="charcoal"
+        class="h-40 w-auto shrink-0 lg:mt-10 lg:h-104"
+      />
+    </div>
     <div class="border-t border-steel-950">
       {items.map((item) => (
         <details class="faq-item rise group border-b border-steel-950">
