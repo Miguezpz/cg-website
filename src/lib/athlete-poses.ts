@@ -486,20 +486,48 @@ const dips: Rig = {
     line({ x: -50, y: 118.5 }, { x: 50, y: 118.5 }, 3),
   ],
   pose(s) {
-    // De brazos rectos arriba a los hombros cerca de la barra. Al bajar, el
-    // tronco se inclina al frente unos 35° (técnica: entre 30° y 45°), los
-    // hombros pasan un poco delante de las manos y los codos van atrás.
+    // 1. Soporte: brazos bloqueados, hombros abajo, lejos de las orejas
+    //    (depresión escapular), y el cuerpo apenas inclinado al frente.
+    // 2. Bajada: los codos se doblan hacia atrás, el tronco se inclina cada vez
+    //    más y las piernas van un poco atrás, hasta que los hombros pasan por
+    //    debajo de los codos.
+    // 3. Empuje: el mismo camino de vuelta; el tronco se endereza al subir.
+    // Lo único que no se elige a ojo es qué tan adelante van los hombros: se
+    // calcula para que el centro de masa quede sobre las manos. Si bajara
+    // vertical, el centro de masa quedaría detrás de las manos y caería atrás.
     const hand = { x: 0, y: 0 };
-    const shoulder = { x: lerp(-1, 7, s), y: lerp(-46, -10, s) };
-    const elbowPt = elbow(hand, shoulder, her.forearm, her.upperArm, -1);
-    const lean = deg(lerp(-4, -35, s));
-    const hip = add(shoulder, her.torso, lean);
-    const head = add(shoulder, her.neck + her.head - 1, lean + Math.PI);
-    // Las piernas, rectas, se quedan en diagonal al frente mientras el tronco
-    // se inclina: la cadera se flexiona un poco más abajo.
-    const legs = deg(lerp(12, 16, s));
-    const knee = add(hip, her.thigh, legs);
-    const ankle = add(knee, her.shin, legs);
+    const depth = lerp(-47.85, -17, s);
+    const lean = deg(-lerp(6, 44, s));
+    const legs = deg(-lerp(2, 14, s));
+    const neck = her.neck + her.head - 1 + lerp(2, 0, s);
+    const build = (x: number) => {
+      const shoulder = { x, y: depth };
+      const hip = add(shoulder, her.torso, lean);
+      const knee = add(hip, her.thigh, legs);
+      return {
+        shoulder,
+        elbowPt: elbow(hand, shoulder, her.forearm, her.upperArm, -1),
+        hip,
+        head: add(shoulder, neck, lean + Math.PI),
+        knee,
+        ankle: add(knee, her.shin, legs),
+      };
+    };
+    const balanced = (x: number) => {
+      const b = build(x);
+      const parts: [Point, number][] = [
+        [b.head, MASS.head],
+        [mid(b.hip, b.shoulder), MASS.trunk],
+        [mid(b.shoulder, b.elbowPt), MASS.upperArm],
+        [mid(b.elbowPt, hand), MASS.forearm],
+        [mid(b.hip, b.knee), MASS.thigh],
+        [mid(b.knee, b.ankle), MASS.shin],
+      ];
+      return parts.reduce((sum, [p, m]) => sum + p.x * m, 0) - hand.x;
+    };
+    const { shoulder, elbowPt, hip, head, knee, ankle } = build(
+      solve(balanced, -10, 40),
+    );
     const tail = { x: head.x - 6, y: head.y - 3 };
 
     return [
