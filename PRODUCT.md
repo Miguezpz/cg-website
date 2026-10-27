@@ -26,7 +26,7 @@ Control Gravedad es la escuela de calistenia en línea del coach **César August
 
 ## Positioning
 
-Un método propio, **Carga & Descarga**, que forma **deportistas hábiles y conscientes**. Las semanas alternan entre carga (fuerza relativa y absoluta, resistencia, técnica pulcra) y descarga (biomecánica, movilidad, elasticidad y descanso). Primero la técnica y el cuidado de músculos y articulaciones, no la cantidad de repeticiones. Un gimnasio genérico o un coach sin método no puede decir esto con verdad.
+Un método claro, **Carga & Descarga** (César lo implementa; no es su creador), que forma **deportistas hábiles y conscientes**. Las semanas alternan entre carga (fuerza relativa y absoluta, resistencia, técnica pulcra) y descarga (biomecánica, movilidad, elasticidad y descanso). Primero la técnica y el cuidado de músculos y articulaciones, no la cantidad de repeticiones. Un gimnasio genérico o un coach sin método no puede decir esto con verdad, pero el sitio nunca dice que el método sea suyo.
 
 ## Operating Context
 

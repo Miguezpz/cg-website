@@ -48,7 +48,7 @@ Construir una **landing page de conversión** para **Control Gravedad**, la escu
 | Todos | Saber cuánto cuesta y si vale la pena | "Seguro es caro" | Servicios y FAQ: el precio se pide por WhatsApp (no se publica, §17.1.2) |
 | Todos | Entrenar sin lesionarse | "Me voy a lastimar" | Cómo funciona (método Carga & Descarga), FAQ |
 
-**Mensaje central:** formar deportistas *hábiles y conscientes* con un método propio, **Carga & Descarga**, que alterna semanas de fuerza con semanas de técnica, movilidad y descanso (§17.1.1). Disciplinas: Calistenia, Streetlifting, Movilidad, Skills Movements y Funcional. Tono: motivacional y cercano; el sitio lo traduce a un registro elegante (§10).
+**Mensaje central:** formar deportistas *hábiles y conscientes* con el método **Carga & Descarga**, que el coach implementa (no es su creador, 2026-10-26) y que alterna semanas de fuerza con semanas de técnica, movilidad y descanso (§17.1.1). Disciplinas: Calistenia, Streetlifting, Movilidad, Skills Movements y Funcional. Tono: motivacional y cercano; el sitio lo traduce a un registro elegante (§10).
 
 **Dispositivo principal:** móvil. Todo se diseña *mobile-first* y se valida primero a 375 px.
 
@@ -450,7 +450,7 @@ Cada tarea se cierra con el ciclo de §13 y su prueba e2e.
 - WhatsApp: +52 443 301 9533 (`524433019533` en los enlaces).
 - Email público (formulario y aviso de privacidad): **controlgravedad@gmail.com**. El email personal del coach no se publica.
 
-**Método: Carga & Descarga** (publicación del 2024-04-10). Las semanas alternan:
+**Método: Carga & Descarga** (publicación del 2024-04-10). César lo **implementa**; no es su creador, así que el sitio nunca lo presenta como «método propio» (2026-10-26). Las semanas alternan:
 - *Semana de carga:* fuerza relativa y absoluta, resistencia cardiovascular y muscular, técnica pulcra y rangos de repetición adecuados.
 - *Semana de descarga:* biomecánica y técnica, descanso, movilidad y elasticidad para cuidar músculos y articulaciones ("progreso consciente").
 
@@ -609,3 +609,4 @@ Leyenda: 🔴 bloquea el inicio · 🟠 bloquea el diseño (T1.2) · 🟢 bloque
 | v0.12.3 | 2026-10-26 | Se quitan las marcas de agarre de gis sobre la barra del Hero y su polvo de magnesia |
 | v0.12.4 | 2026-10-26 | Sin resplandores: se quitan los halos vino de la foto del Hero y del cierre de Contacto, y el halo del CTA primario (queda su canto de 1 px). Ajusta T3.10/T3.12 |
 | v0.12.5 | 2026-10-26 | Foto del Hero: se desenrolla desde la barra con un zoom que se asienta, una sola vez; se quitan su balanceo, su respuesta al puntero y su parallax |
+| v0.12.6 | 2026-10-26 | César **implementa** el método Carga & Descarga, no es su creador: se corrigen la credencial («Implementa el método…») y el indicador del Hero («método de trabajo»); §2 y §17.1.1 |

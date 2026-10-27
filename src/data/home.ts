@@ -25,7 +25,7 @@ export const hero = {
   },
   indicators: [
     { value: '5', label: 'disciplinas' },
-    { value: 'Carga & Descarga', label: 'método propio' },
+    { value: 'Carga & Descarga', label: 'método de trabajo' },
     { value: 'Gravedad Zero', label: 'evento que organizamos' },
   ],
   // [[PENDIENTE]] La foto actual mide 540 × 960 px: falta la versión en alta
@@ -48,7 +48,7 @@ export const about = {
   ],
   demo: 'Historia de ejemplo. Falta: la historia real del coach (máx. 120 palabras), sus años de experiencia y sus certificaciones.',
   credentials: [
-    'Creador del método Carga & Descarga',
+    'Implementa el método Carga & Descarga',
     'Organizador de Gravedad Zero, evento de calistenia (enero 2026)',
     'Calistenia, streetlifting, movilidad, skills y entrenamiento funcional',
     // [[PENDIENTE]] Años de experiencia y certificaciones reales.
