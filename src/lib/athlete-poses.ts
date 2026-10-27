@@ -58,6 +58,10 @@ export type Rig = {
 export type Point = { x: number; y: number };
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+const mid = (a: Point, b: Point) => ({
+  x: (a.x + b.x) / 2,
+  y: (a.y + b.y) / 2,
+});
 const round = (n: number) => Math.round(n * 10) / 10;
 export const line = (
   a: Point,
@@ -166,6 +170,20 @@ export function keys(s: number, frames: [number, number][]): number {
     if (s <= s1) return lerp(v0, v1, smooth((s - s0) / (s1 - s0)));
   }
   return frames[frames.length - 1][1];
+}
+
+/** El valor entre `lo` y `hi` donde `f` cambia de signo (por bisección). */
+export function solve(
+  f: (a: number) => number,
+  lo: number,
+  hi: number,
+): number {
+  for (let i = 0; i < 30; i++) {
+    const a = (lo + hi) / 2;
+    if (Math.sign(f(a)) === Math.sign(f(lo))) lo = a;
+    else hi = a;
+  }
+  return (lo + hi) / 2;
 }
 
 /**
@@ -313,20 +331,44 @@ const pistol: Rig = {
   fixed: [line({ x: -28, y: 4.5 }, { x: 72, y: 4.5 }, 3)],
   pose(s) {
     const ankle = { x: 0, y: 0 };
-    // Espinilla, muslo y tronco se inclinan juntos para no perder el
-    // equilibrio: la cadera baja detrás del talón y el pecho va al frente.
+    // La espinilla y el muslo bajan juntos: la rodilla pasa la punta del pie
+    // y la cadera baja detrás del talón.
     const knee = add(ankle, her.shin, deg(180 - lerp(4, 40, s)));
     const hip = add(knee, her.thigh, deg(180 + lerp(4, 98, s)));
-    const lean = deg(180 - lerp(4, 48, s));
-    const shoulder = add(hip, her.torso, lean);
-    const head = add(shoulder, her.neck + her.head - 1, lean);
-    // Brazos al frente para equilibrar; bajan un poco al subir.
-    const arm = deg(lerp(70, 88, s));
-    const elbowPt = add(shoulder, her.upperArm, arm);
-    const hand = add(elbowPt, her.forearm, arm + deg(5));
     // La pierna libre sube al frente, recta en el fondo.
     const freeKnee = add(hip, her.thigh, deg(lerp(35, 84, s)));
     const freeAnkle = add(freeKnee, her.shin, deg(lerp(15, 86, s)));
+    // Brazos al frente para equilibrar; bajan un poco al subir.
+    const arm = deg(lerp(70, 88, s));
+    const upper = (lean: number) => {
+      const shoulder = add(hip, her.torso, lean);
+      const elbowPt = add(shoulder, her.upperArm, arm);
+      return {
+        shoulder,
+        head: add(shoulder, her.neck + her.head - 1, lean),
+        elbowPt,
+        hand: add(elbowPt, her.forearm, arm + deg(5)),
+      };
+    };
+    // La inclinación del tronco se calcula para que el centro de masa quede
+    // sobre el centro del pie de apoyo (de -3 a 10).
+    const balanced = (forward: number) => {
+      const u = upper(deg(180 - forward));
+      const parts: [Point, number][] = [
+        [u.head, MASS.head],
+        [mid(hip, u.shoulder), MASS.trunk],
+        [mid(u.shoulder, u.elbowPt), MASS.upperArm],
+        [mid(u.elbowPt, u.hand), MASS.forearm],
+        [mid(hip, knee), MASS.thigh / 2],
+        [mid(knee, ankle), MASS.shin / 2],
+        [mid(hip, freeKnee), MASS.thigh / 2],
+        [mid(freeKnee, freeAnkle), MASS.shin / 2],
+      ];
+      return parts.reduce((x, [p, m]) => x + p.x * m, 0) - 3.5;
+    };
+    const { shoulder, head, elbowPt, hand } = upper(
+      deg(180 - solve(balanced, -30, 80)),
+    );
     const tail = { x: head.x - 6, y: head.y - 3 };
 
     return [
@@ -569,10 +611,6 @@ function muscleupFrame(s: number): { body: Shape[]; gear: Shape[] } {
   const head = add(shoulder, body.neck + body.head - 1, lean + Math.PI);
   const knee = add(hip, body.thigh, legs);
   const ankle = add(knee, body.shin, legs);
-  const mid = (a: Point, b: Point) => ({
-    x: (a.x + b.x) / 2,
-    y: (a.y + b.y) / 2,
-  });
   const parts: [Point, number][] = [
     [head, MASS.head],
     [mid(shoulder, hip), MASS.trunk],

@@ -4,7 +4,9 @@
 // plancha), el ángulo del brazo no se elige a ojo: se calcula en cada cuadro
 // para que el centro de masa quede justo bajo la barra o sobre las manos, como
 // en el equilibrio real. Por eso en el tuck los brazos van casi verticales y en
-// la posición completa se inclinan mucho más.
+// la posición completa se inclinan mucho más. En la pistol squat se calcula
+// igual la inclinación del tronco, para que el centro de masa quede sobre el
+// pie de apoyo.
 //
 // Los skills de posición (parada de manos, levers y plancha) llegan a ella
 // una vez y se quedan; los de repeticiones (muscle-up y pistol squat) se
@@ -22,6 +24,7 @@ import {
   keys,
   line,
   MASS,
+  solve,
   type Point,
   type Shape,
 } from './athlete-poses';
@@ -62,6 +65,10 @@ type Joints = {
 };
 
 const ARM = body.upperArm + body.forearm;
+/** Pistol squat en el fondo: inclinación de la espinilla y flexión de la rodilla. */
+const [ANKLE, KNEE] = [34, 110];
+/** Pie de apoyo, del tobillo a la punta. */
+const FOOT = 10;
 /** Del hombro al centro de la cabeza. */
 const HEAD = body.neck + body.head - 1;
 
@@ -120,6 +127,22 @@ function centerOfMass(j: Joints): Point {
 }
 
 /**
+ * La pose de `build(a)` cuyo centro de masa cae en la vertical de `x(j)`, el
+ * apoyo: busca el ángulo `a` entre `lo` y `hi`.
+ */
+function balance(
+  build: (a: number) => Joints,
+  x: (j: Joints) => number,
+  [lo, hi]: [number, number],
+): Joints {
+  const off = (a: number) => {
+    const j = build(a);
+    return centerOfMass(j).x - x(j);
+  };
+  return build(solve(off, lo, hi));
+}
+
+/**
  * Sostén horizontal con los brazos rectos (levers y plancha), con la cabeza a
  * la izquierda y los pies a la derecha. `legs` son los ángulos de cada pierna
  * respecto a un tronco horizontal; `tilt` sube la cadera (tuck de plancha).
@@ -150,17 +173,7 @@ function hold(
       ...(far && { far }),
     };
   };
-  const off = (a: number) => {
-    const j = build(a);
-    return centerOfMass(j).x - j.hand.x;
-  };
-  let [lo, hi] = [0, 85];
-  for (let i = 0; i < 30; i++) {
-    const a = (lo + hi) / 2;
-    if (Math.sign(off(a)) === Math.sign(off(lo))) lo = a;
-    else hi = a;
-  }
-  const j = build((lo + hi) / 2);
+  const j = balance(build, (k) => k.hand.x, [0, 85]);
   return move(j, { x: -j.hand.x, y: -j.hand.y });
 }
 
@@ -214,35 +227,46 @@ function inverted(
 
 /**
  * Pistol squat de perfil sobre la pierna de apoyo (tobillo en 0, 0). `depth`
- * va de parado (0) al fondo (1): espinilla, muslo y tronco se inclinan juntos
- * para no perder el equilibrio, como en el atleta de /gracias.
+ * va de parado (0) al fondo (1): la rodilla pasa la punta del pie y el glúteo
+ * baja casi al talón. La inclinación del tronco no se elige a ojo: se calcula
+ * para que el centro de masa quede sobre el pie de apoyo (la pierna libre y
+ * los brazos al frente hacen de contrapeso), así que de pie la cadera va un
+ * poco atrás y en el fondo el pecho se inclina al frente.
  */
 function squat(depth: number): Joints {
   const lerp = (a: number, b: number) => a + (b - a) * depth;
   const ankle = { x: 0, y: 0 };
-  const knee = add(ankle, body.shin, rad(180 - lerp(4, 40)));
-  const hip = add(knee, body.thigh, rad(180 + lerp(4, 98)));
-  const lean = 180 - lerp(4, 46);
-  const shoulder = add(hip, body.torso, rad(lean));
+  const knee = add(ankle, body.shin, rad(180 - lerp(2, ANKLE)));
+  const hip = add(knee, body.thigh, rad(180 + lerp(2, KNEE)));
+  const stand: Leg = { knee, ankle, toe: add(ankle, FOOT, rad(90)) };
+  // La pierna libre siempre va estirada al frente, sin tocar el piso: en el
+  // fondo, casi paralela al piso (un poco arriba, para no tocarlo).
+  const freeKnee = add(hip, body.thigh, rad(lerp(80, 98)));
+  const freeAnkle = add(freeKnee, body.shin, rad(lerp(82, 100)));
   const arms = lerp(70, 88);
-  const elbow = add(shoulder, body.upperArm, rad(arms));
-  const stand: Leg = { knee, ankle, toe: add(ankle, 10, rad(90)) };
-  // La pierna libre siempre va estirada al frente, sin tocar el piso.
-  const freeKnee = add(hip, body.thigh, rad(84));
-  const freeAnkle = add(freeKnee, body.shin, rad(86));
-  return {
-    shoulder,
-    hip,
-    head: add(shoulder, HEAD, rad(lean)),
-    elbow,
-    hand: add(elbow, body.forearm, rad(arms + 5)),
-    near: {
-      knee: freeKnee,
-      ankle: freeAnkle,
-      toe: add(freeAnkle, 6, rad(140)),
+  return balance(
+    (forward) => {
+      const lean = 180 - forward;
+      const shoulder = add(hip, body.torso, rad(lean));
+      const elbow = add(shoulder, body.upperArm, rad(arms));
+      return {
+        shoulder,
+        hip,
+        head: add(shoulder, HEAD, rad(lean)),
+        elbow,
+        hand: add(elbow, body.forearm, rad(arms + 5)),
+        near: {
+          knee: freeKnee,
+          ankle: freeAnkle,
+          toe: add(freeAnkle, 6, rad(140)),
+        },
+        far: stand,
+      };
     },
-    far: stand,
-  };
+    // Sobre el centro del pie, entre el talón y la punta.
+    () => FOOT / 2 - 1,
+    [-30, 80],
+  );
 }
 
 /**
@@ -432,65 +456,37 @@ function flow(s: number, frames: [number, number][]): number {
 
 const muscleup = motion(
   [bar],
-  // Una repetición: jalón lento al pecho, transición rápida con el pecho sobre
-  // la barra, empuje y bloqueo arriba (brazos rectos, cuerpo vertical). En el
-  // jalón el cuerpo hace un arco hacia atrás y el antebrazo queda casi
-  // vertical: el codo baja hacia las costillas, no se va al frente. Un solo
-  // movimiento continuo: cada ángulo va en un solo sentido hasta la transición
-  // (sin retrocesos) y la curva no se detiene en cada fotograma clave.
+  // Una repetición, en un solo movimiento continuo: los fotogramas clave se
+  // unen con una curva de velocidad continua (sin detenerse en cada uno).
+  // 1. Colgado en hollow body con un ligero balanceo: arco (piernas atrás) y
+  //    patada en hollow (piernas al frente) que arranca el jalón.
+  // 2. Jalón explosivo: el pecho sube en diagonal alejándose de la barra y
+  //    los brazos pasan por 90°; el codo baja hacia las costillas.
+  // 3. Transición brusca: el tronco rota al frente por encima de la barra.
+  // 4. Fondo: empuje hasta los brazos rectos, con la cadera contra la barra y
+  //    los hombros un poco al frente, el centro de masa sobre las manos.
+  // El centro de masa traza una «C» alrededor de la barra: atrás al jalar,
+  // encima al transicionar.
   (p) => {
-    const at = (frames: [number, number][]) => flow(p, frames);
+    const t = [0, 0.1, 0.2, 0.3, 0.38, 0.47, 0.6, 0.82];
+    const at = (values: number[]) =>
+      flow(
+        p,
+        t.map((s, i): [number, number] => [s, values[i]]),
+      );
     return onBar(
       {
-        x: at([
-          [0, -2],
-          [0.14, -16],
-          [0.26, -20],
-          [0.36, -12],
-          [0.47, -9],
-          [0.6, -4],
-          [0.82, -3],
-        ]),
-        y: at([
-          [0, 50],
-          [0.14, 40],
-          [0.26, 22],
-          [0.36, 6],
-          [0.47, -2],
-          [0.6, -22],
-          [0.82, -51],
-        ]),
+        x: at([-1, 4, -4, -19, -13, -9, -2, 5]),
+        y: at([50, 49.5, 48, 28, 6, -2, -24, -51.3]),
       },
-      at([
-        [0, 2],
-        [0.14, 8],
-        [0.26, 16],
-        [0.36, 6],
-        [0.47, -42],
-        [0.6, -14],
-        [0.82, 2],
-      ]),
-      at([
-        [0, 4],
-        [0.14, 10],
-        [0.26, 18],
-        [0.36, 26],
-        [0.47, 34],
-        [0.6, 10],
-        [0.82, 6],
-      ]),
-      at([
-        [0, 4],
-        [0.14, 8],
-        [0.26, 16],
-        [0.36, 20],
-        [0.47, 22],
-        [0.6, 14],
-        [0.82, 6],
-      ]),
+      // Tronco (+ = la cadera va al frente).
+      at([3, -6, 8, 16, 6, -42, -20, -16]),
+      // Muslo y espinilla.
+      at([6, -12, 16, 20, 26, 34, 18, 16]),
+      at([6, -14, 12, 16, 20, 22, 14, 10]),
     );
   },
-  2600,
+  2800,
   { her: false, chest: 1 },
   'reps',
 );
