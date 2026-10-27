@@ -168,6 +168,13 @@
     -webkit-tap-highlight-color: transparent;
   }
 
+  /* Tailwind v4 deja el cursor del navegador en botones y listas: que se lean
+     como clicables (el disabled lo cambia `Button`). */
+  button:not(:disabled),
+  select:not(:disabled) {
+    cursor: pointer;
+  }
+
   @media (pointer: fine) {
     html {
       overscroll-behavior: none;
