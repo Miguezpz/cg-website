@@ -606,3 +606,4 @@ Leyenda: 🔴 bloquea el inicio · 🟠 bloquea el diseño (T1.2) · 🟢 bloque
 | v0.12 | 2026-10-26 | RF-04.1 / T3.18: la ruta de skills pasa a una figura en bucle por skill; se quitan etapas, meta, cronómetro y `skill_stage` (§9.1, §9.3) |
 | v0.12.1 | 2026-10-26 | RF-04.1 / T3.19: misma escala para todas las figuras; ella y él; los skills de posición se quedan en ella y los de repeticiones van en bucle |
 | v0.12.2 | 2026-10-26 | T3.13: la atleta de los fondos lleva las piernas estiradas al frente en diagonal (técnica correcta); muscle-up de la ruta de skills fluido; glúteo con las proporciones de ella |
+| v0.12.3 | 2026-10-26 | Se quitan las marcas de agarre de gis sobre la barra del Hero y su polvo de magnesia |

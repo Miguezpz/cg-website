@@ -50,14 +50,6 @@
     animation: bar-draw 700ms var(--ease-out-expo) both;
   }
 
-  .hero-grips {
-    animation: grip-puff 700ms var(--ease-out-expo) 420ms both;
-  }
-
-  .hero-dust span {
-    animation: dust-fall 1300ms linear var(--d, 600ms) both;
-  }
-
   .hero-rise {
     animation: rise-in var(--duration-enter) var(--ease-out-expo) var(--d, 0ms)
       both;
@@ -310,39 +302,6 @@
   }
   to {
     scale: 1 1;
-  }
-}
-
-@keyframes grip-puff {
-  from {
-    opacity: 0;
-    scale: 0.92;
-    filter: blur(4px);
-  }
-  to {
-    opacity: 1;
-    scale: 1;
-    filter: blur(0);
-  }
-}
-
-/* La magnesia salta un poco al soltarse y luego cae acelerando. */
-@keyframes dust-fall {
-  0% {
-    opacity: 0;
-    translate: 0 0;
-    scale: 1;
-    animation-timing-function: var(--ease-out-expo);
-  }
-  14% {
-    opacity: 0.9;
-    translate: calc(var(--dx) * 0.35) -0.35rem;
-    animation-timing-function: cubic-bezier(0.55, 0, 0.9, 0.45);
-  }
-  100% {
-    opacity: 0;
-    translate: var(--dx) var(--dy);
-    scale: 0.55;
   }
 }
 

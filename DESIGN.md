@@ -60,7 +60,7 @@ Las cifras de precios usan `tabular-nums`.
 - **Esquinas rectas** (`radius-none`). Los campos de formulario llevan `radius-input` (2 px).
 - **Cantos de metal:** bordes de 1–2 px en `steel-700`. No hay sombras decorativas; la profundidad sale del contraste entre `steel-950` y `steel-900`. **Excepciones, todas en vino** (guía de marca, «intense wine red glows»): el resplandor del botón primario (`shadow-glow`), que además le da al CTA el canto de 3:1 que el vino solo no tiene sobre el acero; el halo de la foto del Hero (`shadow-depth`), y el halo radial detrás del cierre de Contacto (utilidad `glow-depth`).
 - **Barra:** elemento horizontal de acero (2–6 px de alto) que cruza el ancho completo. Es el separador del sistema y el soporte del calendario Carga & Descarga.
-- **Gis:** trazos en SVG con un filtro de grano (`feTurbulence`) en color `chalk`. Sirven para subrayar, contar (marcas de 4+1) y señalar dónde van las manos. Su opacidad imita el polvo y su trazo es irregular, nunca un trazo vectorial limpio.
+- **Gis:** trazos en SVG con un filtro de grano (`feTurbulence`) en color `chalk`. Sirven para subrayar y contar (marcas de 4+1). Su opacidad imita el polvo y su trazo es irregular, nunca un trazo vectorial limpio.
 - **Fotos:** con tratamiento real, sin duotono neón. Mientras no haya fotos, cada hueco tiene la proporción final, fondo `steel-900`, un canto `steel-700` y una etiqueta visible `[[PENDIENTE]]`.
 - **Íconos:** SVG propios de trazo uniforme (WhatsApp, Instagram, TikTok, menú). No se usan emojis ni glifos Unicode como íconos.
 - **Logos de terceros:** la «G» de Google junto a cada reseña de Google Maps (`GoogleLogo`, 2026-10-26) conserva sus cuatro colores oficiales, que no son parte de la paleta ni se usan en nada más. Va sobre un círculo `chalk` de 24 px para leerse sobre el acero, y es decorativa: el texto «Reseña en Google Maps» ya lo dice.
@@ -88,7 +88,6 @@ Las cifras de precios usan `tabular-nums`.
 **Entrada del Hero** (una vez, al cargar):
 
 - La barra se traza de izquierda a derecha en 700 ms (`scale` desde la izquierda).
-- Las marcas de agarre aparecen a los 420 ms (opacidad, escala y desenfoque) y sueltan 14 partículas de magnesia. Las partículas saltan un poco y luego caen acelerando, en 1.3 s.
 - El texto de apoyo sube escalonado 60 ms: entrada, ciudad, botones, enlace online e indicadores (`--duration-enter` 520 ms).
 - En escritorio, la foto cuelga de la barra y se asienta con una oscilación amortiguada de ±2° (`--duration-swing` 1.6 s).
 - El `h1` y la imagen nunca se ocultan, para no retrasar el LCP.
