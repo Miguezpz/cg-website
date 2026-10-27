@@ -122,10 +122,12 @@ test.describe('Ruta de skills', () => {
     (typeof skillMotions)[SkillId],
   ][]) {
     test(`${id}: límites del cuerpo en todo el movimiento`, () => {
-      const frames = sample((p) => named(motion.joints(p)));
-      common(frames, true);
+      const go = sample((p) => named(motion.joints(p)));
+      const back = sample((p) => named(motion.backJoints(p)));
+      common(go, true);
+      common(back, true);
       const onBar = !motion.floor;
-      for (const j of frames) {
+      for (const j of [...go, ...back]) {
         if (onBar) expect(dist(j.hand, { x: 0, y: 0 })).toBeLessThan(0.01);
         // En el piso (y = 0) nada lo atraviesa.
         else
@@ -135,7 +137,46 @@ test.describe('Ruta de skills', () => {
     });
   }
 
+  for (const [id, motion] of Object.entries(skillMotions)) {
+    test(`${id}: la vuelta empieza y termina donde la ida`, () => {
+      const same = (a: Joints, b: Joints) => {
+        const [x, y] = [named(a), named(b)];
+        for (const k of Object.keys(x))
+          expect(dist(x[k], y[k]), k).toBeLessThan(0.5);
+      };
+      same(motion.backJoints(0), motion.joints(1));
+      same(motion.backJoints(1), motion.joints(0));
+    });
+  }
+
+  test('ningún skill es más alto que el muscle-up (cabe en una pantalla)', () => {
+    const height = (box: string) => Number(box.split(' ')[3]);
+    const tallest = height(skillMotions.muscleup.viewBox);
+    for (const motion of Object.values(skillMotions))
+      expect(height(motion.viewBox)).toBeLessThanOrEqual(tallest);
+  });
+
   for (const id of HOLDS) {
+    test(`${id}: sostiene con micro-ajustes sin perder la técnica`, () => {
+      const motion = skillMotions[id];
+      expect(motion.settleJoints, 'tiene micro-ajustes').toBeDefined();
+      const settle = motion.settleJoints!;
+      const first = named(settle(0));
+      const final = named(motion.joints(1));
+      for (const k of Object.keys(first))
+        expect(dist(first[k], final[k]), `${k} al empezar`).toBeLessThan(0.01);
+      // 6 s de sostén, cada 25 ms.
+      for (let t = 0; t <= 6000; t += 25) {
+        const raw = settle(t);
+        const j = named(raw);
+        expect(at(j, ELBOW)).toBeGreaterThanOrEqual(LIMIT.locked);
+        expect(at(j, HIP)).toBeGreaterThanOrEqual(LIMIT.straight - 2);
+        expect(Math.abs(centerOfMass(raw).x - raw.hand.x)).toBeLessThanOrEqual(
+          LIMIT.balance,
+        );
+      }
+    });
+
     test(`${id}: la posición final es la del ejercicio`, () => {
       const final = skillMotions[id].joints(1);
       const j = named(final);

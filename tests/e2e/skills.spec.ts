@@ -1,13 +1,19 @@
 import { test, expect, type Browser, type Page } from '@playwright/test';
 
 // Ruta de skills (DESIGN.md): seis skills, cada uno con una figura de gis (los
-// de posición se quedan en ella; los de repeticiones van en bucle), pestañas
-// con radios nativos y un CTA de WhatsApp que nombra el skill elegido.
+// de posición llegan a ella y la sostienen con micro-ajustes; los de
+// repeticiones van en bucle), pestañas con radios nativos y un CTA de WhatsApp
+// que nombra el skill elegido.
 const panel = (id: string) => `#skills [data-skill="${id}"]`;
 const pose = (page: Page, id: string) =>
   page
     .locator(`${panel(id)} [data-body] > *`)
     .evaluateAll((els) => els.map((el) => el.outerHTML).join(''));
+/** La mayor diferencia entre las coordenadas de dos poses (mismo marcado). */
+const drift = (a: string, b: string) => {
+  const [x, y] = [a, b].map((s) => s.match(/-?\d+(\.\d+)?/g)!.map(Number));
+  return Math.max(...x.map((n, i) => Math.abs(n - y[i])));
+};
 
 test('muestra solo el skill elegido, con una sola figura y sin etapas', async ({
   page,
@@ -70,7 +76,7 @@ async function stillPose(browser: Browser, id: string) {
   return still;
 }
 
-test('los skills de posición llegan a ella y se quedan', async ({
+test('los skills de posición llegan a ella y la sostienen con micro-ajustes', async ({
   page,
   browser,
 }) => {
@@ -80,13 +86,24 @@ test('los skills de posición llegan a ella y se quedan', async ({
   await page
     .locator(`${panel('frontlever')} .skill-figure`)
     .scrollIntoViewIfNeeded();
-  // Empieza en el tuck, llega a la pose fija y ya no se mueve.
-  await expect.poll(() => pose(page, 'frontlever')).not.toBe(still);
+  // Empieza colgado, lejos de la posición, y llega a ella.
   await expect
-    .poll(() => pose(page, 'frontlever'), { timeout: 6000 })
-    .toBe(still);
-  await page.waitForTimeout(1500);
-  expect(await pose(page, 'frontlever')).toBe(still);
+    .poll(async () => drift(await pose(page, 'frontlever'), still))
+    .toBeGreaterThan(20);
+  await expect
+    .poll(async () => drift(await pose(page, 'frontlever'), still), {
+      timeout: 8000,
+    })
+    .toBeLessThan(2);
+  // Ya en la posición, se mueve menos de 2 unidades, pero se mueve.
+  const seen = new Set<string>();
+  for (let i = 0; i < 6; i++) {
+    const now = await pose(page, 'frontlever');
+    expect(drift(now, still)).toBeLessThan(2);
+    seen.add(now);
+    await page.waitForTimeout(200);
+  }
+  expect(seen.size).toBeGreaterThan(1);
 });
 
 test('los skills de repeticiones van en bucle', async ({ page, browser }) => {
@@ -158,17 +175,21 @@ test.describe('con movimiento reducido', () => {
   });
 });
 
-test('a 375×667, pestañas, muscle-up y CTA caben sobre la barra de WhatsApp', async ({
+test('a 375×667, las pestañas, cada skill y su CTA caben sobre la barra de WhatsApp', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 375, height: 667 });
   await page.goto('/');
-  await page.locator('#skills .skill-tab', { hasText: 'Muscle-up' }).click();
   const top = await page
     .locator('#skills fieldset')
     .evaluate((el) => el.getBoundingClientRect().top);
-  const cta = page.locator('[data-skill="muscleup"] a[data-track="whatsapp"]');
-  const bottom = await cta.evaluate((el) => el.getBoundingClientRect().bottom);
-  // Header de 64 px arriba y barra de WhatsApp (~70 px) abajo.
-  expect(bottom - top).toBeLessThanOrEqual(667 - 64 - 70);
+  for (const tab of await page.locator('#skills .skill-tab').all()) {
+    await tab.click();
+    const id = await tab.locator('input').inputValue();
+    const bottom = await page
+      .locator(`[data-skill="${id}"] a[data-track="whatsapp"]`)
+      .evaluate((el) => el.getBoundingClientRect().bottom);
+    // Header de 64 px arriba y barra de WhatsApp (~70 px) abajo.
+    expect(bottom - top, id).toBeLessThanOrEqual(667 - 64 - 70);
+  }
 });

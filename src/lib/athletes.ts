@@ -40,9 +40,12 @@ const REP_MS = 1100;
 function reps(svg: SVGSVGElement, travel: number): void {
   const rig = athletes[svg.dataset.athlete as Exercise];
   if (rig?.play !== 'scroll') return;
-  // Cada repetición sube y baja con una curva suave (coseno).
+  // Cada repetición va y vuelve con curvas suaves (medio coseno); la parte
+  // excéntrica dura más que la concéntrica (`tempo`).
   const phase = (travel * rig.reps) % 1;
-  apply(svg, (1 - Math.cos(phase * 2 * Math.PI)) / 2);
+  const go = rig.tempo ?? 0.5;
+  const half = (x: number) => (1 - Math.cos(Math.PI * x)) / 2;
+  apply(svg, phase < go ? half(phase / go) : 1 - half((phase - go) / (1 - go)));
 }
 
 function drawScroll(svg: SVGSVGElement): void {

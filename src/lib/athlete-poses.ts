@@ -52,6 +52,11 @@ export type Rig = {
       /** Repeticiones mientras el atleta cruza la pantalla. */
       play: 'scroll';
       reps: number;
+      /**
+       * Qué parte de cada repetición va de 0 a 1 (el resto, de vuelta). La
+       * bajada (excéntrica) es más lenta que la subida: 0.4 si 0 → 1 sube.
+       */
+      tempo?: number;
     }
   | {
       /** Una sola vez al aparecer (páginas sin scroll), en `duration` ms. */
@@ -288,6 +293,8 @@ const pullup: Rig = {
   viewBox: '-50 -21 100 205',
   play: 'scroll',
   reps: 3,
+  // Sube (concéntrica) más rápido de lo que baja.
+  tempo: 0.4,
   still: 1,
   fixed: [line({ x: -46, y: 0 }, { x: 46, y: 0 }, 5)],
   joints(s) {
@@ -405,6 +412,8 @@ const pistol: Rig = {
   viewBox: '-32 -146 108 154',
   play: 'scroll',
   reps: 2,
+  // 0 → 1 es la bajada: la parte lenta.
+  tempo: 0.6,
   still: 0.85,
   fixed: [line({ x: -28, y: 4.5 }, { x: 72, y: 4.5 }, 3)],
   joints(s) {
@@ -592,6 +601,8 @@ const dips: Rig = {
   viewBox: '-54 -74 108 196',
   play: 'scroll',
   reps: 3,
+  // 0 → 1 es la bajada: la parte lenta.
+  tempo: 0.6,
   still: 0.85,
   fixed: [
     line({ x: -40, y: 0 }, { x: -40, y: 116 }, 4),
@@ -798,6 +809,8 @@ const muscleup: Rig = {
   viewBox: '-58 -92 138 276',
   play: 'scroll',
   reps: 2,
+  // Sube más rápido de lo que baja.
+  tempo: 0.45,
   still: 0.6,
   fixed: [],
   gear: (s) => muscleupFrame(s).gear,

@@ -174,17 +174,18 @@ const { title, mark, intro, legend, skills } = Astro.props;
 <script>
   import { track } from '../../lib/analytics';
   import { update } from '../../lib/athletes';
-  import { skillMotions, type SkillId } from '../../lib/skill-poses';
-
-  /** Pausa en la posición inicial antes de repetir, en ms. */
-  const REST = 600;
+  import {
+    skillMotions,
+    type SkillId,
+    type SkillMotion,
+  } from '../../lib/skill-poses';
 
   const section = document.querySelector<HTMLElement>('[data-skills]');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const animate = !!section && !reduce && 'IntersectionObserver' in window;
   let frame = 0;
   let playing: HTMLElement | undefined;
-  /** Skills de posición que ya llegaron a ella: se quedan quietos. */
+  /** Skills de posición que ya llegaron a ella: ahora la sostienen. */
   const done = new Set<HTMLElement>();
 
   const panels = [
@@ -199,44 +200,55 @@ const { title, mark, intro, legend, skills } = Astro.props;
       ?.querySelector(`[name="skill"][value="${panel.dataset.skill}"]`)
       ?.matches(':checked');
 
-  /** Avance 0 → 1 → 0 en el instante `t` del ciclo: ida, vuelta y pausa. */
-  function progress(t: number, duration: number): number {
-    const at = t % (2 * duration + REST);
-    if (at < duration) return at / duration;
-    return Math.max(0, 2 - at / duration);
+  /**
+   * Una repetición en el instante `t`: vuelta desde la pose fija, pausa,
+   * ida y pausa. Empieza por la vuelta, así que arranca sin saltos.
+   */
+  function rep(motion: SkillMotion, t: number) {
+    const { duration: go, tempo } = motion;
+    let at = t % (tempo.back + tempo.start + go + tempo.end);
+    if (at < tempo.back) return motion.back(at / tempo.back);
+    at -= tempo.back;
+    if (at < tempo.start) return motion.pose(0);
+    at -= tempo.start;
+    return motion.pose(Math.min(1, at / go));
   }
 
   function stop(): void {
     cancelAnimationFrame(frame);
+    // Un sostén que se interrumpe vuelve a su pose fija exacta.
+    if (playing && done.has(playing)) {
+      const motion = motionOf(playing);
+      if (motion) update(partsOf(playing), motion.pose(1));
+    }
     playing = undefined;
   }
 
   /**
-   * Un skill de posición va del inicio a la posición y se queda. Uno de
-   * repeticiones se repite mientras se ve; empieza por la vuelta, así que
-   * arranca desde la pose fija sin saltos.
+   * Un skill de posición va del inicio a la posición y la sostiene con
+   * micro-ajustes; si ya llegó, solo la sostiene. Uno de repeticiones se
+   * repite mientras se ve.
    */
   function play(panel: HTMLElement): void {
     const motion = motionOf(panel);
     const parts = partsOf(panel);
     if (playing === panel || !motion || !parts) return;
-    if (motion.play === 'hold' && done.has(panel)) return;
     stop();
     playing = panel;
-    const reps = motion.play === 'reps';
     let start = 0;
     const tick = (now: number) => {
-      start ||= reps ? now - motion.duration : now;
+      start ||= now;
       const t = now - start;
-      if (reps) {
-        update(parts, motion.pose(progress(t, motion.duration)));
+      if (motion.play === 'reps') update(parts, rep(motion, t));
+      else if (done.has(panel)) {
+        if (!motion.settle) return;
+        update(parts, motion.settle(t));
       } else {
         const p = Math.min(1, t / motion.duration);
         update(parts, motion.pose(p));
         if (p === 1) {
           done.add(panel);
-          playing = undefined;
-          return;
+          start = now;
         }
       }
       frame = requestAnimationFrame(tick);

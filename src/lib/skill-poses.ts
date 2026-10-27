@@ -48,16 +48,32 @@ export type SkillMotion = {
    * Las usa la prueba de biomecánica (tests/e2e/biomechanics.spec.ts).
    */
   joints: (p: number) => Joints;
-  /** Duración de la ida (la vuelta dura lo mismo), en ms. */
+  /** Duración de la ida, en ms. */
   duration: number;
   /**
-   * `hold`: llega a la posición una vez y se queda. `reps`: ida, vuelta y
-   * una pausa, en bucle.
+   * `hold`: llega a la posición una vez y la sostiene con micro-ajustes.
+   * `reps`: ida, pausa, vuelta y pausa, en bucle.
    */
   play: 'hold' | 'reps';
+  /**
+   * La vuelta, de la pose fija (0) a la inicial (1). No es la ida al revés
+   * cuando la técnica cambia: el muscle-up baja en negativa, sin el kip.
+   */
+  back: (p: number) => Shape[];
+  backJoints: (p: number) => Joints;
+  /** Ritmo de las repeticiones, en ms: pausa al final, vuelta y pausa al inicio. */
+  tempo: Tempo;
+  /**
+   * Al sostener la posición, `t` ms después de llegar: pequeñas correcciones
+   * del equilibrio, como en un cuerpo real. `settle(0)` es la pose fija.
+   */
+  settle?: (t: number) => Shape[];
+  settleJoints?: (t: number) => Joints;
   /** Se apoya en el piso (el escalón); colgado de la barra no hay piso. */
   floor: boolean;
 };
+
+export type Tempo = { end: number; back: number; start: number };
 
 export type Leg = { knee: Point; ankle: Point; toe: Point };
 export type Joints = {
@@ -153,38 +169,53 @@ function balance(
 }
 
 /**
- * Sostén horizontal con los brazos rectos (levers y plancha), con la cabeza a
- * la izquierda y los pies a la derecha. `legs` son los ángulos de cada pierna
- * respecto a un tronco horizontal; `tilt` sube la cadera (tuck de plancha).
- * Busca el ángulo del brazo que deja el centro de masa en la vertical de las
- * manos y devuelve la pose con las manos en (0, 0).
+ * Cuerpo colgado de la barra o apoyado en las manos, con los brazos rectos, y
+ * las manos en (0, 0). `tilt` gira todo el cuerpo desde la horizontal (cabeza a
+ * la izquierda y pies a la derecha): -90 es colgado, cabeza arriba. `legs` son
+ * los ángulos de cada pierna respecto a un tronco horizontal. `a` es el ángulo
+ * del brazo: colgado, sube desde el hombro hacia los pies; apoyado, baja.
+ */
+function lever(
+  grip: 'hang' | 'support',
+  legs: [number, number][],
+  tilt: number,
+  a: number,
+): Joints {
+  const torso = 90 + tilt;
+  const shoulder = { x: 0, y: 0 };
+  const hip = add(shoulder, body.torso, rad(torso));
+  const dir = rad(grip === 'hang' ? 180 - a : a);
+  const [near, far] = legs.map(([thigh, shin]) =>
+    leg(hip, thigh + tilt, shin + tilt),
+  );
+  const j: Joints = {
+    shoulder,
+    hip,
+    head: add(shoulder, HEAD, rad(torso + 180)),
+    elbow: add(shoulder, body.upperArm, dir),
+    hand: add(shoulder, ARM, dir),
+    near,
+    ...(far && { far }),
+  };
+  return move(j, { x: -j.hand.x, y: -j.hand.y });
+}
+
+/**
+ * Sostén con los brazos rectos (levers y plancha): busca el ángulo del brazo
+ * que deja el centro de masa en la vertical de las manos, como en el
+ * equilibrio real. `reach` es el rango donde buscarlo.
  */
 function hold(
   grip: 'hang' | 'support',
   legs: [number, number][],
   tilt = 0,
+  reach: [number, number] = [0, 85],
 ): Joints {
-  const torso = 90 + tilt;
-  const build = (a: number): Joints => {
-    const shoulder = { x: 0, y: 0 };
-    const hip = add(shoulder, body.torso, rad(torso));
-    // Colgado: el brazo sube hacia los pies. Apoyado: baja hacia los pies.
-    const dir = rad(grip === 'hang' ? 180 - a : a);
-    const [near, far] = legs.map(([thigh, shin]) =>
-      leg(hip, thigh + tilt, shin + tilt),
-    );
-    return {
-      shoulder,
-      hip,
-      head: add(shoulder, HEAD, rad(torso + 180)),
-      elbow: add(shoulder, body.upperArm, dir),
-      hand: add(shoulder, ARM, dir),
-      near,
-      ...(far && { far }),
-    };
-  };
-  const j = balance(build, (k) => k.hand.x, [0, 85]);
-  return move(j, { x: -j.hand.x, y: -j.hand.y });
+  return balance(
+    (a) => lever(grip, legs, tilt, a),
+    (k) => k.hand.x,
+    reach,
+  );
 }
 
 // Piernas respecto a un tronco horizontal. «Arriba» = del lado del pecho en el
@@ -391,12 +422,26 @@ function motion(
   duration: number,
   figure: Figure,
   play: SkillMotion['play'],
+  {
+    back = (p) => joints(1 - p),
+    tempo = { end: 0, back: duration, start: 600 },
+    settle,
+  }: {
+    back?: (p: number) => Joints;
+    tempo?: Tempo;
+    settle?: (t: number) => Joints;
+  } = {},
 ): SkillMotion {
-  const scaled = (p: number) =>
-    figure.her ? scale(joints(p), HER) : joints(p);
+  const sized = (j: Joints) => (figure.her ? scale(j, HER) : j);
+  const scaled = (p: number) => sized(joints(p));
+  const backJoints = (p: number) => sized(back(p));
   const pose = (p: number) => draw(scaled(p), figure);
-  // La caja contiene cada momento del movimiento.
-  const frames = Array.from({ length: 21 }, (_, i) => pose(i / 20));
+  // La caja contiene cada momento del movimiento, también la vuelta.
+  const frames = Array.from({ length: 21 }, (_, i) => [
+    ...pose(i / 20),
+    ...draw(backJoints(i / 20), figure),
+  ]);
+  const settleJoints = settle && ((t: number) => sized(settle(t)));
   return {
     viewBox: frame([...fixed, ...frames.flat()]),
     fixed,
@@ -404,16 +449,142 @@ function motion(
     joints: scaled,
     duration,
     play,
+    back: (p) => draw(backJoints(p), figure),
+    backJoints,
+    tempo,
+    ...(settleJoints && {
+      settle: (t: number) => draw(settleJoints(t), figure),
+      settleJoints,
+    }),
     floor: !fixed.includes(bar),
   };
 }
 
+/**
+ * Oscilación suave para los micro-ajustes: dos ondas de periodos que no se
+ * repiten juntos (así no se ve mecánica). Vale 0 en `t = 0`.
+ */
+const sway = (t: number, amplitude: number, period: number) =>
+  amplitude *
+  (0.7 * Math.sin((2 * Math.PI * t) / period) +
+    0.3 * Math.sin((2 * Math.PI * t) / (period * 0.41)));
+
+/** 0 → 1 entre `from` y `to` (suave), fijo fuera de ese tramo. */
+const stage = (p: number, from: number, to: number) =>
+  keys(p, [
+    [from, 0],
+    [to, 1],
+  ]);
+
+const mixLeg = (
+  a: [number, number],
+  b: [number, number],
+  t: number,
+): [number, number] => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
+
+/**
+ * Ángulos absolutos de cada segmento (desde la vertical hacia abajo, + a la
+ * derecha), para poses que no se apoyan en un solo punto: la entrada a la
+ * parada de manos pasa del pie a las manos.
+ */
+type Angles = {
+  trunk: number;
+  arm: number;
+  near: [number, number, number];
+  far: [number, number, number];
+};
+
+/** El cuerpo con la cadera en `hip`: tronco, brazos rectos y piernas. */
+function chain(a: Angles, hip: Point = { x: 0, y: 0 }): Joints {
+  const shoulder = add(hip, body.torso, rad(a.trunk));
+  const limb = ([thigh, shin, foot]: [number, number, number]): Leg => {
+    const knee = add(hip, body.thigh, rad(thigh));
+    const ankle = add(knee, body.shin, rad(shin));
+    return { knee, ankle, toe: add(ankle, 6, rad(foot)) };
+  };
+  return {
+    shoulder,
+    hip,
+    // La cabeza asoma un poco hacia el pecho, como en `inverted`.
+    head: add(shoulder, HEAD - 1, rad(a.trunk + 14)),
+    elbow: add(shoulder, body.upperArm, rad(a.arm)),
+    hand: add(shoulder, ARM, rad(a.arm)),
+    near: limb(a.near),
+    far: limb(a.far),
+  };
+}
+
+/** Entrada a la parada de manos: cuándo las manos tocan el piso. */
+const TOUCH = 0.55;
+
+/**
+ * Patada a la parada de manos (ella mira a la izquierda, hacia las manos):
+ * zancada con los brazos arriba, se inclina y apoya las manos, patea con la
+ * pierna de atrás y la de adelante empuja y la sigue, hasta la tijera sobre
+ * las manos. Todo el cuerpo gira en el mismo sentido. Antes de `TOUCH` el pie
+ * de adelante está fijo en el piso; después, las manos.
+ */
+function kickAngles(t: number, shin = 26): Angles {
+  const s = [0, 0.3, TOUCH, 0.8, 1];
+  const at = (values: number[]) =>
+    flow(
+      t,
+      s.map((k, i): [number, number] => [k, values[i]]),
+    );
+  return {
+    trunk: at([190, 240, 300, 345, 360]),
+    arm: at([190, 250, 340, 357, 360]),
+    // Pierna de adelante (empuja): de la zancada a la tijera, al frente.
+    near: [
+      at([-35, -40, -10, 60, 148]),
+      at([0, -10, shin, 90, 148]),
+      at([-60, -60, -60, 90, 148]),
+    ],
+    // Pierna de atrás (patea): sube por detrás y pasa la vertical.
+    far: [
+      at([30, 50, 100, 160, 212]),
+      at([30, 55, 105, 165, 212]),
+      at([-30, 0, 105, 165, 212]),
+    ],
+  };
+}
+
+const handOrigin = (j: Joints) => move(j, { x: -j.hand.x, y: -j.hand.y });
+
+// Al tocar, el tobillo de adelante queda 3 sobre el piso (el pie, plano):
+// la espinilla se calcula para que el pie y las manos lleguen juntos.
+const TOUCH_SHIN = solve(
+  (shin) => {
+    const j = handOrigin(chain(kickAngles(TOUCH, shin)));
+    return j.near.ankle.y + 3;
+  },
+  0,
+  60,
+);
+const PLANTED = (() => {
+  const j = handOrigin(chain(kickAngles(TOUCH, TOUCH_SHIN)));
+  return j.near.ankle;
+})();
+
+function kickUp(t: number): Joints {
+  const j = chain(kickAngles(t, TOUCH_SHIN));
+  if (t >= TOUCH) return handOrigin(j);
+  return move(j, {
+    x: PLANTED.x - j.near.ankle.x,
+    y: PLANTED.y - j.near.ankle.y,
+  });
+}
+
 const handstand = motion(
   [],
-  // Desde la tijera junta las piernas y corrige el equilibrio con las
-  // muñecas: el cuerpo, recto, se mece cada vez menos hasta quedar quieto.
+  // Patada desde la zancada hasta la tijera sobre las manos. Luego junta las
+  // piernas y corrige el equilibrio con las muñecas: el cuerpo, recto, se
+  // mece cada vez menos hasta quedar quieto.
   (p) => {
-    const lean = keys(p, [
+    const ENTRY = 0.42;
+    if (p < ENTRY) return kickUp(p / ENTRY);
+    const q = (p - ENTRY) / (1 - ENTRY);
+    const lean = keys(q, [
       [0, 0],
       [0.45, 0],
       [0.56, 2.2],
@@ -424,16 +595,23 @@ const handstand = motion(
     ]);
     const open =
       32 *
-      keys(p, [
+      keys(q, [
         [0, 1],
         [0.1, 1],
         [0.42, 0],
       ]);
     return inverted(lean, 180 - lean - open, 180 - lean + open);
   },
-  2800,
+  4800,
   { her: true, chest: -1 },
   'hold',
+  {
+    // Ya quieta, corrige con las muñecas: se mece menos de 1° sobre las manos.
+    settle: (t) => {
+      const lean = sway(t, 0.6, 1400);
+      return inverted(lean, 180 - lean, 180 - lean);
+    },
+  },
 );
 
 /**
@@ -506,72 +684,161 @@ const muscleup = motion(
   2800,
   { her: false, chest: 1 },
   'reps',
+  {
+    // La negativa: del soporte baja despacio por el fondo, vuelve a pasar
+    // bajo la barra inclinando el tronco al frente y baja el jalón hasta el
+    // colgado. Sin balanceo ni patada: el kip solo sirve para subir.
+    back: (p) => {
+      const t = [0, 0.3, 0.5, 0.62, 0.8, 1];
+      const at = (values: number[]) =>
+        flow(
+          p,
+          t.map((s, i): [number, number] => [s, values[i]]),
+        );
+      return onBar(
+        {
+          x: at([3.5, -2, -14, -18, -12, -1]),
+          y: at([-51.85, -24, -12, 8, 32, 51.9]),
+        },
+        at([-16, -20, -30, 0, 6, 3]),
+        at([-2, 8, 20, 18, 10, 6]),
+        at([-4, 4, 14, 14, 8, 6]),
+      );
+    },
+    tempo: { end: 500, back: 2000, start: 500 },
+  },
 );
 
 /**
- * De `from` a la posición completa: las piernas se extienden desde el tuck
- * (las rodillas pasan por el tuck avanzado) y el ángulo del brazo se vuelve a
- * calcular en cada momento, así que se inclina conforme el cuerpo se alarga.
+ * Del colgado muerto a un lever: sube las rodillas al pecho (tuck), gira con
+ * los brazos rectos `turn` grados y extiende las piernas. En cada momento el
+ * ángulo del brazo se calcula para que el centro de masa quede bajo la barra:
+ * el giro es lento y controlado, como en la realidad.
  */
-function extend(
-  grip: 'hang' | 'support',
-  from: [number, number],
-  tilt: [number, number] = [0, 0],
-) {
+function fromHang(tuck: [number, number], turn: number) {
   return (p: number) => {
-    const t = keys(p, [
-      [0, 0],
-      [0.15, 0],
-      [0.65, 1],
-    ]);
-    const mix = (a: number, b: number) => a + (b - a) * t;
+    const [up, rotate, open] = [
+      stage(p, 0.08, 0.3),
+      stage(p, 0.26, 0.64),
+      stage(p, 0.68, 0.94),
+    ];
+    const legs = open > 0 ? mixLeg(tuck, FULL, open) : mixLeg(FULL, tuck, up);
+    return hold('hang', [legs], -90 + turn * rotate, [-60, 85]);
+  };
+}
+
+/**
+ * Micro-ajustes de un sostén con los brazos rectos: el cuerpo se inclina y la
+ * cadera se dobla menos de 1°, y el brazo se vuelve a calcular para seguir en
+ * equilibrio.
+ */
+function settleHold(
+  grip: 'hang' | 'support',
+  tilt: number,
+  reach?: [number, number],
+) {
+  return (t: number) => {
+    const hip = sway(t, 0.8, 1100);
     return hold(
       grip,
-      [[mix(from[0], FULL[0]), mix(from[1], FULL[1])]],
-      mix(...tilt),
+      [[FULL[0] + hip, FULL[1] + hip]],
+      tilt + sway(t, 0.5, 1500),
+      reach,
     );
   };
 }
 
+// Front lever: del colgado gira 90° hasta quedar horizontal, pecho arriba.
 const frontlever = motion(
   [bar],
-  extend('hang', TUCK_UP),
-  2200,
+  fromHang(TUCK_UP, 90),
+  3400,
   { her: true, chest: 1 },
   'hold',
+  { settle: settleHold('hang', 0, [-60, 85]) },
 );
 
+// Back lever: del colgado gira hacia atrás 270°: pasa por el colgado
+// invertido (cadera arriba) y baja hasta quedar horizontal, pecho abajo.
 const backlever = motion(
   [bar],
-  extend('hang', TUCK_DOWN),
-  2200,
+  fromHang(TUCK_DOWN, -270),
+  4400,
   { her: false, chest: -1 },
   'hold',
+  { settle: settleHold('hang', -360, [-60, 85]) },
 );
 
-// Del tuck a la plancha completa: la cadera baja mientras se extiende.
+/**
+ * Plancha inclinada (planche lean): cuerpo recto, con las puntas de los pies
+ * en el piso y los hombros `a` grados por delante de las manos.
+ */
+function plankTilt(a: number): number {
+  const shoulderY = ARM * Math.cos(rad(a));
+  const reach = body.torso + body.thigh + body.shin + 6;
+  return (Math.acos(shoulderY / reach) * 180) / Math.PI - 90;
+}
+
+/** Ángulo del brazo del tuck de plancha en equilibrio sobre las manos. */
+const PLANCHE_TUCK_TILT = 14;
+const PLANCHE_TUCK_ARM = solve(
+  (a) => centerOfMass(lever('support', [TUCK_DOWN], PLANCHE_TUCK_TILT, a)).x,
+  0,
+  85,
+);
+
+/**
+ * De la plancha inclinada a la plancha: se inclina con el cuerpo recto y las
+ * puntas en el piso, despega los pies llevando las rodillas al pecho (tuck,
+ * en equilibrio sobre las manos) y extiende las piernas mientras la cadera
+ * baja.
+ */
 const planche = motion(
   [],
-  extend('support', TUCK_DOWN, [14, 2]),
-  2400,
+  (p) => {
+    // La cadera sube antes de que las rodillas lleguen al pecho: así los pies
+    // se despegan hacia arriba, sin rozar el piso.
+    const [lean, hips, lift, open] = [
+      stage(p, 0.04, 0.3),
+      stage(p, 0.32, 0.52),
+      stage(p, 0.38, 0.58),
+      stage(p, 0.62, 0.94),
+    ];
+    if (open > 0) {
+      return hold(
+        'support',
+        [mixLeg(TUCK_DOWN, FULL, open)],
+        PLANCHE_TUCK_TILT + (2 - PLANCHE_TUCK_TILT) * open,
+      );
+    }
+    // Se inclina hasta el ángulo del tuck con los pies en el piso; al llevar
+    // las rodillas al pecho, el centro de masa llega sobre las manos y los
+    // pies se despegan solos.
+    const a = PLANCHE_TUCK_ARM * lean;
+    const tilt = plankTilt(a) + (PLANCHE_TUCK_TILT - plankTilt(a)) * hips;
+    return lever('support', [mixLeg(FULL, TUCK_DOWN, lift)], tilt, a);
+  },
+  3800,
   { her: false, chest: -1 },
   'hold',
+  { settle: settleHold('support', 2) },
 );
 
-// De pie sobre una pierna, baja despacio hasta el fondo y se queda.
+// De pie sobre una pierna, baja despacio hasta el fondo, se detiene y sube más
+// rápido: la bajada (excéntrica) es la parte controlada.
 const pistol = motion(
   [],
   (p) =>
     squat(
       keys(p, [
         [0, 0],
-        [0.12, 0],
-        [0.75, 1],
+        [1, 1],
       ]),
     ),
-  2400,
+  1600,
   { her: true, chest: 1 },
   'reps',
+  { tempo: { end: 400, back: 1100, start: 600 } },
 );
 
 export const skillMotions: Record<SkillId, SkillMotion> = {
