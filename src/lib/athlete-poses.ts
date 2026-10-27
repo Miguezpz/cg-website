@@ -42,6 +42,11 @@ export type Rig = {
    * 1 = punto más alto). Con `once`, el avance del movimiento completo.
    */
   pose: (s: number) => Shape[];
+  /**
+   * Las articulaciones del mismo instante, con nombre (shoulder, elbow, hand,
+   * hip, knee, ankle…). Las usa la prueba de biomecánica.
+   */
+  joints: (s: number) => Record<string, Point>;
 } & (
   | {
       /** Repeticiones mientras el atleta cruza la pantalla. */
@@ -248,37 +253,56 @@ export const body = {
   shin: 37,
 };
 
+/** Dominadas: las articulaciones de frente para un esfuerzo `s`. */
+function pullupJoints(s: number) {
+  // Del colgado con brazos casi rectos a la barbilla sobre la barra: arriba,
+  // los hombros quedan a ~4 de la barra y la barbilla la pasa.
+  const sy = lerp(49, 3.8, s);
+  const hands = [-31, 31].map((x) => ({ x, y: 0 }));
+  const shoulders = [-1, 1].map((side) => ({
+    x: side * body.shoulder,
+    y: sy,
+  }));
+  const elbows = [-1, 1].map((side, i) =>
+    elbow(hands[i], shoulders[i], body.forearm, body.upperArm, side),
+  );
+  const hipY = sy + body.torso - 2;
+  // Al subir, las piernas se juntan y las rodillas se adelantan un poco: de
+  // frente, la espinilla se ve más corta (escorzo).
+  const spread = lerp(7, 6, s);
+  const knees = [-1, 1].map((side) => ({
+    x: side * spread,
+    y: hipY + body.thigh - 2 * s,
+  }));
+  const ankles = [-1, 1].map((side, i) => ({
+    x: side * (spread - 2),
+    y: knees[i].y + lerp(body.shin, body.shin - 7, s),
+  }));
+  const neckTop = { x: 0, y: sy - body.neck };
+  const head = { x: 0, y: neckTop.y - body.head + 1 };
+  return { sy, hands, shoulders, elbows, hipY, knees, ankles, neckTop, head };
+}
+
 /** Dominadas de frente, colgado de una barra corta. */
 const pullup: Rig = {
-  viewBox: '-50 -18 100 202',
+  viewBox: '-50 -21 100 205',
   play: 'scroll',
   reps: 3,
   still: 1,
   fixed: [line({ x: -46, y: 0 }, { x: 46, y: 0 }, 5)],
+  joints(s) {
+    const j = pullupJoints(s);
+    return {
+      shoulder: j.shoulders[1],
+      elbow: j.elbows[1],
+      hand: j.hands[1],
+      head: j.head,
+      chin: { x: 0, y: j.head.y + body.head },
+    };
+  },
   pose(s) {
-    // Del colgado con brazos casi rectos a la barbilla sobre la barra.
-    const sy = lerp(49, 8, s);
-    const hands = [-30, 30].map((x) => ({ x, y: 0 }));
-    const shoulders = [-1, 1].map((side) => ({
-      x: side * body.shoulder,
-      y: sy,
-    }));
-    const elbows = [-1, 1].map((side, i) =>
-      elbow(hands[i], shoulders[i], body.forearm, body.upperArm, side),
-    );
-    const hipY = sy + body.torso - 2;
-    // Al subir, las piernas se juntan y las rodillas se adelantan un poco: de
-    // frente, la espinilla se ve más corta (escorzo).
-    const spread = lerp(7, 6, s);
-    const knees = [-1, 1].map((side) => ({
-      x: side * spread,
-      y: hipY + body.thigh - 2 * s,
-    }));
-    const ankles = [-1, 1].map((side, i) => ({
-      x: side * (spread - 2),
-      y: knees[i].y + lerp(body.shin, body.shin - 7, s),
-    }));
-    const neckTop = { x: 0, y: sy - body.neck };
+    const { sy, hands, shoulders, elbows, hipY, knees, ankles, neckTop, head } =
+      pullupJoints(s);
     const t = (n: number) => round(n);
     const sh = body.shoulder;
     // Espalda en V: hombros anchos que bajan en curva hasta la cintura.
@@ -295,7 +319,7 @@ const pullup: Rig = {
     return [
       { kind: 'path', d: torso },
       line({ x: 0, y: sy }, neckTop, 7.5),
-      circle({ x: 0, y: neckTop.y - body.head + 1 }, body.head),
+      circle(head, body.head),
       ...[0, 1].flatMap((i) => [
         circle({ x: shoulders[i].x * 0.92, y: sy + 2 }, 6.5),
         line(shoulders[i], elbows[i], 8.5),
@@ -322,6 +346,60 @@ const her = {
   shin: 35,
 };
 
+/** Pistol squat: las articulaciones de perfil para un esfuerzo `s`. */
+function pistolJoints(s: number) {
+  const ankle = { x: 0, y: 0 };
+  // La espinilla y el muslo bajan juntos: la rodilla pasa la punta del pie
+  // y la cadera baja detrás del talón.
+  const knee = add(ankle, her.shin, deg(180 - lerp(4, 40, s)));
+  const hip = add(knee, her.thigh, deg(180 + lerp(4, 98, s)));
+  // La pierna libre sube al frente, recta en el fondo.
+  const freeKnee = add(hip, her.thigh, deg(lerp(35, 84, s)));
+  const freeAnkle = add(freeKnee, her.shin, deg(lerp(15, 86, s)));
+  // Brazos al frente para equilibrar; bajan un poco al subir.
+  const arm = deg(lerp(70, 88, s));
+  const upper = (lean: number) => {
+    const shoulder = add(hip, her.torso, lean);
+    const elbowPt = add(shoulder, her.upperArm, arm);
+    return {
+      shoulder,
+      head: add(shoulder, her.neck + her.head - 1, lean),
+      elbowPt,
+      hand: add(elbowPt, her.forearm, arm + deg(5)),
+    };
+  };
+  // La inclinación del tronco se calcula para que el centro de masa quede
+  // sobre el centro del pie de apoyo (de -3 a 10).
+  const balanced = (forward: number) => {
+    const u = upper(deg(180 - forward));
+    const parts: [Point, number][] = [
+      [u.head, MASS.head],
+      [mid(hip, u.shoulder), MASS.trunk],
+      [along(u.shoulder, u.elbowPt, CENTER.upperArm), MASS.upperArm],
+      [along(u.elbowPt, u.hand, CENTER.forearm), MASS.forearm],
+      [along(hip, knee, CENTER.thigh), MASS.thigh / 2],
+      [along(knee, ankle, CENTER.shin), MASS.shin / 2],
+      [along(hip, freeKnee, CENTER.thigh), MASS.thigh / 2],
+      [along(freeKnee, freeAnkle, CENTER.shin), MASS.shin / 2],
+    ];
+    return parts.reduce((x, [p, m]) => x + p.x * m, 0) - 3.5;
+  };
+  const { shoulder, head, elbowPt, hand } = upper(
+    deg(180 - solve(balanced, -30, 80)),
+  );
+  return {
+    ankle,
+    knee,
+    hip,
+    freeKnee,
+    freeAnkle,
+    shoulder,
+    head,
+    elbowPt,
+    hand,
+  };
+}
+
 /** Pistol squat de perfil (mira a la derecha), sobre una pierna. */
 const pistol: Rig = {
   viewBox: '-32 -146 108 154',
@@ -329,46 +407,22 @@ const pistol: Rig = {
   reps: 2,
   still: 0.85,
   fixed: [line({ x: -28, y: 4.5 }, { x: 72, y: 4.5 }, 3)],
+  joints(s) {
+    const { elbowPt, ...j } = pistolJoints(s);
+    return { ...j, elbow: elbowPt };
+  },
   pose(s) {
-    const ankle = { x: 0, y: 0 };
-    // La espinilla y el muslo bajan juntos: la rodilla pasa la punta del pie
-    // y la cadera baja detrás del talón.
-    const knee = add(ankle, her.shin, deg(180 - lerp(4, 40, s)));
-    const hip = add(knee, her.thigh, deg(180 + lerp(4, 98, s)));
-    // La pierna libre sube al frente, recta en el fondo.
-    const freeKnee = add(hip, her.thigh, deg(lerp(35, 84, s)));
-    const freeAnkle = add(freeKnee, her.shin, deg(lerp(15, 86, s)));
-    // Brazos al frente para equilibrar; bajan un poco al subir.
-    const arm = deg(lerp(70, 88, s));
-    const upper = (lean: number) => {
-      const shoulder = add(hip, her.torso, lean);
-      const elbowPt = add(shoulder, her.upperArm, arm);
-      return {
-        shoulder,
-        head: add(shoulder, her.neck + her.head - 1, lean),
-        elbowPt,
-        hand: add(elbowPt, her.forearm, arm + deg(5)),
-      };
-    };
-    // La inclinación del tronco se calcula para que el centro de masa quede
-    // sobre el centro del pie de apoyo (de -3 a 10).
-    const balanced = (forward: number) => {
-      const u = upper(deg(180 - forward));
-      const parts: [Point, number][] = [
-        [u.head, MASS.head],
-        [mid(hip, u.shoulder), MASS.trunk],
-        [mid(u.shoulder, u.elbowPt), MASS.upperArm],
-        [mid(u.elbowPt, u.hand), MASS.forearm],
-        [mid(hip, knee), MASS.thigh / 2],
-        [mid(knee, ankle), MASS.shin / 2],
-        [mid(hip, freeKnee), MASS.thigh / 2],
-        [mid(freeKnee, freeAnkle), MASS.shin / 2],
-      ];
-      return parts.reduce((x, [p, m]) => x + p.x * m, 0) - 3.5;
-    };
-    const { shoulder, head, elbowPt, hand } = upper(
-      deg(180 - solve(balanced, -30, 80)),
-    );
+    const {
+      ankle,
+      knee,
+      hip,
+      freeKnee,
+      freeAnkle,
+      shoulder,
+      head,
+      elbowPt,
+      hand,
+    } = pistolJoints(s);
     const tail = { x: head.x - 6, y: head.y - 3 };
 
     return [
@@ -394,6 +448,39 @@ const pistol: Rig = {
   },
 };
 
+/** Salto: las articulaciones de frente para un avance `p`. */
+function jumpJoints(p: number) {
+  const air =
+    p > 0.28 && p < 0.72 ? Math.sin(((p - 0.28) / 0.44) * Math.PI) : 0;
+  const crouch = Math.max(
+    span(p, 0.08, 0.26) * (1 - span(p, 0.26, 0.32)),
+    span(p, 0.7, 0.78) * (1 - span(p, 0.84, 1)),
+  );
+  const reach = span(p, 0.2, 0.42) * (1 - span(p, 0.62, 0.9));
+  const lift = air * 30;
+  const legs = body.thigh + body.shin;
+  const hipY = -lift - legs * (1 - 0.3 * crouch) - 4;
+  const sy = hipY - body.torso + 2;
+  const ankles = [-1, 1].map((side) => ({ x: side * 7, y: -lift - 4 }));
+  const knees = [-1, 1].map((side, i) => ({
+    x: side * (7 + 7 * crouch),
+    y: (hipY + ankles[i].y) / 2 - 2 * crouch,
+  }));
+  const shoulders = [-1, 1].map((side) => ({
+    x: side * body.shoulder,
+    y: sy,
+  }));
+  // Brazos: de colgar a estirarse hacia arriba buscando la barra.
+  const angle = deg(lerp(12, 168, reach));
+  const elbows = [-1, 1].map((side, i) =>
+    add(shoulders[i], body.upperArm, side * angle),
+  );
+  const hands = [-1, 1].map((side, i) =>
+    add(elbows[i], body.forearm, side * (angle + deg(4))),
+  );
+  return { hipY, sy, ankles, knees, shoulders, elbows, hands };
+}
+
 /** 404: salta hacia una barra que no está (punteada) y vuelve al piso. */
 const jump: Rig = {
   viewBox: '-75 -226 150 234',
@@ -404,36 +491,19 @@ const jump: Rig = {
     line({ x: -40, y: -214 }, { x: 40, y: -214 }, 5, '2 9'),
     line({ x: -46, y: 4.5 }, { x: 46, y: 4.5 }, 3),
   ],
+  joints(p) {
+    const j = jumpJoints(p);
+    return {
+      shoulder: j.shoulders[1],
+      elbow: j.elbows[1],
+      hand: j.hands[1],
+      hip: { x: 5.5, y: j.hipY },
+      knee: j.knees[1],
+      ankle: j.ankles[1],
+    };
+  },
   pose(p) {
-    // Se agacha, salta con los brazos arriba, no hay barra, cae y se levanta.
-    const air =
-      p > 0.28 && p < 0.72 ? Math.sin(((p - 0.28) / 0.44) * Math.PI) : 0;
-    const crouch = Math.max(
-      span(p, 0.08, 0.26) * (1 - span(p, 0.26, 0.32)),
-      span(p, 0.7, 0.78) * (1 - span(p, 0.84, 1)),
-    );
-    const reach = span(p, 0.2, 0.42) * (1 - span(p, 0.62, 0.9));
-    const lift = air * 30;
-    const legs = body.thigh + body.shin;
-    const hipY = -lift - legs * (1 - 0.3 * crouch) - 4;
-    const sy = hipY - body.torso + 2;
-    const ankles = [-1, 1].map((side) => ({ x: side * 7, y: -lift - 4 }));
-    const knees = [-1, 1].map((side, i) => ({
-      x: side * (7 + 7 * crouch),
-      y: (hipY + ankles[i].y) / 2 - 2 * crouch,
-    }));
-    const shoulders = [-1, 1].map((side) => ({
-      x: side * body.shoulder,
-      y: sy,
-    }));
-    // Brazos: de colgar a estirarse hacia arriba buscando la barra.
-    const angle = deg(lerp(12, 168, reach));
-    const elbows = [-1, 1].map((side, i) =>
-      add(shoulders[i], body.upperArm, side * angle),
-    );
-    const hands = [-1, 1].map((side, i) =>
-      add(elbows[i], body.forearm, side * (angle + deg(4))),
-    );
+    const { hipY, sy, ankles, knees, shoulders, elbows, hands } = jumpJoints(p);
     const neckTop = { x: 0, y: sy - body.neck };
     const t = (n: number) => round(n);
     const sh = body.shoulder;
@@ -470,6 +540,50 @@ const jump: Rig = {
   },
 };
 
+/** Fondos: las articulaciones de perfil para un esfuerzo `s`. */
+function dipsJoints(s: number) {
+  // 1. Soporte: brazos bloqueados, hombros abajo, lejos de las orejas
+  //    (depresión escapular), y el cuerpo apenas inclinado al frente.
+  // 2. Bajada: los codos se doblan hacia atrás, el tronco se inclina cada vez
+  //    más y las piernas van un poco atrás, hasta que los hombros pasan por
+  //    debajo de los codos.
+  // 3. Empuje: el mismo camino de vuelta; el tronco se endereza al subir.
+  // Lo único que no se elige a ojo es qué tan adelante van los hombros: se
+  // calcula para que el centro de masa quede sobre las manos. Si bajara
+  // vertical, el centro de masa quedaría detrás de las manos y caería atrás.
+  const hand = { x: 0, y: 0 };
+  const depth = lerp(-47.85, -17, s);
+  const lean = deg(-lerp(6, 44, s));
+  const legs = deg(-lerp(2, 14, s));
+  const neck = her.neck + her.head - 1 + lerp(2, 0, s);
+  const build = (x: number) => {
+    const shoulder = { x, y: depth };
+    const hip = add(shoulder, her.torso, lean);
+    const knee = add(hip, her.thigh, legs);
+    return {
+      shoulder,
+      elbowPt: elbow(hand, shoulder, her.forearm, her.upperArm, -1),
+      hip,
+      head: add(shoulder, neck, lean + Math.PI),
+      knee,
+      ankle: add(knee, her.shin, legs),
+    };
+  };
+  const balanced = (x: number) => {
+    const b = build(x);
+    const parts: [Point, number][] = [
+      [b.head, MASS.head],
+      [mid(b.hip, b.shoulder), MASS.trunk],
+      [along(b.shoulder, b.elbowPt, CENTER.upperArm), MASS.upperArm],
+      [along(b.elbowPt, hand, CENTER.forearm), MASS.forearm],
+      [along(b.hip, b.knee, CENTER.thigh), MASS.thigh],
+      [along(b.knee, b.ankle, CENTER.shin), MASS.shin],
+    ];
+    return parts.reduce((sum, [p, m]) => sum + p.x * m, 0) - hand.x;
+  };
+  return { ...build(solve(balanced, -10, 40)), legs };
+}
+
 /**
  * Fondos en paralelas de perfil (ella), con la técnica correcta: piernas
  * estiradas hacia abajo y al frente en diagonal, puntas estiradas.
@@ -485,49 +599,14 @@ const dips: Rig = {
     line({ x: -48, y: 0 }, { x: 48, y: 0 }, 5),
     line({ x: -50, y: 118.5 }, { x: 50, y: 118.5 }, 3),
   ],
-  pose(s) {
-    // 1. Soporte: brazos bloqueados, hombros abajo, lejos de las orejas
-    //    (depresión escapular), y el cuerpo apenas inclinado al frente.
-    // 2. Bajada: los codos se doblan hacia atrás, el tronco se inclina cada vez
-    //    más y las piernas van un poco atrás, hasta que los hombros pasan por
-    //    debajo de los codos.
-    // 3. Empuje: el mismo camino de vuelta; el tronco se endereza al subir.
-    // Lo único que no se elige a ojo es qué tan adelante van los hombros: se
-    // calcula para que el centro de masa quede sobre las manos. Si bajara
-    // vertical, el centro de masa quedaría detrás de las manos y caería atrás.
+  joints(s) {
+    const { shoulder, elbowPt, hip, head, knee, ankle } = dipsJoints(s);
     const hand = { x: 0, y: 0 };
-    const depth = lerp(-47.85, -17, s);
-    const lean = deg(-lerp(6, 44, s));
-    const legs = deg(-lerp(2, 14, s));
-    const neck = her.neck + her.head - 1 + lerp(2, 0, s);
-    const build = (x: number) => {
-      const shoulder = { x, y: depth };
-      const hip = add(shoulder, her.torso, lean);
-      const knee = add(hip, her.thigh, legs);
-      return {
-        shoulder,
-        elbowPt: elbow(hand, shoulder, her.forearm, her.upperArm, -1),
-        hip,
-        head: add(shoulder, neck, lean + Math.PI),
-        knee,
-        ankle: add(knee, her.shin, legs),
-      };
-    };
-    const balanced = (x: number) => {
-      const b = build(x);
-      const parts: [Point, number][] = [
-        [b.head, MASS.head],
-        [mid(b.hip, b.shoulder), MASS.trunk],
-        [mid(b.shoulder, b.elbowPt), MASS.upperArm],
-        [mid(b.elbowPt, hand), MASS.forearm],
-        [mid(b.hip, b.knee), MASS.thigh],
-        [mid(b.knee, b.ankle), MASS.shin],
-      ];
-      return parts.reduce((sum, [p, m]) => sum + p.x * m, 0) - hand.x;
-    };
-    const { shoulder, elbowPt, hip, head, knee, ankle } = build(
-      solve(balanced, -10, 40),
-    );
+    return { shoulder, elbow: elbowPt, hand, hip, head, knee, ankle };
+  },
+  pose(s) {
+    const { shoulder, elbowPt, hip, head, knee, ankle, legs } = dipsJoints(s);
+    const hand = { x: 0, y: 0 };
     const tail = { x: head.x - 6, y: head.y - 3 };
 
     return [
@@ -571,6 +650,7 @@ const STRAP = 86;
 const FALSE_GRIP_FOREARM = 21;
 
 // Masa relativa de cada segmento (antropometría de Dempster, ambos lados).
+// El antebrazo incluye la mano y la pierna, el pie.
 export const MASS = {
   head: 0.08,
   trunk: 0.5,
@@ -580,25 +660,49 @@ export const MASS = {
   shin: 0.12,
 };
 
-function muscleupFrame(s: number): { body: Shape[]; gear: Shape[] } {
+/**
+ * Dónde está el centro de masa de cada segmento, como fracción desde la
+ * articulación más cercana al tronco (Dempster). La mano y el pie lo llevan
+ * hacia la punta: no está a la mitad.
+ */
+export const CENTER = {
+  upperArm: 0.436,
+  forearm: 0.682,
+  thigh: 0.433,
+  shin: 0.606,
+};
+
+/** El punto a una fracción `t` del camino de `a` a `b`. */
+export const along = (a: Point, b: Point, t: number): Point => ({
+  x: a.x + (b.x - a.x) * t,
+  y: a.y + (b.y - a.y) * t,
+});
+
+function muscleupFrame(s: number): {
+  body: Shape[];
+  gear: Shape[];
+  joints: Record<string, Point>;
+} {
   // Esfuerzo → tiempo real: el jalón ocupa casi la mitad y la transición es
   // un tramo corto.
   const shoulderRel = {
     x: keys(s, [
       [0, -2],
-      [0.4, -13],
-      [0.52, -9],
+      [0.4, -18],
+      [0.52, -10],
       [0.64, -6],
       [0.82, -3],
       [1, -1],
     ]),
+    // Colgado muerto y bloqueo a 48 de la muñeca (el brazo recto, con el
+    // antebrazo corto del agarre falso); en medio, nunca a menos de ~16.
     y: keys(s, [
-      [0, 48.5],
-      [0.4, -4],
-      [0.52, -14],
+      [0, 47.9],
+      [0.4, -5],
+      [0.52, -15],
       [0.64, -24],
       [0.82, -36],
-      [1, -47.5],
+      [1, -47.98],
     ]),
   };
   // Ángulo del tronco y de las piernas respecto a la vertical (+ = la parte de
@@ -642,10 +746,10 @@ function muscleupFrame(s: number): { body: Shape[]; gear: Shape[] } {
   const parts: [Point, number][] = [
     [head, MASS.head],
     [mid(shoulder, hip), MASS.trunk],
-    [mid(shoulder, elbowPt), MASS.upperArm],
-    [mid(elbowPt, wrist), MASS.forearm],
-    [mid(hip, knee), MASS.thigh],
-    [mid(knee, ankle), MASS.shin],
+    [along(shoulder, elbowPt, CENTER.upperArm), MASS.upperArm],
+    [along(elbowPt, wrist, CENTER.forearm), MASS.forearm],
+    [along(hip, knee, CENTER.thigh), MASS.thigh],
+    [along(knee, ankle, CENTER.shin), MASS.shin],
   ];
   const com = parts.reduce(
     (acc, [p, m]) => ({ x: acc.x + p.x * m, y: acc.y + p.y * m }),
@@ -663,6 +767,15 @@ function muscleupFrame(s: number): { body: Shape[]; gear: Shape[] } {
   // Agarre falso: la mano se dobla por encima y al frente de la anilla.
   const hand = at({ x: 3, y: -4 });
   return {
+    joints: {
+      shoulder: at(shoulder),
+      elbow: at(elbowPt),
+      hand: at(wrist),
+      hip: at(hip),
+      knee: at(knee),
+      ankle: at(ankle),
+      head: at(head),
+    },
     gear: [
       line(anchor, add(anchor, STRAP - 6.5, strap), 2.5),
       circle(ring, 6.5, 2.5),
@@ -689,6 +802,7 @@ const muscleup: Rig = {
   fixed: [],
   gear: (s) => muscleupFrame(s).gear,
   pose: (s) => muscleupFrame(s).body,
+  joints: (s) => muscleupFrame(s).joints,
 };
 
 export const athletes: Record<Exercise, Rig> = {

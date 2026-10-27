@@ -15,8 +15,10 @@
 
 import {
   add,
+  along,
   arm,
   body,
+  CENTER,
   circle,
   deg,
   elbowAround,
@@ -41,6 +43,11 @@ export type SkillMotion = {
    * `pose(1)` es la pose fija.
    */
   pose: (p: number) => Shape[];
+  /**
+   * Las articulaciones del mismo instante, ya a la escala de quien lo hace.
+   * Las usa la prueba de biomecánica (tests/e2e/biomechanics.spec.ts).
+   */
+  joints: (p: number) => Joints;
   /** Duración de la ida (la vuelta dura lo mismo), en ms. */
   duration: number;
   /**
@@ -52,8 +59,8 @@ export type SkillMotion = {
   floor: boolean;
 };
 
-type Leg = { knee: Point; ankle: Point; toe: Point };
-type Joints = {
+export type Leg = { knee: Point; ankle: Point; toe: Point };
+export type Joints = {
   shoulder: Point;
   hip: Point;
   head: Point;
@@ -102,18 +109,21 @@ function transform(j: Joints, m: (p: Point) => Point): Joints {
 const move = (j: Joints, d: Point) =>
   transform(j, (p) => ({ x: p.x + d.x, y: p.y + d.y }));
 
-/** Centro de masa por segmentos (Dempster). Sin `far`, las piernas van juntas. */
-function centerOfMass(j: Joints): Point {
+/**
+ * Centro de masa por segmentos (Dempster, con el centro de cada uno donde
+ * corresponde). Sin `far`, las piernas van juntas.
+ */
+export function centerOfMass(j: Joints): Point {
   const legs = j.far ? [j.near, j.far] : [j.near];
   const share = 1 / legs.length;
   const parts: [Point, number][] = [
     [j.head, MASS.head],
     [mid(j.shoulder, j.hip), MASS.trunk],
-    [mid(j.shoulder, j.elbow), MASS.upperArm],
-    [mid(j.elbow, j.hand), MASS.forearm],
+    [along(j.shoulder, j.elbow, CENTER.upperArm), MASS.upperArm],
+    [along(j.elbow, j.hand, CENTER.forearm), MASS.forearm],
     ...legs.flatMap((g): [Point, number][] => [
-      [mid(j.hip, g.knee), MASS.thigh * share],
-      [mid(g.knee, g.ankle), MASS.shin * share],
+      [along(j.hip, g.knee, CENTER.thigh), MASS.thigh * share],
+      [along(g.knee, g.ankle, CENTER.shin), MASS.shin * share],
     ]),
   ];
   const total = parts.reduce((sum, [, m]) => sum + m, 0);
@@ -180,8 +190,10 @@ function hold(
 // Piernas respecto a un tronco horizontal. «Arriba» = del lado del pecho en el
 // front lever; en el back lever y la plancha el pecho va abajo (espejo).
 const FULL: [number, number] = [90, 90];
-const TUCK_UP: [number, number] = [230, 68];
-const TUCK_DOWN: [number, number] = [-50, 112];
+// En el tuck la rodilla dobla unos 140° (40° entre muslo y espinilla): más no
+// se puede, la pantorrilla choca con el muslo.
+const TUCK_UP: [number, number] = [230, 90];
+const TUCK_DOWN: [number, number] = [-50, 90];
 
 /** Colgado de la barra con agarre normal; la barra está en y = 0. */
 function onBar(
@@ -380,14 +392,16 @@ function motion(
   figure: Figure,
   play: SkillMotion['play'],
 ): SkillMotion {
-  const pose = (p: number) =>
-    draw(figure.her ? scale(joints(p), HER) : joints(p), figure);
+  const scaled = (p: number) =>
+    figure.her ? scale(joints(p), HER) : joints(p);
+  const pose = (p: number) => draw(scaled(p), figure);
   // La caja contiene cada momento del movimiento.
   const frames = Array.from({ length: 21 }, (_, i) => pose(i / 20));
   return {
     viewBox: frame([...fixed, ...frames.flat()]),
     fixed,
     pose,
+    joints: scaled,
     duration,
     play,
     floor: !fixed.includes(bar),
@@ -474,16 +488,19 @@ const muscleup = motion(
         p,
         t.map((s, i): [number, number] => [s, values[i]]),
       );
+    // El hombro nunca se acerca a menos de ~17 de la barra: el codo no dobla
+    // más de unos 140° (35° entre brazo y antebrazo). Abajo y arriba, a ~52
+    // (el largo del brazo): colgado muerto y bloqueo con los brazos rectos.
     return onBar(
       {
-        x: at([-1, 4, -4, -19, -13, -9, -2, 5]),
-        y: at([50, 49.5, 48, 28, 6, -2, -24, -51.3]),
+        x: at([-1, 4, -4, -19, -18, -14, -2, 3.5]),
+        y: at([51.9, 51.7, 48, 28, 8, -12, -24, -51.85]),
       },
       // Tronco (+ = la cadera va al frente).
       at([3, -6, 8, 16, 6, -42, -20, -16]),
-      // Muslo y espinilla.
-      at([6, -12, 16, 20, 26, 34, 18, 16]),
-      at([6, -14, 12, 16, 20, 22, 14, 10]),
+      // Muslo y espinilla: arriba, casi en línea con el tronco (hueco leve).
+      at([6, -12, 16, 20, 26, 34, 8, -2]),
+      at([6, -14, 12, 16, 20, 22, 4, -4]),
     );
   },
   2800,
