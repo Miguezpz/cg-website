@@ -97,14 +97,11 @@ Orden de secciones = orden del embudo: **atención → autoridad → oferta → 
 **Aceptación:** cada CTA abre WhatsApp con un mensaje prellenado **distinto** que nombra el servicio (ver §9.1).
 
 ### RF-04.1 · Ruta de skills (`#skills`)
-- Entre Servicios y Resultados (2026-10-26). Una escalera de 4 etapas dibujadas en gis por cada skill que enseña el coach (parada de manos, muscle-up, front lever, planche, back lever y pistol squat); la última etapa es la meta.
+- Entre Servicios y Resultados (2026-10-26). Por cada skill que enseña el coach (parada de manos, muscle-up, front lever, planche, back lever y pistol squat), **una sola figura de gis que hace el skill** mientras se ve. Los skills de posición (parada de manos, front lever, back lever, planche) llegan a ella una vez y se quedan; los de repeticiones (muscle-up, pistol squat) van en bucle. Todas las figuras van a la misma escala; parada de manos, front lever y pistol squat los hace ella, y los demás él. Sin etapas, sin meta y sin cronómetro (2026-10-26, a pedido del usuario; reemplaza la escalera de 4 etapas de T3.15–T3.17).
 - Pestañas con radios nativos y `:has()`: funciona sin JS. Cada skill tiene su CTA de WhatsApp, que nombra el skill (`data-source="skills"`, `data-service="skill-<id>"`).
-- Las etapas son una progresión clásica de ejemplo, con aviso «Demo», hasta que el coach confirme las que usa (§17.1).
-
-- La meta se ejecuta una sola vez al verse y se queda en su posición, con un cronómetro de gis que cuenta 3 s mientras sostiene. Cada etapa se puede elegir («¿En qué etapa vas?») y se agrega al mensaje de WhatsApp del skill; además se propone en el formulario de contacto (objetivo «Aprender skills» y un mensaje), sin pisar lo que la persona ya eligió o escribió (2026-10-26).
 - Se llega desde el menú («Skills») y desde la respuesta de la FAQ «¿Qué skills puedo aprender?».
 
-**Aceptación:** se cambia de skill y de etapa con mouse, touch y flechas del teclado; los dibujos son decorativos (`aria-hidden`); con movimiento reducido no hay animación.
+**Aceptación:** se cambia de skill con mouse, touch y flechas del teclado; los dibujos son decorativos (`aria-hidden`); sin JS o con movimiento reducido la figura queda en su pose fija.
 
 ### RF-05 · Resultados: antes y después (`#resultados`)
 - 2–4 casos con slider comparativo, más el nombre o inicial, el tiempo de entrenamiento y un logro concreto.
@@ -241,7 +238,6 @@ type FaqItem   = { q: string; a: string };
 ### 9.1 WhatsApp
 - `waLink({ service, source })` → `https://wa.me/<PUBLIC_WHATSAPP_NUMBER>?text=<encodeURIComponent(msg)>`.
 - Mensaje base: *"Hola, vi tu página web y me interesa {servicio}."* Así el coach sabe que el contacto viene de la web.
-- En la ruta de skills, la etapa elegida se agrega al final: *"… me interesa aprender el muscle-up. Ahora voy en «Transición»."*
 - Todos los enlaces llevan `data-track="whatsapp"` y `data-source="hero|services|skills|contact|floating"` para la analítica, y `data-service` con el servicio (`rutina`, `a-medida`, `skill-<id>` o `general`).
 
 ### 9.2 Formulario (Web3Forms)
@@ -255,9 +251,8 @@ type FaqItem   = { q: string; a: string };
 | `form_submit` | Envío exitoso | `goal` |
 | `social_click` | Clic en Instagram/TikTok | `network` |
 | `skill_view` | Elegir un skill en la ruta de skills | `skill` |
-| `skill_stage` | Elegir una etapa («¿En qué etapa vas?») | `skill`, `stage` (1–4) |
 
-- Un solo listener delegado en `document` (sin handlers por botón). Excepción: `skill_view` y `skill_stage` salen del cambio de radio de la ruta de skills.
+- Un solo listener delegado en `document` (sin handlers por botón). Excepción: `skill_view` sale del cambio de radio de la ruta de skills.
 - `whatsapp_click` y `form_submit` se marcan como **eventos clave** en GA4.
 - GA4 se carga después de `load` o en la primera interacción para cumplir RNF-01 y RNF-03.
 
@@ -396,6 +391,8 @@ Cada tarea se cierra con el ciclo de §13 y su prueba e2e.
 - **T3.15 · ✅ Ruta de skills** (2026-10-26, sobre `main`) — RF-04.1, RNF-07: sección `#skills` con una escalera de 4 etapas por skill, dibujadas en gis con las proporciones de los atletas (`src/lib/skill-poses.ts`, poses fijas). En los levers y la plancha, el ángulo del brazo se calcula para que el centro de masa quede bajo la barra o sobre las manos. Las etapas suben desde su escalón al verse y al cambiar de skill. Se descartaron el front lever como separador (ya está en la escalera) y más magnesia (ya existe en el Hero y en los enlaces de WhatsApp).
 - **T3.16 · ✅ Meta en movimiento y etapa en WhatsApp** (2026-10-26, sobre `main`) — RF-04.1: la meta de cada skill se ejecuta una vez al verse (y al elegir otro skill) y termina en su pose fija; cada etapa es un radio y la elegida se agrega al mensaje de WhatsApp. Reglas en `DESIGN.md` (Ruta de skills).
 - **T3.17 · ✅ Ruta de skills conectada y medida** (2026-10-26, sobre `main`) — RF-01, RF-04.1, RF-09, §9.3: «Skills» en el menú; enlace desde la FAQ; eventos `skill_view` y `skill_stage` (sin PII); la etapa elegida se propone en el formulario de contacto; cronómetro de gis en la meta. Lighthouse local: 99/100/100/100 en `/` (LCP 2.0 s, CLS 0, TBT 0 ms) y 100/100/100/100 en `/privacidad`. *(Descartado: enlazar la cinta de disciplinas, porque se mueve con el scroll y repite cada palabra tres veces.)*
+- **T3.18 · ✅ Skills en bucle, sin etapas** (2026-10-26, sobre `main`) — RF-04.1, §9.1, §9.3: a pedido del usuario, cada skill es una sola figura de gis que lo hace en bucle (ida, sostén, vuelta y una pausa) mientras la sección se ve. Se quitan las etapas, la meta, el cronómetro, «¿En qué etapa vas?» (con su nota en WhatsApp y su propuesta en el formulario) y el evento `skill_stage`. Los skills de barra no llevan escalón de piso.
+- **T3.19 · ✅ Misma escala, ella y él, posición o repeticiones** (2026-10-26, sobre `main`) — RF-04.1: a pedido del usuario, todas las figuras van a la misma escala (unidades del dibujo → rem); parada de manos, front lever y pistol squat los hace ella (proporciones de los atletas, glúteo y cola de caballo que cuelga con la gravedad) y muscle-up, planche y back lever él; los skills de posición llegan a ella una vez (y otra vez al volver a elegirlos) y se quedan, y los de repeticiones van en bucle.
 
 ### Fase 4 — QA y lanzamiento (→ M5)
 - **T4.1 · ✅ Completar la suite e2e** (sin JS, reduced motion, axe, WebKit) — RNF-06–08, RNF-11.
@@ -509,12 +506,12 @@ Cada tarea se cierra con el ciclo de §13 y su prueba e2e.
 - [ ] [[PENDIENTE]] Logo en SVG oficial. Mientras tanto, `src/components/ui/Logo.astro` es un redibujo vectorial del de 150 px (también en `favicon.svg` y `og-image.jpg`).
 - [ ] [[PENDIENTE]] Paleta oficial: aplicada la de la guía de marca Vol. 1 (vino `#6A1E2B`, burdeos `#4F111E`); falta que el diseñador confirme los hex exactos (D-10).
 - [ ] [[PENDIENTE]] Preguntas frecuentes que recibe por DM.
-- [ ] [[PENDIENTE]] Ruta de skills: que el coach confirme las 4 etapas de cada skill (hoy son una progresión clásica, con aviso «Demo»; `src/data/skills.ts`).
 
 *Resueltos:*
 - [x] Nombre del coach en el sitio: **César Augusto** (T1.1).
 - [x] Precios, clase individual, horarios y ubicación en Morelia: ya no aplican (solo online, sin precios publicados; §17.1.2).
 - [x] Skills, edad mínima y salud: respondidos el 2026-10-26 (§17.1.2).
+- [x] Etapas de cada skill: ya no aplican (T3.18, la ruta de skills ya no muestra etapas).
 - [x] CTA de la Rutina personalizada: WhatsApp.
 - [x] Tipografía: restricción de "elegante" levantada por el usuario en T1.2; se usó Archivo y desde el 2026-10-25 Readex Pro, a pedido del usuario (§10, `DESIGN.md`).
 - [x] Prueba social: 3 reseñas de Google Maps (falta su permiso, arriba).
@@ -605,3 +602,7 @@ Leyenda: 🔴 bloquea el inicio · 🟠 bloquea el diseño (T1.2) · 🟢 bloque
 | v0.11.1 | 2026-10-26 | T3.16: la meta de cada skill se ejecuta; «¿En qué etapa vas?» agrega la etapa al mensaje de WhatsApp (§9.1) |
 | v0.11.2 | 2026-10-26 | T3.17: «Skills» en el menú y la FAQ, eventos `skill_view`/`skill_stage` (§9.3), etapa propuesta en el formulario y cronómetro en la meta |
 | v0.11.3 | 2026-10-26 | RF-06: logo de Google junto a cada reseña de Google Maps |
+| v0.11.4 | 2026-10-26 | T3.13: glúteos naturales en la atleta de gis (fondos y pistol squat): curva de la espalda baja al muslo en vez de un círculo |
+| v0.12 | 2026-10-26 | RF-04.1 / T3.18: la ruta de skills pasa a una figura en bucle por skill; se quitan etapas, meta, cronómetro y `skill_stage` (§9.1, §9.3) |
+| v0.12.1 | 2026-10-26 | RF-04.1 / T3.19: misma escala para todas las figuras; ella y él; los skills de posición se quedan en ella y los de repeticiones van en bucle |
+| v0.12.2 | 2026-10-26 | T3.13: la atleta de los fondos lleva las piernas estiradas al frente en diagonal (técnica correcta); muscle-up de la ruta de skills fluido; glúteo con las proporciones de ella |

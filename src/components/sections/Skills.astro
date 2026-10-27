@@ -1,16 +1,16 @@
 ---
-// Ruta de skills (DESIGN.md · Ruta de skills): cada skill es una escalera de
-// cuatro etapas dibujadas en gis. Las pestañas son radios nativos + :has(),
-// así que funciona sin JS (sin :has() se ven todas las escaleras). Con JS, la
-// meta se ejecuta al verse y la etapa elegida se agrega al mensaje de WhatsApp.
+// Ruta de skills (DESIGN.md · Ruta de skills): cada skill lo hace una figura
+// de gis, todas a la misma escala. Los de posición llegan a ella y se quedan;
+// los de repeticiones van en bucle. Las pestañas son radios nativos + :has(),
+// así que funciona sin JS (sin :has() se ven todos los skills). Sin JS o con
+// movimiento reducido, la figura se queda en su pose fija.
 import type { Skill } from '../../data/types';
 import Button from '../ui/Button.astro';
-import ChalkNote from '../ui/ChalkNote.astro';
 import ChalkShapes from '../ui/ChalkShapes.astro';
-import DemoNote from '../ui/DemoNote.astro';
+import FigureChalkFilter from '../ui/FigureChalkFilter.astro';
 import SectionHeading, { type HeadingMark } from '../ui/SectionHeading.astro';
 import SteelBar from '../ui/SteelBar.astro';
-import { skillLadders } from '../../lib/skill-poses';
+import { skillMotions } from '../../lib/skill-poses';
 import { waAttrs } from '../../lib/whatsapp';
 
 interface Props {
@@ -18,32 +18,10 @@ interface Props {
   mark?: HeadingMark;
   intro: string;
   legend: string;
-  stageLabel: string;
-  goalLabel: string;
-  stageLegend: string;
-  stageHint: string;
-  waStage: string;
-  waGoal: string;
-  formMessage: string;
-  demo?: string;
   skills: Skill[];
 }
 
-const {
-  title,
-  mark,
-  intro,
-  legend,
-  stageLabel,
-  goalLabel,
-  stageLegend,
-  stageHint,
-  waStage,
-  waGoal,
-  formMessage,
-  demo,
-  skills,
-} = Astro.props;
+const { title, mark, intro, legend, skills } = Astro.props;
 ---
 
 <section
@@ -56,7 +34,6 @@ const {
   <div class="mx-auto w-full max-w-content px-gutter">
     <SectionHeading id="skills-title" title={title} mark={mark} />
     <p class="mt-4 max-w-prose text-concrete-400">{intro}</p>
-    {demo && <DemoNote text={demo} class="mt-5 max-w-prose" />}
 
     <fieldset class="mt-8">
       <legend class="sr-only">{legend}</legend>
@@ -76,111 +53,58 @@ const {
       </div>
     </fieldset>
 
-    <ChalkNote text={stageHint} arrow="down" class="mt-8" />
-
     {skills.map((skill) => {
-      const ladder = skillLadders[skill.id];
+      const motion = skillMotions[skill.id];
+      const [, , width, height] = motion.viewBox.split(' ');
       return (
-        <div
-          class="skill-panel mt-4"
-          data-skill={skill.id}
-          data-form-message={formMessage.replace(
-            '{interest}',
-            skill.waInterest,
-          )}
-        >
+        <div class="skill-panel mt-10" data-skill={skill.id}>
           <h3 class="sr-only">{skill.name}</h3>
-          <!-- Escalera: cada etapa un escalón más arriba; la meta, en vino.
-               Cada etapa es un radio: «¿en qué etapa vas?». -->
-          <fieldset>
-            <legend class="sr-only">{stageLegend}</legend>
-            <ol class="grid grid-cols-2 items-end gap-x-4 gap-y-10 md:grid-cols-4 md:gap-x-6">
-              {ladder.stages.map((stage, i) => {
-                const goal = i === ladder.stages.length - 1;
-                return (
-                  <li class="stage" style={`--i: ${i}`}>
-                    <label class="stage-pick block cursor-pointer outline-offset-4 outline-signal-glow has-[:focus-visible]:outline-2">
-                      <input
-                        type="radio"
-                        name={`etapa-${skill.id}`}
-                        value={i + 1}
-                        class="sr-only"
-                        data-wa-note={(goal ? waGoal : waStage).replace(
-                          '{stage}',
-                          skill.stages[i],
-                        )}
-                      />
-                      <svg
-                        viewBox={ladder.viewBox}
-                        preserveAspectRatio="xMidYMax meet"
-                        aria-hidden="true"
-                        focusable="false"
-                        class="stage-figure block h-28 w-full sm:h-36 lg:h-44"
-                        data-meta={goal ? '' : undefined}
-                      >
-                        <g
-                          class="text-steel-700"
-                          stroke="currentColor"
-                          fill="currentColor"
-                          stroke-linecap="round"
-                        >
-                          <ChalkShapes shapes={stage.fixed} />
-                        </g>
-                        <g
-                          class="text-chalk"
-                          opacity="0.8"
-                          stroke="currentColor"
-                          fill="currentColor"
-                          stroke-width="4"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          filter="url(#chalk-figure)"
-                          data-body
-                        >
-                          <ChalkShapes
-                            shapes={stage.body}
-                            gapClass="stroke-steel-950"
-                            body
-                          />
-                        </g>
-                      </svg>
-                      <span
-                        class:list={[
-                          'step block h-1.5',
-                          goal ? 'bg-signal-glow' : 'bg-steel-700',
-                        ]}
-                        aria-hidden="true"
-                      />
-                      <p class="mt-3 text-label font-semibold uppercase">
-                        <span
-                          class:list={[
-                            'block tabular-nums',
-                            goal ? 'text-signal-glow' : 'text-concrete-400',
-                          ]}
-                        >
-                          {goal ? goalLabel : `${stageLabel} ${i + 1}`}
-                          {/* Cronómetro de gis: cuenta mientras la meta sostiene. */}
-                          {goal && (
-                            <span
-                              data-timer
-                              hidden
-                              aria-hidden="true"
-                              class="stage-timer ml-2 inline-block -rotate-2 text-[1.2rem] leading-none font-normal text-chalk normal-case"
-                            >
-                              0:00
-                            </span>
-                          )}
-                        </span>
-                        <span class="stage-name mt-1 block">
-                          {skill.stages[i]}
-                        </span>
-                      </p>
-                    </label>
-                  </li>
-                );
-              })}
-            </ol>
-          </fieldset>
+          <!-- En el piso, la figura se apoya en un escalón de acero. -->
+          <div class="max-w-xl">
+            <svg
+              viewBox={motion.viewBox}
+              preserveAspectRatio="xMidYMax meet"
+              aria-hidden="true"
+              focusable="false"
+              class="skill-figure mx-auto block"
+              style={`--w: ${width}; --h: ${height}`}
+            >
+              <defs>
+                <FigureChalkFilter
+                  id={`skill-chalk-${skill.id}`}
+                  viewBox={motion.viewBox}
+                />
+              </defs>
+              <g
+                class="text-steel-700"
+                stroke="currentColor"
+                fill="currentColor"
+                stroke-linecap="round"
+              >
+                <ChalkShapes shapes={motion.fixed} />
+              </g>
+              <g
+                class="text-chalk"
+                opacity="0.8"
+                stroke="currentColor"
+                fill="currentColor"
+                stroke-width="4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                filter={`url(#skill-chalk-${skill.id})`}
+                data-body
+              >
+                <ChalkShapes
+                  shapes={motion.pose(1)}
+                  gapClass="stroke-steel-950"
+                  body
+                />
+              </g>
+            </svg>
+            {motion.floor && (
+              <span class="block h-1.5 bg-steel-700" aria-hidden="true" />
+            )}
+          </div>
           <Button
             variant="secondary"
             size="sm"
@@ -203,15 +127,18 @@ const {
 </section>
 
 <style>
-  /* Escalera: cada etapa sube un escalón (de dos en dos en móvil). */
-  @media (max-width: 47.99rem) {
-    .stage:nth-child(even) {
-      margin-bottom: 1.25rem;
-    }
+  /* Misma escala para todas las figuras (unidades del dibujo → rem): un
+     cuerpo mide lo mismo en cualquier skill. Si no cabe, se reduce. */
+  .skill-figure {
+    --u: 0.09rem;
+    width: calc(var(--w) * var(--u));
+    max-width: 100%;
+    height: auto;
+    aspect-ratio: var(--w) / var(--h);
   }
-  @media (min-width: 48rem) {
-    .stage {
-      margin-bottom: calc(var(--i) * 1.5rem);
+  @media (min-width: 64rem) {
+    .skill-figure {
+      --u: 0.1rem;
     }
   }
 
@@ -219,37 +146,9 @@ const {
     .skill-tab:not(:has(:checked)):hover {
       border-color: var(--color-concrete-400);
     }
-    .stage-pick:hover .stage-figure {
-      opacity: 1;
-    }
   }
 
-  /* «¿En qué etapa vas?»: la elegida se queda y las demás se atenúan (solo
-     el dibujo; el texto conserva su contraste). Su escalón pasa a gis. */
-  .stage-figure {
-    transition: opacity 200ms var(--ease-out-expo);
-  }
-  .skill-panel:has(.stage input:checked) .stage-figure {
-    opacity: 0.35;
-  }
-  .skill-panel .stage:has(input:checked) .stage-figure {
-    opacity: 1;
-  }
-  .stage:has(input:checked) .step.bg-steel-700 {
-    background-color: var(--color-chalk);
-  }
-  .stage:has(input:checked) .stage-name {
-    text-decoration: underline;
-    text-decoration-thickness: 2px;
-    text-underline-offset: 0.35em;
-  }
-
-  /* El cronómetro va a mano, como las anotaciones de gis. */
-  .stage-timer {
-    font-family: var(--font-hand);
-  }
-
-  /* Solo se ve la escalera del skill elegido. */
+  /* Solo se ve el skill elegido. */
   @supports selector(:has(*)) {
     .skill-panel {
       display: none;
@@ -263,130 +162,115 @@ const {
       display: block;
     }
   }
-
-  /* Las etapas suben desde su escalón, una tras otra: la primera vez que se
-     ven y cada vez que se elige otro skill (al mostrarse, la animación
-     vuelve a empezar). */
-  @media (prefers-reduced-motion: no-preference) {
-    [data-skills][data-animate] .stage-figure {
-      clip-path: inset(0 0 100% 0);
-    }
-    [data-skills][data-animate][data-seen] .stage-figure {
-      clip-path: none;
-      animation: ledge 640ms var(--ease-out-expo) both;
-      animation-delay: calc(var(--i) * 110ms + 120ms);
-    }
-  }
 </style>
 
 <script>
   import { track } from '../../lib/analytics';
   import { update } from '../../lib/athletes';
-  import { skillLadders, type SkillId } from '../../lib/skill-poses';
+  import { skillMotions, type SkillId } from '../../lib/skill-poses';
 
-  /** La meta empieza a moverse cuando su escalón ya casi subió. */
-  const META_DELAY = 1000;
-  /** Segundos que cuenta el cronómetro mientras la meta sostiene. */
-  const HOLD_SECONDS = 3;
+  /** Pausa en la posición inicial antes de repetir, en ms. */
+  const REST = 600;
 
   const section = document.querySelector<HTMLElement>('[data-skills]');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const animate = !!section && !reduce && 'IntersectionObserver' in window;
   let frame = 0;
+  let playing: HTMLElement | undefined;
+  /** Skills de posición que ya llegaron a ella: se quedan quietos. */
+  const done = new Set<HTMLElement>();
 
-  const panel = (id?: string) =>
-    section?.querySelector<HTMLElement>(`[data-skill="${id}"]`);
-  const current = () =>
-    panel(
-      section?.querySelector<HTMLInputElement>('[name="skill"]:checked')?.value,
-    );
+  const panels = [
+    ...(section?.querySelectorAll<HTMLElement>('[data-skill]') ?? []),
+  ];
+  const motionOf = (panel: HTMLElement) =>
+    skillMotions[panel.dataset.skill as SkillId];
+  const partsOf = (panel: HTMLElement) =>
+    panel.querySelector('[data-body]')?.children;
+  const isCurrent = (panel: HTMLElement) =>
+    !!section
+      ?.querySelector(`[name="skill"][value="${panel.dataset.skill}"]`)
+      ?.matches(':checked');
+
+  /** Avance 0 → 1 → 0 en el instante `t` del ciclo: ida, vuelta y pausa. */
+  function progress(t: number, duration: number): number {
+    const at = t % (2 * duration + REST);
+    if (at < duration) return at / duration;
+    return Math.max(0, 2 - at / duration);
+  }
+
+  function stop(): void {
+    cancelAnimationFrame(frame);
+    playing = undefined;
+  }
 
   /**
-   * La meta se ejecuta una vez y se queda sosteniendo la posición; mientras
-   * sostiene, el cronómetro cuenta unos segundos y se detiene.
+   * Un skill de posición va del inicio a la posición y se queda. Uno de
+   * repeticiones se repite mientras se ve; empieza por la vuelta, así que
+   * arranca desde la pose fija sin saltos.
    */
-  function play(target?: HTMLElement | null): void {
-    const ladder = skillLadders[target?.dataset.skill as SkillId];
-    const parts = target?.querySelector('[data-meta] [data-body]')?.children;
-    const timer = target?.querySelector<HTMLElement>('[data-timer]');
-    if (!ladder || !parts) return;
-    cancelAnimationFrame(frame);
-    update(parts, ladder.meta(0));
-    if (timer) timer.hidden = true;
+  function play(panel: HTMLElement): void {
+    const motion = motionOf(panel);
+    const parts = partsOf(panel);
+    if (playing === panel || !motion || !parts) return;
+    if (motion.play === 'hold' && done.has(panel)) return;
+    stop();
+    playing = panel;
+    const reps = motion.play === 'reps';
     let start = 0;
-    let held = 0;
     const tick = (now: number) => {
-      start ||= now + META_DELAY;
-      const p = Math.max(0, Math.min(1, (now - start) / ladder.duration));
-      update(parts, ladder.meta(p));
-      if (p >= ladder.hold) held ||= now;
-      const seconds = held
-        ? Math.min(HOLD_SECONDS, Math.floor((now - held) / 1000))
-        : 0;
-      if (timer && held) {
-        timer.hidden = false;
-        timer.textContent = `0:0${seconds}`;
+      start ||= reps ? now - motion.duration : now;
+      const t = now - start;
+      if (reps) {
+        update(parts, motion.pose(progress(t, motion.duration)));
+      } else {
+        const p = Math.min(1, t / motion.duration);
+        update(parts, motion.pose(p));
+        if (p === 1) {
+          done.add(panel);
+          playing = undefined;
+          return;
+        }
       }
-      if (p < 1 || seconds < HOLD_SECONDS) frame = requestAnimationFrame(tick);
+      frame = requestAnimationFrame(tick);
     };
     frame = requestAnimationFrame(tick);
   }
 
-  let seen = false;
-  const reveal = () => {
-    if (seen || !section) return;
-    seen = true;
-    section.toggleAttribute('data-seen', true);
-    observer?.disconnect();
-    play(current());
-  };
-
-  // Se observan todas las escaleras: solo la del skill elegido se ve.
-  const observer = animate
-    ? new IntersectionObserver(
-        (entries) => {
-          if (entries.some((entry) => entry.isIntersecting)) reveal();
-        },
-        { threshold: 0.3 },
-      )
-    : undefined;
-  if (section && observer) {
-    section.toggleAttribute('data-animate', true);
-    section.querySelectorAll('ol').forEach((ol) => observer.observe(ol));
+  if (animate) {
+    // Los de posición esperan en su inicio, fuera de pantalla.
+    for (const panel of panels) {
+      const motion = motionOf(panel);
+      if (motion?.play === 'hold') update(partsOf(panel), motion.pose(0));
+    }
+    // Solo se ve el skill elegido: al cambiar de pestaña, su figura aparece
+    // (y la otra desaparece) y el observador se entera.
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          const panel = entry.target.closest<HTMLElement>('[data-skill]');
+          if (!panel) continue;
+          if (entry.isIntersecting && isCurrent(panel)) play(panel);
+          else if (panel === playing) stop();
+        }
+      },
+      { threshold: 0.5 },
+    );
+    panels.forEach((panel) => {
+      const figure = panel.querySelector('.skill-figure');
+      if (figure) observer.observe(figure);
+    });
   }
 
   section?.addEventListener('change', (event) => {
     const input = event.target as HTMLInputElement;
-    if (input.name === 'skill') {
-      track('skill_view', { skill: input.value });
-      if (!animate) return;
-      // Las etapas del nuevo skill suben y su meta se ejecuta.
-      if (seen) play(panel(input.value));
-      else reveal();
-      return;
-    }
-    // Etapa elegida: se agrega al mensaje de WhatsApp de ese skill y se
-    // propone en el formulario de contacto. A GA4 va solo skill y etapa.
-    const ladder = input.closest<HTMLElement>('[data-skill]');
-    const cta = ladder?.querySelector<HTMLAnchorElement>(
-      'a[data-track="whatsapp"]',
-    );
-    if (!ladder || !cta) return;
-    track('skill_stage', {
-      skill: ladder.dataset.skill ?? '',
-      stage: input.value,
-    });
-    document.dispatchEvent(
-      new CustomEvent('skill-interest', {
-        detail: {
-          message: `${ladder.dataset.formMessage} ${input.dataset.waNote}`,
-        },
-      }),
-    );
-    const [url, text = ''] = cta.href.split('?text=');
-    cta.dataset.waText ??= decodeURIComponent(text);
-    cta.href = `${url}?text=${encodeURIComponent(
-      `${cta.dataset.waText} ${input.dataset.waNote}`,
-    )}`;
+    if (input.name !== 'skill') return;
+    track('skill_view', { skill: input.value });
+    // Al volver a elegirlo, el skill de posición se ejecuta otra vez.
+    const panel = panels.find((p) => p.dataset.skill === input.value);
+    const motion = panel && motionOf(panel);
+    if (!animate || !panel || motion?.play !== 'hold') return;
+    done.delete(panel);
+    update(partsOf(panel), motion.pose(0));
   });
 </script>

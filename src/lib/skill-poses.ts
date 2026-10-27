@@ -1,13 +1,15 @@
-// Etapas de cada skill dibujadas en gis (DESIGN.md · Ruta de skills): poses
-// fijas de perfil, con las proporciones y los trazos de los atletas de gis.
-// Él mira a la derecha. En las posiciones horizontales que se sostienen con
-// los brazos rectos (levers y plancha), el ángulo del brazo no se elige a ojo:
-// se calcula para que el centro de masa quede justo bajo la barra o sobre las
-// manos, como en el equilibrio real. Por eso en el tuck los brazos van casi
-// verticales y en la posición completa se inclinan mucho más.
+// Cada skill dibujado en gis (DESIGN.md · Ruta de skills): de perfil, con las
+// proporciones y los trazos de los atletas de gis. Él mira a la derecha. En
+// las posiciones horizontales que se sostienen con los brazos rectos (levers y
+// plancha), el ángulo del brazo no se elige a ojo: se calcula en cada cuadro
+// para que el centro de masa quede justo bajo la barra o sobre las manos, como
+// en el equilibrio real. Por eso en el tuck los brazos van casi verticales y en
+// la posición completa se inclinan mucho más.
 //
-// La meta (la última etapa) además se ejecuta: llega a su posición una sola
-// vez al verse y la sostiene. Su pose final es la que se dibuja fija.
+// Los skills de posición (parada de manos, levers y plancha) llegan a ella
+// una vez y se quedan; los de repeticiones (muscle-up y pistol squat) se
+// repiten en bucle. La pose final es la que se dibuja fija (sin JS o con
+// movimiento reducido). Unos los hace él y otros ella.
 
 import {
   add,
@@ -16,6 +18,7 @@ import {
   circle,
   deg,
   elbowAround,
+  glute,
   keys,
   line,
   MASS,
@@ -26,21 +29,24 @@ import {
 export type SkillId =
   'handstand' | 'muscleup' | 'frontlever' | 'planche' | 'backlever' | 'pistol';
 
-export type Stage = { fixed: Shape[]; body: Shape[] };
-
-/** Las etapas de un skill comparten `viewBox`: la barra y el piso se alinean. */
-export type SkillLadder = {
+export type SkillMotion = {
   viewBox: string;
-  stages: Stage[];
+  /** Lo que no se mueve (la barra), en acero. */
+  fixed: Shape[];
   /**
-   * La meta ejecutándose: el cuerpo para un avance `p` (0 → 1), siempre con
-   * las mismas figuras. `meta(1)` es la pose fija de la última etapa.
+   * El cuerpo para un avance `p` (0 → 1), siempre con las mismas figuras.
+   * `pose(1)` es la pose fija.
    */
-  meta: (p: number) => Shape[];
-  /** Duración de la meta, en ms. */
+  pose: (p: number) => Shape[];
+  /** Duración de la ida (la vuelta dura lo mismo), en ms. */
   duration: number;
-  /** Avance (0 → 1) en el que la meta ya sostiene la posición. */
-  hold: number;
+  /**
+   * `hold`: llega a la posición una vez y se queda. `reps`: ida, vuelta y
+   * una pausa, en bucle.
+   */
+  play: 'hold' | 'reps';
+  /** Se apoya en el piso (el escalón); colgado de la barra no hay piso. */
+  floor: boolean;
 };
 
 type Leg = { knee: Point; ankle: Point; toe: Point };
@@ -72,8 +78,8 @@ function leg(hip: Point, thigh: number, shin: number, foot = shin): Leg {
   return { knee, ankle, toe: add(ankle, 6, rad(foot)) };
 }
 
-function move(j: Joints, d: Point): Joints {
-  const m = (p: Point) => ({ x: p.x + d.x, y: p.y + d.y });
+/** La misma pose con cada articulación transformada por `m`. */
+function transform(j: Joints, m: (p: Point) => Point): Joints {
   const l = (g: Leg) => ({ knee: m(g.knee), ankle: m(g.ankle), toe: m(g.toe) });
   return {
     shoulder: m(j.shoulder),
@@ -85,6 +91,9 @@ function move(j: Joints, d: Point): Joints {
     ...(j.far && { far: l(j.far) }),
   };
 }
+
+const move = (j: Joints, d: Point) =>
+  transform(j, (p) => ({ x: p.x + d.x, y: p.y + d.y }));
 
 /** Centro de masa por segmentos (Dempster). Sin `far`, las piernas van juntas. */
 function centerOfMass(j: Joints): Point {
@@ -159,12 +168,7 @@ function hold(
 // front lever; en el back lever y la plancha el pecho va abajo (espejo).
 const FULL: [number, number] = [90, 90];
 const TUCK_UP: [number, number] = [230, 68];
-const ADV_UP: [number, number] = [180, 90];
 const TUCK_DOWN: [number, number] = [-50, 112];
-const ADV_DOWN: [number, number] = [0, 90];
-// En la plancha los hombros van bajos: con el muslo vertical, la rodilla
-// tocaría el piso. El muslo se va atrás y los talones suben.
-const ADV_PLANCHE: [number, number] = [40, 120];
 
 /** Colgado de la barra con agarre normal; la barra está en y = 0. */
 function onBar(
@@ -213,14 +217,14 @@ function inverted(
  * va de parado (0) al fondo (1): espinilla, muslo y tronco se inclinan juntos
  * para no perder el equilibrio, como en el atleta de /gracias.
  */
-function squat(depth: number, free: boolean, reach = 0): Joints {
+function squat(depth: number): Joints {
   const lerp = (a: number, b: number) => a + (b - a) * depth;
   const ankle = { x: 0, y: 0 };
   const knee = add(ankle, body.shin, rad(180 - lerp(4, 40)));
   const hip = add(knee, body.thigh, rad(180 + lerp(4, 98)));
   const lean = 180 - lerp(4, 46);
   const shoulder = add(hip, body.torso, rad(lean));
-  const arms = lerp(70, 88) + reach;
+  const arms = lerp(70, 88);
   const elbow = add(shoulder, body.upperArm, rad(arms));
   const stand: Leg = { knee, ankle, toe: add(ankle, 10, rad(90)) };
   // La pierna libre siempre va estirada al frente, sin tocar el piso.
@@ -232,59 +236,105 @@ function squat(depth: number, free: boolean, reach = 0): Joints {
     head: add(shoulder, HEAD, rad(lean)),
     elbow,
     hand: add(elbow, body.forearm, rad(arms + 5)),
-    // La pierna libre va al frente; sin ella, las dos se apoyan juntas.
-    near: free
-      ? { knee: freeKnee, ankle: freeAnkle, toe: add(freeAnkle, 6, rad(140)) }
-      : stand,
-    ...(free && { far: stand }),
+    near: {
+      knee: freeKnee,
+      ankle: freeAnkle,
+      toe: add(freeAnkle, 6, rad(140)),
+    },
+    far: stand,
   };
 }
 
-/** Con `both`, la pierna de atrás siempre se dibuja (encimada si no está). */
-function draw(j: Joints, both = false): Shape[] {
-  const far = j.far ?? (both ? j.near : undefined);
+/**
+ * Quién hace el skill. `chest` dice hacia dónde va el pecho: 1 si queda a la
+ * izquierda de la línea cadera → hombro vista hacia la cabeza (de pie mirando
+ * a la derecha, front lever), -1 si queda al otro lado (parada de manos con el
+ * pecho a la derecha, back lever, plancha).
+ */
+type Figure = { her: boolean; chest: 1 | -1 };
+
+/** Ella: las proporciones de los atletas de gis (el tronco mide 46, no 50). */
+const HER = 46 / 50;
+
+/**
+ * Escala la pose desde el origen (la barra, las manos o el pie de apoyo): el
+ * apoyo no se mueve y el centro de masa sigue en su vertical.
+ */
+const scale = (j: Joints, k: number) =>
+  transform(j, (p) => ({ x: p.x * k, y: p.y * k }));
+
+const unit = (a: Point, b: Point) => {
+  const d = Math.hypot(b.x - a.x, b.y - a.y);
+  return { x: (b.x - a.x) / d, y: (b.y - a.y) / d };
+};
+
+/**
+ * La pierna de atrás siempre se dibuja (encimada si no está). Ella lleva
+ * glúteo y una cola de caballo que cuelga con la gravedad, también de cabeza.
+ */
+function draw(j: Joints, { her, chest }: Figure): Shape[] {
+  const far = j.far ?? j.near;
   const limb = (g: Leg) => [
-    line(j.hip, g.knee, 11.5),
-    line(g.knee, g.ankle, 8),
-    line(g.ankle, g.toe, 5),
+    line(j.hip, g.knee, her ? 11 : 11.5),
+    line(g.knee, g.ankle, her ? 7.5 : 8),
+    line(g.ankle, g.toe, her ? 4.5 : 5),
   ];
+  if (!her) {
+    return [
+      ...limb(far),
+      line(j.hip, j.shoulder, 16),
+      line(j.shoulder, j.head, 7.5),
+      circle(j.head, body.head),
+      ...limb(j.near),
+      ...arm(j.shoulder, j.elbow, j.hand, 8.5, 7),
+      circle(j.hand, 3.6),
+    ];
+  }
+  // La espalda: del lado contrario al pecho.
+  const t = unit(j.hip, j.shoulder);
+  const back = { x: t.y * chest, y: -t.x * chest };
+  const up = unit(j.shoulder, j.head);
+  const at = (p: Point, b: number, u: number, g: number) => ({
+    x: p.x + back.x * b + up.x * u,
+    y: p.y + back.y * b + up.y * u + g,
+  });
+  const tail = at(j.head, 6, 3, 0);
+  const tip = at(tail, 5, 0, 4);
   return [
-    ...(far ? limb(far) : []),
-    line(j.hip, j.shoulder, 16),
-    line(j.shoulder, j.head, 7.5),
-    circle(j.head, body.head),
+    ...limb(far),
+    glute(j.shoulder, j.hip, far.knee, chest),
+    line(j.hip, j.shoulder, 14),
+    line(j.shoulder, j.head, 6.5),
+    circle(j.head, body.head * HER),
+    line(tail, tip, 5),
+    line(tip, at(tip, 2, 0, 8), 3.5),
     ...limb(j.near),
-    ...arm(j.shoulder, j.elbow, j.hand, 8.5, 7),
-    circle(j.hand, 3.6),
+    ...arm(j.shoulder, j.elbow, j.hand, 7.5, 6),
+    circle(j.hand, 3.5),
   ];
 }
 
-// Equipo, en acero. El piso no se dibuja: es el escalón de cada etapa.
-const bar = (x = 0) => line({ x: x - 24, y: 0 }, { x: x + 24, y: 0 }, 5);
-const box = (x1: number, x2: number, top: number): Shape => ({
-  kind: 'path',
-  d: `M${x1} ${top} L${x2} ${top} L${x2} 3 L${x1} 3 Z`,
-});
+// Equipo, en acero. El piso no se dibuja: es el escalón bajo la figura.
+const bar = line({ x: -24, y: 0 }, { x: 24, y: 0 }, 5);
 
-const stage = (j: Joints, fixed: Shape[]): Stage => ({ fixed, body: draw(j) });
-
-/** Caja que contiene todas las etapas, con un margen para el grano del gis. */
-function frame(stages: Stage[]): string {
+/** Caja que contiene las figuras, con un margen para el grano del gis. */
+function frame(shapes: Shape[]): string {
   const xs: number[] = [];
   const ys: number[] = [];
   const grow = (x: number, y: number, r: number) => {
     xs.push(x - r, x + r);
     ys.push(y - r, y + r);
   };
-  for (const shape of stages.flatMap((s) => [...s.fixed, ...s.body])) {
+  for (const shape of shapes) {
     if (shape.kind === 'line') {
       grow(shape.x1, shape.y1, shape.w / 2);
       grow(shape.x2, shape.y2, shape.w / 2);
     } else if (shape.kind === 'circle') {
       grow(shape.cx, shape.cy, shape.r + (shape.ring ?? 0) / 2);
     } else {
+      // El contorno del cuerpo (stroke-width 4) suma 2 por fuera.
       const n = shape.d.match(/-?\d+(\.\d+)?/g)!.map(Number);
-      for (let i = 0; i < n.length; i += 2) grow(n[i], n[i + 1], 0);
+      for (let i = 0; i < n.length; i += 2) grow(n[i], n[i + 1], 2);
     }
   }
   // Abajo casi sin margen: manos y pies se apoyan en el escalón.
@@ -295,151 +345,154 @@ function frame(stages: Stage[]): string {
 }
 
 /**
- * Las tres primeras etapas y la meta: su equipo fijo, su movimiento (pose para
- * un avance 0 → 1, que termina quieta en la posición) y su duración.
+ * Un skill: su equipo fijo, su movimiento (pose para un avance 0 → 1, que
+ * termina quieta en la posición), la duración de la ida, quién lo hace y si
+ * se sostiene o se repite.
  */
-function ladder(
-  stages: Stage[],
-  goal: {
-    fixed: Shape[];
-    pose: (p: number) => Joints;
-    duration: number;
-    hold: number;
-  },
-): SkillLadder {
-  const meta = (p: number) => draw(goal.pose(p), true);
-  const all = [...stages, { fixed: goal.fixed, body: meta(1) }];
-  // La caja también contiene cada momento del movimiento.
-  const frames = Array.from({ length: 21 }, (_, i) => ({
-    fixed: [],
-    body: meta(i / 20),
-  }));
+function motion(
+  fixed: Shape[],
+  joints: (p: number) => Joints,
+  duration: number,
+  figure: Figure,
+  play: SkillMotion['play'],
+): SkillMotion {
+  const pose = (p: number) =>
+    draw(figure.her ? scale(joints(p), HER) : joints(p), figure);
+  // La caja contiene cada momento del movimiento.
+  const frames = Array.from({ length: 21 }, (_, i) => pose(i / 20));
   return {
-    viewBox: frame([...all, ...frames]),
-    stages: all,
-    meta,
-    duration: goal.duration,
-    hold: goal.hold,
+    viewBox: frame([...fixed, ...frames.flat()]),
+    fixed,
+    pose,
+    duration,
+    play,
+    floor: !fixed.includes(bar),
   };
 }
 
-const handstand = (() => {
-  const pike = inverted(0, 90);
-  const wall = inverted(4, 176);
-  const wallX = wall.hip.x + 13;
-  return ladder(
-    [
-      // Pies en un cajón a la altura de la cadera: el peso pasa a los hombros.
-      stage(pike, [
-        box(pike.near.ankle.x - 16, pike.near.ankle.x + 10, pike.hip.y + 5),
-      ]),
-      // Pecho a la pared: el cuerpo se alinea sin tener que equilibrarse.
-      stage(wall, [
-        line({ x: wallX, y: 4 }, { x: wallX, y: wall.near.toe.y - 14 }, 5),
-      ]),
-      // Tijera: ya sin pared, las piernas abiertas ayudan a corregir.
-      stage(inverted(0, 148, 212), []),
-    ],
-    {
-      fixed: [],
-      duration: 2800,
-      // Ya parado de manos: lo que sigue son las correcciones.
-      hold: 0.45,
-      // Desde la tijera junta las piernas y corrige el equilibrio con las
-      // muñecas: el cuerpo, recto, se mece cada vez menos hasta quedar quieto.
-      pose(p) {
-        const lean = keys(p, [
-          [0, 0],
-          [0.45, 0],
-          [0.56, 2.2],
-          [0.68, -1.6],
-          [0.8, 0.8],
-          [0.9, -0.3],
-          [1, 0],
-        ]);
-        const open =
-          32 *
-          keys(p, [
-            [0, 1],
-            [0.1, 1],
-            [0.42, 0],
-          ]);
-        return inverted(lean, 180 - lean - open, 180 - lean + open);
-      },
-    },
-  );
-})();
-
-const muscleup = ladder(
-  [
-    // Dominada al pecho: la barra llega abajo de la clavícula.
-    stage(onBar({ x: -12, y: 6 }, 14, 18), [bar()]),
-    // Fondo en barra recta: abajo, con el pecho sobre la barra.
-    stage(onBar({ x: -4, y: -22 }, -14, 10, 14), [bar()]),
-    // Transición: el pecho pasa por encima de la barra, los codos atrás.
-    stage(onBar({ x: -12, y: 2 }, -42, 34, 22), [bar()]),
-  ],
-  {
-    fixed: [bar()],
-    duration: 2600,
-    hold: 0.82,
-    // Una repetición: jalón lento al pecho, transición rápida con el pecho sobre
-    // la barra, empuje y bloqueo arriba (brazos rectos, cuerpo vertical). En el
-    // jalón el cuerpo hace un arco hacia atrás y el antebrazo queda casi
-    // vertical: el codo baja hacia las costillas, no se va al frente.
-    pose(p) {
-      const at = (frames: [number, number][]) => keys(p, frames);
-      return onBar(
-        {
-          x: at([
-            [0, -2],
-            [0.14, -16],
-            [0.26, -20],
-            [0.36, -12],
-            [0.47, -12],
-            [0.6, -4],
-            [0.82, -3],
-          ]),
-          y: at([
-            [0, 50],
-            [0.14, 40],
-            [0.26, 22],
-            [0.36, 6],
-            [0.47, 2],
-            [0.6, -22],
-            [0.82, -51],
-          ]),
-        },
-        at([
-          [0, 2],
-          [0.14, 8],
-          [0.26, 16],
-          [0.36, 14],
-          [0.47, -42],
-          [0.6, -14],
-          [0.82, 2],
-        ]),
-        at([
-          [0, 4],
-          [0.14, 10],
-          [0.26, 22],
-          [0.36, 18],
-          [0.47, 34],
-          [0.6, 10],
-          [0.82, 6],
-        ]),
-        at([
-          [0, 4],
-          [0.14, 8],
-          [0.26, 20],
-          [0.36, 18],
-          [0.47, 22],
-          [0.6, 14],
-          [0.82, 6],
-        ]),
-      );
-    },
+const handstand = motion(
+  [],
+  // Desde la tijera junta las piernas y corrige el equilibrio con las
+  // muñecas: el cuerpo, recto, se mece cada vez menos hasta quedar quieto.
+  (p) => {
+    const lean = keys(p, [
+      [0, 0],
+      [0.45, 0],
+      [0.56, 2.2],
+      [0.68, -1.6],
+      [0.8, 0.8],
+      [0.9, -0.3],
+      [1, 0],
+    ]);
+    const open =
+      32 *
+      keys(p, [
+        [0, 1],
+        [0.1, 1],
+        [0.42, 0],
+      ]);
+    return inverted(lean, 180 - lean - open, 180 - lean + open);
   },
+  2800,
+  { her: true, chest: -1 },
+  'hold',
+);
+
+/**
+ * Valor en `s` a partir de fotogramas clave [s, valor], con una curva que pasa
+ * por todos sin frenar en cada uno (Hermite monótona, PCHIP): la velocidad es
+ * continua y la curva no rebasa los valores clave. Solo se detiene al principio,
+ * al final y donde el valor cambia de sentido, como un movimiento real.
+ */
+function flow(s: number, frames: [number, number][]): number {
+  const n = frames.length;
+  if (s <= frames[0][0]) return frames[0][1];
+  if (s >= frames[n - 1][0]) return frames[n - 1][1];
+  const width = (i: number) => frames[i + 1][0] - frames[i][0];
+  const slope = (i: number) => (frames[i + 1][1] - frames[i][1]) / width(i);
+  const tangent = (i: number) => {
+    if (i === 0 || i === n - 1) return 0;
+    const [a, b] = [slope(i - 1), slope(i)];
+    if (a * b <= 0) return 0;
+    const [h0, h1] = [width(i - 1), width(i)];
+    return (3 * (h0 + h1)) / ((2 * h1 + h0) / a + (h1 + 2 * h0) / b);
+  };
+  let i = 0;
+  while (s > frames[i + 1][0]) i++;
+  const h = width(i);
+  const t = (s - frames[i][0]) / h;
+  const [t2, t3] = [t * t, t * t * t];
+  return (
+    (2 * t3 - 3 * t2 + 1) * frames[i][1] +
+    (t3 - 2 * t2 + t) * h * tangent(i) +
+    (3 * t2 - 2 * t3) * frames[i + 1][1] +
+    (t3 - t2) * h * tangent(i + 1)
+  );
+}
+
+const muscleup = motion(
+  [bar],
+  // Una repetición: jalón lento al pecho, transición rápida con el pecho sobre
+  // la barra, empuje y bloqueo arriba (brazos rectos, cuerpo vertical). En el
+  // jalón el cuerpo hace un arco hacia atrás y el antebrazo queda casi
+  // vertical: el codo baja hacia las costillas, no se va al frente. Un solo
+  // movimiento continuo: cada ángulo va en un solo sentido hasta la transición
+  // (sin retrocesos) y la curva no se detiene en cada fotograma clave.
+  (p) => {
+    const at = (frames: [number, number][]) => flow(p, frames);
+    return onBar(
+      {
+        x: at([
+          [0, -2],
+          [0.14, -16],
+          [0.26, -20],
+          [0.36, -12],
+          [0.47, -9],
+          [0.6, -4],
+          [0.82, -3],
+        ]),
+        y: at([
+          [0, 50],
+          [0.14, 40],
+          [0.26, 22],
+          [0.36, 6],
+          [0.47, -2],
+          [0.6, -22],
+          [0.82, -51],
+        ]),
+      },
+      at([
+        [0, 2],
+        [0.14, 8],
+        [0.26, 16],
+        [0.36, 6],
+        [0.47, -42],
+        [0.6, -14],
+        [0.82, 2],
+      ]),
+      at([
+        [0, 4],
+        [0.14, 10],
+        [0.26, 18],
+        [0.36, 26],
+        [0.47, 34],
+        [0.6, 10],
+        [0.82, 6],
+      ]),
+      at([
+        [0, 4],
+        [0.14, 8],
+        [0.26, 16],
+        [0.36, 20],
+        [0.47, 22],
+        [0.6, 14],
+        [0.82, 6],
+      ]),
+    );
+  },
+  2600,
+  { her: false, chest: 1 },
+  'reps',
 );
 
 /**
@@ -467,90 +520,48 @@ function extend(
   };
 }
 
-const frontlever = ladder(
-  [
-    stage(hold('hang', [TUCK_UP]), [bar()]),
-    stage(hold('hang', [ADV_UP]), [bar()]),
-    stage(hold('hang', [FULL, ADV_UP]), [bar()]),
-  ],
-  { fixed: [bar()], duration: 2200, hold: 0.65, pose: extend('hang', TUCK_UP) },
+const frontlever = motion(
+  [bar],
+  extend('hang', TUCK_UP),
+  2200,
+  { her: true, chest: 1 },
+  'hold',
 );
 
-const backlever = ladder(
-  [
-    stage(hold('hang', [TUCK_DOWN]), [bar()]),
-    stage(hold('hang', [ADV_DOWN]), [bar()]),
-    stage(hold('hang', [FULL, ADV_DOWN]), [bar()]),
-  ],
-  {
-    fixed: [bar()],
-    duration: 2200,
-    hold: 0.65,
-    pose: extend('hang', TUCK_DOWN),
-  },
+const backlever = motion(
+  [bar],
+  extend('hang', TUCK_DOWN),
+  2200,
+  { her: false, chest: -1 },
+  'hold',
 );
 
-const planche = (() => {
-  // Lean: en posición de lagartija, los hombros se adelantan a las manos.
-  const hand = { x: 0, y: 0 };
-  const shoulder = add(hand, ARM, rad(205));
-  const slope =
-    (Math.acos((-5 - shoulder.y) / (body.torso + 75)) * 180) / Math.PI;
-  const hip = add(shoulder, body.torso, rad(slope));
-  const knee = add(hip, body.thigh, rad(slope));
-  const ankle = add(knee, body.shin, rad(slope));
-  const lean: Joints = {
-    shoulder,
-    hip,
-    head: add(shoulder, HEAD, rad(slope + 180)),
-    elbow: add(hand, body.forearm, rad(205)),
-    hand,
-    near: { knee, ankle, toe: add(ankle, 6, rad(-30)) },
-  };
-  const tuck = hold('support', [TUCK_DOWN], 14);
-  const adv = hold('support', [ADV_PLANCHE], 4);
-  return ladder([stage(lean, []), stage(tuck, []), stage(adv, [])], {
-    fixed: [],
-    duration: 2400,
-    hold: 0.65,
-    // Del tuck a la plancha completa: la cadera baja mientras se extiende.
-    pose: extend('support', TUCK_DOWN, [14, 2]),
-  });
-})();
+// Del tuck a la plancha completa: la cadera baja mientras se extiende.
+const planche = motion(
+  [],
+  extend('support', TUCK_DOWN, [14, 2]),
+  2400,
+  { her: false, chest: -1 },
+  'hold',
+);
 
-const pistol = (() => {
-  const deep = squat(1, false);
-  const toBox = squat(0.72, true);
-  const helped = squat(1, true, -8);
-  const post = helped.hand.x + 1;
-  return ladder(
-    [
-      // Sentadilla profunda con las dos piernas.
-      stage(deep, []),
-      // Pistol hasta un cajón: se baja solo hasta donde se controla.
-      stage(toBox, [box(toBox.hip.x - 18, toBox.hip.x + 8, toBox.hip.y + 9)]),
-      // Con apoyo: una mano en un poste quita el problema del equilibrio.
-      stage(helped, [line({ x: post, y: 4 }, { x: post, y: -150 }, 4)]),
-    ],
-    {
-      fixed: [],
-      duration: 2400,
-      hold: 0.75,
-      // De pie sobre una pierna, baja despacio hasta el fondo y se queda.
-      pose: (p) =>
-        squat(
-          keys(p, [
-            [0, 0],
-            [0.12, 0],
-            [0.75, 1],
-          ]),
-          true,
-        ),
-    },
-  );
-})();
+// De pie sobre una pierna, baja despacio hasta el fondo y se queda.
+const pistol = motion(
+  [],
+  (p) =>
+    squat(
+      keys(p, [
+        [0, 0],
+        [0.12, 0],
+        [0.75, 1],
+      ]),
+    ),
+  2400,
+  { her: true, chest: 1 },
+  'reps',
+);
 
-export const skillLadders: Record<SkillId, SkillLadder> = {
+export const skillMotions: Record<SkillId, SkillMotion> = {
   handstand,
   muscleup,
   frontlever,

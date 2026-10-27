@@ -1,11 +1,7 @@
 // GA4 diferido + un solo listener delegado (spec §9.3). Nunca se envía PII.
 
 type EventName =
-  | 'whatsapp_click'
-  | 'form_submit'
-  | 'social_click'
-  | 'skill_view'
-  | 'skill_stage';
+  'whatsapp_click' | 'form_submit' | 'social_click' | 'skill_view';
 type Params = Record<string, string>;
 
 declare global {

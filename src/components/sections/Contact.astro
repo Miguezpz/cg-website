@@ -15,8 +15,6 @@ interface FormCopy {
   goal: {
     label: string;
     placeholder: string;
-    /** La opción que se elige sola desde la ruta de skills. */
-    skills: string;
     options: readonly string[];
   };
   message: { label: string; placeholder: string };
@@ -196,11 +194,7 @@ const errorText = 'mt-2 text-label text-error-on-dark';
                 {form.goal.placeholder}
               </option>
               {form.goal.options.map((option) => (
-                <option
-                  data-skills={option === form.goal.skills ? '' : undefined}
-                >
-                  {option}
-                </option>
+                <option>{option}</option>
               ))}
             </select>
             <ChalkMark
@@ -349,24 +343,6 @@ const errorText = 'mt-2 text-label text-error-on-dark';
         }
       });
     }
-
-    // Al marcar una etapa en la ruta de skills, se propone el objetivo y un
-    // mensaje, sin pisar lo que la persona ya escribió o eligió.
-    const goal = form.elements.namedItem('goal') as HTMLSelectElement;
-    const note = form.elements.namedItem('message') as HTMLTextAreaElement;
-    let proposed = '';
-    document.addEventListener('skill-interest', (event) => {
-      const { message: text } = (event as CustomEvent<{ message: string }>)
-        .detail;
-      const option = goal.querySelector<HTMLOptionElement>('[data-skills]');
-      if (!goal.value && option) {
-        option.selected = true;
-        markValid(goal as unknown as HTMLInputElement);
-      }
-      if (note.value === '' || note.value === proposed) {
-        note.value = proposed = text;
-      }
-    });
 
     form.addEventListener('submit', async (event) => {
       event.preventDefault();

@@ -1,14 +1,15 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect, type Browser, type Page } from '@playwright/test';
 
-// Ruta de skills (DESIGN.md): seis skills, cuatro etapas cada uno, pestañas
+// Ruta de skills (DESIGN.md): seis skills, cada uno con una figura de gis (los
+// de posición se quedan en ella; los de repeticiones van en bucle), pestañas
 // con radios nativos y un CTA de WhatsApp que nombra el skill elegido.
 const panel = (id: string) => `#skills [data-skill="${id}"]`;
-const meta = (page: Page, id: string) =>
+const pose = (page: Page, id: string) =>
   page
-    .locator(`${panel(id)} [data-meta] [data-body] > *`)
+    .locator(`${panel(id)} [data-body] > *`)
     .evaluateAll((els) => els.map((el) => el.outerHTML).join(''));
 
-test('muestra solo la escalera del skill elegido, con sus cuatro etapas', async ({
+test('muestra solo el skill elegido, con una sola figura y sin etapas', async ({
   page,
 }) => {
   await page.goto('/');
@@ -17,10 +18,13 @@ test('muestra solo la escalera del skill elegido, con sus cuatro etapas', async 
   await expect(radios.first()).toBeChecked();
   await expect(page.locator(panel('handstand'))).toBeVisible();
   await expect(page.locator(panel('frontlever'))).toBeHidden();
-  await expect(page.locator(`${panel('handstand')} li`)).toHaveCount(4);
-  await expect(page.locator(`${panel('handstand')} li`).last()).toContainText(
-    'Meta',
+  await expect(page.locator(`${panel('handstand')} .skill-figure`)).toHaveCount(
+    1,
   );
+  // Ni etapas, ni meta, ni cronómetro.
+  await expect(page.locator(`${panel('handstand')} li`)).toHaveCount(0);
+  await expect(page.locator('#skills [data-timer]')).toHaveCount(0);
+  await expect(page.locator('#skills')).not.toContainText('Meta');
 
   await page.locator('#skills .skill-tab', { hasText: 'Front lever' }).click();
   await expect(page.locator(panel('frontlever'))).toBeVisible();
@@ -39,8 +43,8 @@ test('los dibujos son decorativos y el CTA nombra el skill', async ({
   page,
 }) => {
   await page.goto('/');
-  const figures = page.locator('#skills .stage-figure');
-  await expect(figures).toHaveCount(24);
+  const figures = page.locator('#skills .skill-figure');
+  await expect(figures).toHaveCount(6);
   for (const svg of await figures.all()) {
     await expect(svg).toHaveAttribute('aria-hidden', 'true');
   }
@@ -56,112 +60,83 @@ test('los dibujos son decorativos y el CTA nombra el skill', async ({
   );
 });
 
-test('las etapas suben de su escalón y quedan visibles', async ({ page }) => {
+/** La pose fija del skill, la que se ve sin JS. */
+async function stillPose(browser: Browser, id: string) {
+  const context = await browser.newContext({ javaScriptEnabled: false });
+  const page = await context.newPage();
   await page.goto('/');
-  const section = page.locator('#skills');
-  await section.locator('ol:visible').scrollIntoViewIfNeeded();
-  await expect(section).toHaveAttribute('data-seen', '');
-  // Al terminar, ninguna etapa queda recortada.
-  await expect
-    .poll(() =>
-      section
-        .locator('ol:visible .stage-figure')
-        .evaluateAll((svgs) =>
-          svgs.every((svg) =>
-            svg.getAnimations().every((a) => a.playState === 'finished'),
-          ),
-        ),
-    )
-    .toBe(true);
-});
+  const still = await pose(page, id);
+  await context.close();
+  return still;
+}
 
-test('la meta se ejecuta una vez al verse y termina en su posición', async ({
+test('los skills de posición llegan a ella y se quedan', async ({
   page,
+  browser,
 }) => {
+  const still = await stillPose(browser, 'frontlever');
   await page.goto('/');
-  const still = await meta(page, 'frontlever');
   await page.locator('#skills .skill-tab', { hasText: 'Front lever' }).click();
-  await page.locator(`${panel('frontlever')} ol`).scrollIntoViewIfNeeded();
-  // Empieza en otra pose (el tuck) y vuelve a la pose fija de la meta.
-  await expect.poll(() => meta(page, 'frontlever')).not.toBe(still);
+  await page
+    .locator(`${panel('frontlever')} .skill-figure`)
+    .scrollIntoViewIfNeeded();
+  // Empieza en el tuck, llega a la pose fija y ya no se mueve.
+  await expect.poll(() => pose(page, 'frontlever')).not.toBe(still);
   await expect
-    .poll(() => meta(page, 'frontlever'), { timeout: 6000 })
+    .poll(() => pose(page, 'frontlever'), { timeout: 6000 })
     .toBe(still);
+  await page.waitForTimeout(1500);
+  expect(await pose(page, 'frontlever')).toBe(still);
 });
 
-test('la etapa elegida se agrega al mensaje de WhatsApp', async ({ page }) => {
+test('los skills de repeticiones van en bucle', async ({ page, browser }) => {
+  const still = await stillPose(browser, 'muscleup');
   await page.goto('/');
   await page.locator('#skills .skill-tab', { hasText: 'Muscle-up' }).click();
-  const cta = page.locator(`${panel('muscleup')} a[data-track="whatsapp"]`);
-  const text = async () =>
-    new URL((await cta.getAttribute('href')) ?? '').searchParams.get('text');
-
   await page
-    .locator(`${panel('muscleup')} .stage-pick`, { hasText: 'Transición' })
-    .click();
-  expect(await text()).toBe(
-    'Hola, vi tu página web y me interesa aprender el muscle-up. Ahora voy en «Transición».',
-  );
-  // Al cambiar de etapa, se reemplaza (no se acumula).
-  await page
-    .locator(`${panel('muscleup')} .stage-pick`, { hasText: 'Meta' })
-    .click();
-  expect(await text()).toBe(
-    'Hola, vi tu página web y me interesa aprender el muscle-up. Ya llegué a «Muscle-up» y quiero seguir avanzando.',
-  );
-  await expect(
-    page.locator(`${panel('muscleup')} input[name="etapa-muscleup"]:checked`),
-  ).toHaveValue('4');
+    .locator(`${panel('muscleup')} .skill-figure`)
+    .scrollIntoViewIfNeeded();
+  // Sale de la pose fija, vuelve a ella y vuelve a salir: no se detiene.
+  await expect.poll(() => pose(page, 'muscleup')).not.toBe(still);
+  await expect
+    .poll(() => pose(page, 'muscleup'), { timeout: 8000 })
+    .toBe(still);
+  await expect
+    .poll(() => pose(page, 'muscleup'), { timeout: 8000 })
+    .not.toBe(still);
 });
 
-test('mientras la meta sostiene, el cronómetro cuenta hasta 0:03', async ({
-  page,
-}) => {
+test('todas las figuras van a la misma escala', async ({ page }) => {
   await page.goto('/');
-  const timer = page.locator(`${panel('handstand')} [data-timer]`);
-  await expect(timer).toBeHidden();
-  await page.locator(`${panel('handstand')} ol`).scrollIntoViewIfNeeded();
-  await expect(timer).toHaveText('0:03', { timeout: 9000 });
-  await expect(timer).toHaveAttribute('aria-hidden', 'true');
+  const scales = await page
+    .locator('#skills .skill-figure')
+    .evaluateAll((svgs) =>
+      (svgs as SVGSVGElement[]).map((svg) => {
+        svg.closest<HTMLElement>('.skill-panel')!.style.display = 'block';
+        return svg.getBoundingClientRect().height / svg.viewBox.baseVal.height;
+      }),
+    );
+  for (const scale of scales) expect(scale).toBeCloseTo(scales[0], 1);
 });
 
-test('la etapa elegida se propone en el formulario sin pisar lo escrito', async ({
-  page,
-}) => {
+test('unas figuras son de ella y otras de él', async ({ page }) => {
   await page.goto('/');
-  await page.locator('#skills .skill-tab', { hasText: 'Planche' }).click();
-  await page
-    .locator(`${panel('planche')} .stage-pick`, { hasText: 'Tuck avanzado' })
-    .click();
-  await expect(page.locator('#f-goal')).toHaveValue(
-    'Aprender skills (muscle-up, parada de manos…)',
-  );
-  await expect(page.locator('#f-message')).toHaveValue(
-    'Me interesa aprender la planche. Ahora voy en «Tuck avanzado».',
-  );
-  // Si cambia de etapa, la propuesta se actualiza…
-  await page
-    .locator(`${panel('planche')} .stage-pick`, { hasText: 'Etapa 1' })
-    .click();
-  await expect(page.locator('#f-message')).toHaveValue(
-    'Me interesa aprender la planche. Ahora voy en «Planche lean».',
-  );
-  // …pero lo que la persona escribe no se toca.
-  await page.locator('#f-message').fill('Tengo una lesión de hombro.');
-  await page
-    .locator(`${panel('planche')} .stage-pick`, { hasText: 'Tuck' })
-    .first()
-    .click();
-  await expect(page.locator('#f-message')).toHaveValue(
-    'Tengo una lesión de hombro.',
-  );
+  // Ella lleva glúteo (un path) en el cuerpo; él no.
+  const her = await page
+    .locator('#skills [data-skill]')
+    .evaluateAll((panels) =>
+      panels
+        .filter((p) => p.querySelector('[data-body] path'))
+        .map((p) => (p as HTMLElement).dataset.skill),
+    );
+  expect(her).toEqual(['handstand', 'frontlever', 'pistol']);
 });
 
 test('la FAQ y el menú llevan a la ruta de skills', async ({ page }) => {
   await page.goto('/');
   await expect(
     page.locator('#faq a[href="#skills"]', {
-      hasText: 'Ver las etapas de cada skill',
+      hasText: 'Ver cada skill en movimiento',
     }),
   ).toHaveCount(1);
   await expect(page.locator('a[data-nav-link][href="/#skills"]')).toHaveCount(
@@ -172,21 +147,13 @@ test('la FAQ y el menú llevan a la ruta de skills', async ({ page }) => {
 test.describe('con movimiento reducido', () => {
   test.use({ reducedMotion: 'reduce' });
 
-  test('las etapas se ven sin animación', async ({ page }) => {
+  test('la figura se queda en su pose fija', async ({ page }) => {
     await page.goto('/');
-    const section = page.locator('#skills');
-    await expect(section).not.toHaveAttribute('data-animate');
-    await section.locator('ol:visible').scrollIntoViewIfNeeded();
-    const clips = await section
-      .locator('ol:visible .stage-figure')
-      .evaluateAll((svgs) => svgs.map((svg) => getComputedStyle(svg).clipPath));
-    expect(clips).toEqual(['none', 'none', 'none', 'none']);
-    // La meta se queda en su pose fija y no hay cronómetro.
-    const still = await meta(page, 'handstand');
+    await page
+      .locator(`${panel('handstand')} .skill-figure`)
+      .scrollIntoViewIfNeeded();
+    const still = await pose(page, 'handstand');
     await page.waitForTimeout(1500);
-    expect(await meta(page, 'handstand')).toBe(still);
-    await expect(
-      page.locator(`${panel('handstand')} [data-timer]`),
-    ).toBeHidden();
+    expect(await pose(page, 'handstand')).toBe(still);
   });
 });

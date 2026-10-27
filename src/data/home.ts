@@ -75,18 +75,8 @@ export const skillsSection = {
   title: 'Tu ruta de skills',
   mark: { word: 'skills', kind: 'underline' },
   intro:
-    'Ningún skill sale de golpe: se sube por etapas. Empiezas en la tuya y la rutina te lleva a la siguiente.',
-  legend: 'Elige un skill para ver sus etapas',
-  stageLabel: 'Etapa',
-  goalLabel: 'Meta',
-  stageLegend: '¿En qué etapa vas?',
-  stageHint: 'toca la etapa en la que vas',
-  /** Se agrega al mensaje de WhatsApp del skill al elegir una etapa. */
-  waStage: 'Ahora voy en «{stage}».',
-  waGoal: 'Ya llegué a «{stage}» y quiero seguir avanzando.',
-  /** Mensaje que se propone en el formulario de contacto al elegir etapa. */
-  formMessage: 'Me interesa {interest}.',
-  demo: 'Progresiones de ejemplo. Falta: que el coach confirme las etapas que usa en cada skill.',
+    'Ningún skill sale de golpe: se construye con progresiones. Empiezas donde estás y la rutina te lleva hasta él.',
+  legend: 'Elige un skill',
 } as const;
 
 export const howItWorks = {
@@ -172,8 +162,6 @@ export const contact = {
     goal: {
       label: 'Objetivo',
       placeholder: 'Elige una opción',
-      /** Opción que se elige sola al marcar una etapa en la ruta de skills. */
-      skills: 'Aprender skills (muscle-up, parada de manos…)',
       options: [
         'Empezar desde cero',
         'Aprender skills (muscle-up, parada de manos…)',

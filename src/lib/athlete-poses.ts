@@ -91,6 +91,54 @@ export const arm = (
   line(shoulder, elbowPt, upper),
   line(elbowPt, wrist, fore),
 ];
+/**
+ * Glúteo de perfil: una curva suave que sale de la espalda baja y entra en la
+ * parte de atrás del muslo, sin el «balón» de un círculo pegado a la cadera.
+ * `facing` es hacia dónde mira la atleta (1 derecha, -1 izquierda).
+ */
+export function glute(
+  shoulder: Point,
+  hip: Point,
+  knee: Point,
+  facing: 1 | -1 = 1,
+): Shape {
+  const unit = (a: Point, b: Point) => {
+    const d = Math.hypot(b.x - a.x, b.y - a.y);
+    return { x: (b.x - a.x) / d, y: (b.y - a.y) / d };
+  };
+  // Bajando por el cuerpo, la espalda queda a la izquierda si mira a la derecha.
+  const t = unit(shoulder, hip);
+  const k = unit(hip, knee);
+  const back = (d: Point) => ({ x: -d.y * facing, y: d.x * facing });
+  const at = (from: Point, d: Point, along: number, n: Point, out: number) => ({
+    x: from.x + d.x * along + n.x * out,
+    y: from.y + d.y * along + n.y * out,
+  });
+  const nt = back(t);
+  const nk = back(k);
+  // Proporciones de ella: el glúteo empieza a 1/4 del tronco sobre la cadera,
+  // termina a 1/3 del muslo y sobresale unas 3 unidades del tronco (14 de
+  // ancho). El contorno del <path> suma 2 de grosor por fuera, así que los
+  // bordes quedan al ras del tronco y del muslo (11).
+  const torso = Math.hypot(hip.x - shoulder.x, hip.y - shoulder.y);
+  const thigh = Math.hypot(knee.x - hip.x, knee.y - hip.y);
+  const [top, bottom] = [torso * 0.25, thigh * 0.35];
+  const start = at(hip, t, -top, nt, 5);
+  const c1 = at(hip, t, -torso * 0.06, nt, 11.5);
+  const c2 = at(hip, k, thigh * 0.14, nk, 11);
+  const end = at(hip, k, bottom, nk, 3.5);
+  const p = (q: Point) => `${round(q.x)} ${round(q.y)}`;
+  return {
+    kind: 'path',
+    d: [
+      `M${p(start)}`,
+      `C${p(c1)} ${p(c2)} ${p(end)}`,
+      `L${p(at(hip, k, bottom, nk, 0))}`,
+      `L${p(hip)}`,
+      `L${p(at(hip, t, -top, nt, 0))}Z`,
+    ].join(''),
+  };
+}
 export const add = (p: Point, length: number, angle: number): Point => ({
   // Ángulo desde la vertical hacia abajo; positivo = hacia la derecha.
   x: p.x + length * Math.sin(angle),
@@ -282,7 +330,7 @@ const pistol: Rig = {
     const tail = { x: head.x - 6, y: head.y - 3 };
 
     return [
-      circle(add(hip, 3, deg(-90)), 8),
+      glute(shoulder, hip, knee),
       line(hip, shoulder, 15),
       line(shoulder, head, 6.5),
       circle(head, her.head),
@@ -380,33 +428,40 @@ const jump: Rig = {
   },
 };
 
-/** Fondos en paralelas de perfil (ella): rodillas dobladas, pies atrás. */
+/**
+ * Fondos en paralelas de perfil (ella), con la técnica correcta: piernas
+ * estiradas hacia abajo y al frente en diagonal, puntas estiradas.
+ */
 const dips: Rig = {
-  viewBox: '-50 -74 100 176',
+  viewBox: '-54 -74 108 196',
   play: 'scroll',
   reps: 3,
   still: 0.85,
   fixed: [
-    line({ x: -34, y: 0 }, { x: -34, y: 96 }, 4),
-    line({ x: 34, y: 0 }, { x: 34, y: 96 }, 4),
-    line({ x: -44, y: 0 }, { x: 44, y: 0 }, 5),
-    line({ x: -46, y: 98.5 }, { x: 46, y: 98.5 }, 3),
+    line({ x: -40, y: 0 }, { x: -40, y: 116 }, 4),
+    line({ x: 40, y: 0 }, { x: 40, y: 116 }, 4),
+    line({ x: -48, y: 0 }, { x: 48, y: 0 }, 5),
+    line({ x: -50, y: 118.5 }, { x: 50, y: 118.5 }, 3),
   ],
   pose(s) {
-    // De brazos rectos arriba a los hombros cerca de la barra, con el tronco
-    // inclinado al frente y los codos hacia atrás.
+    // De brazos rectos arriba a los hombros cerca de la barra. Al bajar, el
+    // tronco se inclina al frente unos 35° (técnica: entre 30° y 45°), los
+    // hombros pasan un poco delante de las manos y los codos van atrás.
     const hand = { x: 0, y: 0 };
-    const shoulder = { x: lerp(-1, 4, s), y: lerp(-46, -10, s) };
+    const shoulder = { x: lerp(-1, 7, s), y: lerp(-46, -10, s) };
     const elbowPt = elbow(hand, shoulder, her.forearm, her.upperArm, -1);
-    const lean = deg(lerp(-2, -22, s));
+    const lean = deg(lerp(-4, -35, s));
     const hip = add(shoulder, her.torso, lean);
     const head = add(shoulder, her.neck + her.head - 1, lean + Math.PI);
-    const knee = add(hip, her.thigh, deg(lerp(8, 15, s)));
-    const ankle = add(knee, her.shin, deg(lerp(-87, -80, s)));
+    // Las piernas, rectas, se quedan en diagonal al frente mientras el tronco
+    // se inclina: la cadera se flexiona un poco más abajo.
+    const legs = deg(lerp(12, 16, s));
+    const knee = add(hip, her.thigh, legs);
+    const ankle = add(knee, her.shin, legs);
     const tail = { x: head.x - 6, y: head.y - 3 };
 
     return [
-      circle(add(hip, 4, lean - deg(90)), 8),
+      glute(shoulder, hip, knee),
       line(hip, shoulder, 14),
       line(shoulder, head, 6.5),
       circle(head, her.head),
@@ -418,7 +473,7 @@ const dips: Rig = {
       ),
       line(hip, knee, 11),
       line(knee, ankle, 7.5),
-      line(ankle, add(ankle, 5, deg(-80)), 4.5),
+      line(ankle, add(ankle, 5, legs + deg(8)), 4.5),
       ...arm(shoulder, elbowPt, hand, 7.5, 6),
       circle(hand, 3.5),
     ];

@@ -22,7 +22,7 @@ export const faq: FaqItem[] = [
   {
     q: '¿Qué skills puedo aprender?',
     a: 'Parada de manos, muscle-up, front lever, planche, back lever y pistol squat, siempre con progresiones según tu nivel.',
-    link: { label: 'Ver las etapas de cada skill', href: '#skills' },
+    link: { label: 'Ver cada skill en movimiento', href: '#skills' },
   },
   {
     q: '¿Necesito equipo?',

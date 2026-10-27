@@ -77,8 +77,6 @@ export interface Skill {
   /** Clave de su dibujo en `src/lib/skill-poses.ts`. */
   id: SkillId;
   name: string;
-  /** Las cuatro etapas, de la primera a la meta (DESIGN.md · Ruta de skills). */
-  stages: readonly [string, string, string, string];
   /** Texto del botón de WhatsApp de este skill. */
   cta: string;
   /** Lo que completa «Hola, vi tu página web y me interesa …». */
