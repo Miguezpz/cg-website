@@ -8,7 +8,7 @@
 | Coach | **César Augusto** (en redes: "Chesare Mozart") |
 | Modalidad | **Solo online** (desde 2026-10-26). Lo presencial existe solo a petición y **no se publica** (§17.1.2) |
 | Branch | ramas que salen de `main` (`main` = producción) |
-| Versión | v0.14 (borrador) |
+| Versión | v0.14.1 (borrador) |
 | Punto de partida | Proyecto desde cero. No se reutiliza código, estilos ni estructura del branch `main` |
 | Idioma del sitio | Español (`es-MX`) |
 | Hosting | **Vercel, plan Hobby (gratuito)**, en un subdominio `*.vercel.app` (sin dominio propio). Reemplaza al sitio actual en `*.netlify.app` (ver §11.1) |
@@ -76,7 +76,7 @@ Orden de secciones = orden del embudo: **atención → identificación → autor
 **Aceptación:** los enlaces llevan a su sección sin que el header la tape (`scroll-margin-top`); el menú abre y cierra con teclado y con `Esc`, actualiza `aria-expanded`, y se cierra al elegir un enlace.
 
 ### RF-02 · Hero
-- Imagen a pantalla completa (o video con *poster*, ver D-03); el nombre **«Control Gravedad»** en pequeño sobre el título, solo bajo 640 px, donde el header muestra únicamente el monograma (desde 640 px ya lo lleva el header); título orientado a beneficio (**«Calistenia a tu nivel»**, 2026-10-26); subtítulo de 1 línea con la oferta; el lema «Desafía la gravedad» queda como frase de apoyo.
+- Imagen a pantalla completa (o video con *poster*, ver D-03); el nombre **«Control Gravedad»** en pequeño sobre el título, solo bajo 640 px, donde el header muestra únicamente el monograma (desde 640 px ya lo lleva el header); título **«Desafía la gravedad»** con el beneficio en el subtítulo: «Calistenia online a tu nivel, para progresar con técnica y sin lesionarte» (decisión del usuario, 2026-10-26; reemplaza «Calistenia a tu nivel» de T3.21, que conviene comparar con GA4 cuando esté conectado); el lema «Formamos deportistas hábiles y conscientes» como frase de apoyo.
 - Solo dos acciones: CTA primario **"Escríbeme por WhatsApp"** → WhatsApp y CTA secundario "Ver la rutina" → `#servicios`. ~~Enlace "¿Necesitas algo más personalizado?" → `#a-medida`~~: retirado el 2026-10-26 (T3.21) porque competía con el CTA; esa puerta sigue en Servicios y en la FAQ.
 - 2–3 indicadores de autoridad (ej. "+X alumnos", "X años"). Hoy: «7–12 días para recibir tu rutina», «Carga & Descarga» y «Gravedad Zero» (2026-10-26, T3.22: «5 disciplinas» no convencía de nada).
 
@@ -628,3 +628,4 @@ Leyenda: 🔴 bloquea el inicio · 🟠 bloquea el diseño (T1.2) · 🟢 bloque
 | v0.13 | 2026-10-26 | T3.21: mejoras de conversión. Título del Hero con beneficio, sin el enlace a `#a-medida`; RF-02.1 «¿Para quién es?»; nuevo orden del embudo (§4, RF-01, RF-04.1, RF-07); mensaje de WhatsApp con nivel y meta (§9.1); barra de WhatsApp en móvil (RF-12) |
 | v0.13.1 | 2026-10-26 | RF-02: «Control Gravedad» en pequeño sobre el título del Hero, solo en móvil (en pantallas más anchas ya está en el header); el título sigue siendo el beneficio (decisión del usuario) |
 | v0.14 | 2026-10-26 | T3.22: mejoras sin datos del coach. Cierres con CTA en Sobre mí y Testimonios (RF-03, RF-06, RF-12, §9.1); indicador «7–12 días» (RF-02); sin credencial «por confirmar»; seguimiento primero (RF-04); FAQ sobre videos de YouTube y precio + pago juntos (RF-09); objetivos del formulario por perfil (RF-10) |
+| v0.14.1 | 2026-10-26 | RF-02: el título del Hero vuelve a «Desafía la gravedad» (decisión del usuario) y el beneficio pasa al subtítulo; el lema «Formamos deportistas hábiles y conscientes» como frase de apoyo |

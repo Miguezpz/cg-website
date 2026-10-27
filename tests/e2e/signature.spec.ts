@@ -50,7 +50,7 @@ test.describe('Momentos de firma', () => {
       )
       .toBeGreaterThan(3);
     await expect(
-      page.getByRole('heading', { level: 1, name: 'Calistenia a tu nivel' }),
+      page.getByRole('heading', { level: 1, name: 'Desafía la gravedad' }),
     ).toBeVisible();
   });
 

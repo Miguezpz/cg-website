@@ -15,12 +15,13 @@ export const hero = {
   // Bajo 640 px el header solo muestra el monograma: ahí el nombre va sobre el
   // título (desde 640 px ya lo lleva el header).
   brand: site.name,
-  // Título con el beneficio; el lema de la marca queda como frase de apoyo.
-  title: 'Calistenia a tu nivel',
+  // La frase de la marca como título; el beneficio va en el subtítulo
+  // (decisión del usuario, 2026-10-26).
+  title: 'Desafía la gravedad',
   /** Palabra del título en vino claro. */
-  accent: 'nivel',
-  lede: 'Una rutina online hecha para ti, para progresar con técnica y sin lesionarte.',
-  where: 'Desafía la gravedad',
+  accent: 'gravedad',
+  lede: 'Calistenia online a tu nivel, para progresar con técnica y sin lesionarte.',
+  where: 'Formamos deportistas hábiles y conscientes',
   primaryCta: 'Escríbeme por WhatsApp',
   note: 'precio y detalles por WhatsApp',
   secondaryCta: { label: 'Ver la rutina', href: '#servicios' },
