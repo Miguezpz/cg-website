@@ -1,42 +1,24 @@
 import type { Result } from './types';
-import before1 from '../assets/demo/result-1-before.jpg';
-import after1 from '../assets/demo/result-1-after.jpg';
-import before2 from '../assets/demo/result-2-before.jpg';
-import after2 from '../assets/demo/result-2-after.jpg';
+import gaelBefore from '../assets/results/gael-before.jpg';
+import gaelAfter from '../assets/results/gael-after.jpg';
 
-// [[PENDIENTE]] Casos reales de antes y después, con consentimiento escrito
-// de cada alumno (spec §17.2). Las fotos actuales son de stock (ver
-// src/assets/demo/CREDITOS.md) y el «antes» es la misma foto en gris.
-const demo =
-  'Fotos de stock: el «antes» es la misma foto en gris. Falta: casos reales con mismo encuadre, tiempo de entrenamiento y consentimiento escrito.';
-
+// Fotos recortadas a 4:5 para igualar el encuadre (el «antes» se acercó para
+// que el torso quede a la misma escala) y sin metadatos EXIF.
+// [[PENDIENTE]] Consentimiento escrito de Gael (spec §17.2), tiempo de
+// entrenamiento entre las dos fotos y su logro concreto (por ahora se muestra
+// lo que se ve en las fotos). Segundo atleta: lo manda el usuario después.
 export const results: Result[] = [
   {
-    demo,
-    name: 'Alumno de ejemplo',
-    duration: '6 meses',
-    achievement: 'Primer «skin the cat» en anillas',
-    before: before1,
-    after: after1,
+    demo: 'Atleta real de César. Falta: su consentimiento escrito, el tiempo de entrenamiento y su logro concreto.',
+    name: 'Gael',
+    achievement: 'Más músculo y definición',
+    before: gaelBefore,
+    after: gaelAfter,
     alt: {
       before:
-        'Foto de ejemplo en gris: atleta colgado de cabeza en anillas dentro de un gimnasio',
+        'Gael antes de entrenar: selfie sin camisa frente al espejo, complexión delgada y brazos finos',
       after:
-        'Foto de ejemplo a color: atleta colgado de cabeza en anillas dentro de un gimnasio',
-    },
-  },
-  {
-    demo,
-    name: 'Alumno de ejemplo',
-    duration: '4 meses',
-    achievement: 'Primer muscle-up completo',
-    before: before2,
-    after: after2,
-    alt: {
-      before:
-        'Foto de ejemplo en gris: hombre poniéndose magnesia en las manos en una pista al aire libre',
-      after:
-        'Foto de ejemplo a color: hombre poniéndose magnesia en las manos en una pista al aire libre',
+        'Gael después de entrenar: selfie sin camisa frente al espejo, con hombros, brazos y abdomen marcados',
     },
   },
 ];

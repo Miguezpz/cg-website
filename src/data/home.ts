@@ -136,7 +136,7 @@ export const faqSection = {
 export const resultsSection = {
   title: 'Resultados',
   mark: { word: 'Resultados', kind: 'double' },
-  intro: 'Mismo encuadre, misma luz: arrastra para comparar.',
+  intro: 'Arrastra la línea para comparar el antes y el después.',
   sliderLabel: 'Comparar antes y después',
   before: 'Antes',
   after: 'Después',

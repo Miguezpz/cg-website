@@ -24,7 +24,8 @@ export interface Result {
   /** Aviso de contenido demo: qué falta reunir para que sea real. */
   demo?: string;
   name: string;
-  duration: string;
+  /** Tiempo de entrenamiento entre las dos fotos; sin él solo se ve el nombre. */
+  duration?: string;
   achievement: string;
   before: ImageMetadata;
   after: ImageMetadata;

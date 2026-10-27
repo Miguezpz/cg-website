@@ -495,7 +495,7 @@ Cada tarea se cierra con el ciclo de §13 y su prueba e2e.
 - [ ] [[PENDIENTE]] **Permiso de uso de las reseñas de Google Maps** (Roberto González, Sofía Hernández y Asdrubal Ramirez): el coach les escribe, les muestra el recorte exacto que se publica y guarda la respuesta (captura del chat). Si alguien dice que no, se quita su reseña de `src/data/testimonials.ts`. Hasta entonces, la sección muestra el aviso «Demo».
 - [ ] [[PENDIENTE]] Historia, años de experiencia y certificaciones del coach.
 - [ ] [[PENDIENTE]] ¿Qué necesita el alumno para entrenar (barra, paralelas, ligas…)? Hoy la FAQ dice solo "Ropa cómoda, agua y toalla" (demo).
-- [ ] [[PENDIENTE]] Fotos: la del Hero en alta resolución (≥ 1600 × 2000 px) y fotos reales de antes y después (con consentimiento escrito).
+- [ ] [[PENDIENTE]] Fotos: la del Hero en alta resolución (≥ 1600 × 2000 px) y fotos reales de antes y después (con consentimiento escrito). *(2026-10-26: llegaron las de Gael, ya en el sitio; de él faltan el consentimiento, el tiempo de entrenamiento y el logro. Falta un segundo atleta.)*
 - [ ] [[PENDIENTE]] Aviso de privacidad: nombre del responsable, fecha y validación del texto.
 - [ ] [[PENDIENTE]] Formulario de salud del coach (Google Form): agregarle aviso de privacidad y casilla de consentimiento expreso, porque pide datos sensibles (LFPDPPP).
 
