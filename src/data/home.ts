@@ -1,5 +1,7 @@
 // Textos de la landing. Todo lo provisional va marcado con [[PENDIENTE]].
 
+import { site } from './site';
+
 export const nav = [
   { label: 'Sobre mí', href: '/#sobre-mi' },
   { label: 'Skills', href: '/#skills' },
@@ -10,6 +12,9 @@ export const nav = [
 ] as const;
 
 export const hero = {
+  // Bajo 640 px el header solo muestra el monograma: ahí el nombre va sobre el
+  // título (desde 640 px ya lo lleva el header).
+  brand: site.name,
   // Título con el beneficio; el lema de la marca queda como frase de apoyo.
   title: 'Calistenia a tu nivel',
   /** Palabra del título en vino claro. */

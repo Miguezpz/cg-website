@@ -9,6 +9,27 @@ test.describe('Hero (RF-02)', () => {
     ).toBeInViewport();
   });
 
+  test('el nombre de la marca se lee una sola vez arriba', async ({ page }) => {
+    await page.goto('/');
+    const inHero = page
+      .locator('section[aria-labelledby="hero-title"]')
+      .getByText('Control Gravedad', { exact: true });
+    const inHeader = page
+      .locator('[data-header]')
+      .getByText('Control Gravedad', { exact: true });
+    if (page.viewportSize()!.width < 640) {
+      // El header solo muestra el monograma: el nombre va sobre el título.
+      await expect(inHeader).toBeHidden();
+      await expect(inHero).toBeInViewport();
+      const brandBox = (await inHero.boundingBox())!;
+      const titleBox = (await page.locator('#hero-title').boundingBox())!;
+      expect(brandBox.y).toBeLessThan(titleBox.y);
+    } else {
+      await expect(inHeader).toBeVisible();
+      await expect(inHero).toBeHidden();
+    }
+  });
+
   test('la imagen del Hero lleva prioridad alta y carga inmediata', async ({
     page,
   }) => {
