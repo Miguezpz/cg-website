@@ -1,8 +1,10 @@
 ---
 import type { ImageMetadata } from 'astro';
 import { Image } from 'astro:assets';
+import Button from '../ui/Button.astro';
 import DemoNote from '../ui/DemoNote.astro';
 import SectionHeading, { type HeadingMark } from '../ui/SectionHeading.astro';
+import { waAttrs } from '../../lib/whatsapp';
 
 interface Props {
   title: string;
@@ -10,12 +12,14 @@ interface Props {
   role: string;
   story: readonly string[];
   credentials: readonly string[];
+  /** Cierre de la sección: una pregunta y el CTA general de WhatsApp. */
+  cta: { lead: string; label: string };
   photo: ImageMetadata;
   photoAlt: string;
   demo?: string;
 }
 
-const { title, mark, role, story, credentials, photo, photoAlt, demo } =
+const { title, mark, role, story, credentials, cta, photo, photoAlt, demo } =
   Astro.props;
 ---
 
@@ -57,6 +61,12 @@ const { title, mark, role, story, credentials, photo, photoAlt, demo } =
           </li>
         ))}
       </ul>
+      <div class="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-6">
+        <p class="text-h3 font-bold">{cta.lead}</p>
+        <Button icon="whatsapp" {...waAttrs({ source: 'about' })}>
+          {cta.label}
+        </Button>
+      </div>
     </div>
   </div>
 </section>

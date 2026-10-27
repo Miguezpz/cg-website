@@ -8,11 +8,14 @@ export const services: Service[] = [
     name: 'Rutina personalizada',
     audience:
       'Para quien entrena por su cuenta y quiere un plan hecho para su nivel.',
+    // El seguimiento va primero: es lo que la distingue de un PDF cualquiera.
+    // [[PENDIENTE]] Cómo es el seguimiento (¿por WhatsApp?, ¿revisa videos?).
     includes: [
+      'Seguimiento conmigo después de recibirla',
       '2 rutinas en PDF para 4 semanas: una de carga y una de descarga',
       'Ejercicios explicados a detalle, con imágenes demostrativas',
       'Glosario de términos',
-      'Entrega por correo en 7 a 12 días y seguimiento después de recibirla',
+      'Entrega por correo en 7 a 12 días',
       'Dura 30 días y se puede renovar cada mes',
     ],
     note: 'el precio te lo paso por WhatsApp',

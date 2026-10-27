@@ -25,7 +25,7 @@ export const hero = {
   note: 'precio y detalles por WhatsApp',
   secondaryCta: { label: 'Ver la rutina', href: '#servicios' },
   indicators: [
-    { value: '5', label: 'disciplinas' },
+    { value: '7–12 días', label: 'para recibir tu rutina' },
     { value: 'Carga & Descarga', label: 'método de trabajo' },
     { value: 'Gravedad Zero', label: 'evento que organizamos' },
   ],
@@ -83,9 +83,10 @@ export const about = {
     'Implementa el método Carga & Descarga',
     'Organizador de Gravedad Zero, evento de calistenia (enero 2026)',
     'Calistenia, streetlifting, movilidad, skills y entrenamiento funcional',
-    // [[PENDIENTE]] Años de experiencia y certificaciones reales.
-    'Años de experiencia y certificaciones: por confirmar',
+    // [[PENDIENTE]] Años de experiencia y certificaciones reales. No se
+    // muestra nada mientras tanto: «por confirmar» le resta autoridad.
   ],
+  cta: { lead: '¿Entrenamos juntos?', label: 'Escríbeme por WhatsApp' },
   photoAlt:
     'César Augusto, coach de Control Gravedad, con camisa negra y lentes, de pie con las manos en los bolsillos',
 } as const;
@@ -178,6 +179,7 @@ export const testimonialsSection = {
   title: 'Lo que dicen los alumnos',
   mark: { word: 'alumnos', kind: 'underline' },
   swipeHint: 'Desliza para ver más',
+  cta: { lead: '¿Quieres progresar así?', label: 'Escríbeme por WhatsApp' },
   demo: 'Reseñas reales de Google Maps. Falta: la autorización de uso de cada persona.',
 } as const;
 
@@ -194,12 +196,13 @@ export const contact = {
     goal: {
       label: 'Objetivo',
       placeholder: 'Elige una opción',
+      // Las tres primeras son los perfiles de «¿Para quién es?».
       options: [
         'Empezar desde cero',
         'Aprender skills (muscle-up, parada de manos…)',
+        'Entrenar a mi ritmo, sin horario fijo',
         'Ganar fuerza (streetlifting)',
         'Mejorar mi movilidad',
-        'Rutina personalizada',
         'Otro',
       ],
     },

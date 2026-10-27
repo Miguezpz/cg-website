@@ -35,7 +35,7 @@ test.describe('Contenido demo', () => {
     );
     const questions = faq.mainEntity.map((q: { name: string }) => q.name);
     expect(questions).not.toContain('¿Dónde son las clases presenciales?');
-    expect(questions).toContain('¿Cuánto cuesta?');
+    expect(questions).toContain('¿Cuánto cuesta y cómo pago?');
     const services = data['@graph'].filter(
       (n: { '@type': string }) => n['@type'] === 'Service',
     );

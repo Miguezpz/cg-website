@@ -9,7 +9,14 @@ interface WaInterest {
 
 /** Dónde está el enlace; se envía a GA4 como `source` (spec §9.1). */
 export type WaSource =
-  'hero' | 'audience' | 'services' | 'skills' | 'contact' | 'floating';
+  | 'hero'
+  | 'audience'
+  | 'about'
+  | 'testimonials'
+  | 'services'
+  | 'skills'
+  | 'contact'
+  | 'floating';
 
 const DEFAULT_INTEREST = 'entrenar contigo';
 

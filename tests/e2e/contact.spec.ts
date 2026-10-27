@@ -30,7 +30,7 @@ test.describe('Contacto y botón flotante (RF-10, RF-12)', () => {
     await page.goto('/');
     const floating = page.locator('[data-floating-wa]');
     await expect(floating).toHaveAttribute('data-hidden', '');
-    await page.locator('#servicio-rutina').scrollIntoViewIfNeeded();
+    await page.locator('#como-funciona-title').scrollIntoViewIfNeeded();
     await expect(floating).not.toHaveAttribute('data-hidden', '');
     await page.locator('#contacto').scrollIntoViewIfNeeded();
     await expect(floating).toHaveAttribute('data-hidden', '');
@@ -41,7 +41,7 @@ test.describe('Contacto y botón flotante (RF-10, RF-12)', () => {
   }) => {
     await page.goto('/');
     const floating = page.locator('[data-floating-wa]');
-    await page.locator('#servicio-rutina').scrollIntoViewIfNeeded();
+    await page.locator('#como-funciona-title').scrollIntoViewIfNeeded();
     await expect(floating).not.toHaveAttribute('data-hidden', '');
     const width = page.viewportSize()!.width;
     const box = (await floating.boundingBox())!;

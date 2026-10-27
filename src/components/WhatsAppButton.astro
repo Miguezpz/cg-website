@@ -23,10 +23,13 @@ const { label } = Astro.props;
 </a>
 
 <script>
-  // Se oculta mientras el CTA del Hero o la sección de contacto están en pantalla.
+  // Se oculta mientras hay otro CTA general en pantalla (Hero, cierres de
+  // Sobre mí y Testimonios) o la sección de contacto, para no duplicarlo.
   const button = document.querySelector<HTMLElement>('[data-floating-wa]');
   const targets = [
-    document.querySelector('a[data-track="whatsapp"][data-source="hero"]'),
+    ...document.querySelectorAll(
+      'main a[data-track="whatsapp"]:is([data-source="hero"], [data-source="about"], [data-source="testimonials"])',
+    ),
     document.querySelector('#contacto'),
   ].filter((el): el is HTMLElement => el instanceof HTMLElement);
 

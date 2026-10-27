@@ -8,16 +8,20 @@ export const faq: FaqItem[] = [
     demo: 'Respuesta de ejemplo. Confirmar con el coach.',
   },
   {
-    q: '¿Cuánto cuesta?',
-    a: 'Escríbeme por WhatsApp con tu nivel y lo que quieres lograr, y te comparto el precio y los detalles.',
-  },
-  {
-    q: '¿Cómo pago?',
-    a: 'Por transferencia SPEI. Te enviamos los datos por WhatsApp; al pagar, pon tu nombre y apellido en el concepto y manda la captura del comprobante.',
+    // Precio y pago van juntos para dejar sitio a «¿Por qué no solo sigo
+    // videos?» sin pasar de 8 preguntas (RF-09).
+    q: '¿Cuánto cuesta y cómo pago?',
+    a: 'Escríbeme por WhatsApp con tu nivel y lo que quieres lograr, y te comparto el precio y los detalles. Se paga por transferencia SPEI: te enviamos los datos por WhatsApp; al pagar, pon tu nombre y apellido en el concepto y manda la captura del comprobante.',
   },
   {
     q: '¿Qué recibo y cuándo?',
     a: 'Por correo, en 7 a 12 días, 2 rutinas en PDF para 4 semanas (una de carga y una de descarga), con cada ejercicio explicado e ilustrado y un glosario de términos. Después te doy seguimiento. El plan vence a los 30 días y lo puedes renovar cada mes.',
+  },
+  {
+    q: '¿Por qué no solo sigo videos de YouTube?',
+    // [[PENDIENTE]] Respuesta del coach.
+    a: 'Un video no conoce tu nivel ni te corrige. Tu rutina se arma para ti, alterna semanas de carga y de descarga para que progreses sin lesionarte, y después de recibirla te doy seguimiento.',
+    demo: 'Respuesta de ejemplo. Confirmar con el coach.',
   },
   {
     q: '¿Qué skills puedo aprender?',

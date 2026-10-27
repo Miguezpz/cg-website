@@ -76,7 +76,7 @@ test.describe('Movimiento «Peso y control» (RNF-07)', () => {
     page,
   }) => {
     await page.goto('/');
-    await page.locator('#servicio-rutina').scrollIntoViewIfNeeded();
+    await page.locator('#como-funciona-title').scrollIntoViewIfNeeded();
     await expect(page.locator('[data-floating-wa]')).toHaveAttribute(
       'data-pulse',
       '',
