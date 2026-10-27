@@ -8,7 +8,7 @@
 | Coach | **César Augusto** (en redes: "Chesare Mozart") |
 | Modalidad | **Solo online** (desde 2026-10-26). Lo presencial existe solo a petición y **no se publica** (§17.1.2) |
 | Branch | ramas que salen de `main` (`main` = producción) |
-| Versión | v0.9 (borrador) |
+| Versión | v0.13 (borrador) |
 | Punto de partida | Proyecto desde cero. No se reutiliza código, estilos ni estructura del branch `main` |
 | Idioma del sitio | Español (`es-MX`) |
 | Hosting | **Vercel, plan Hobby (gratuito)**, en un subdominio `*.vercel.app` (sin dominio propio). Reemplaza al sitio actual en `*.netlify.app` (ver §11.1) |
@@ -66,21 +66,27 @@ Construir una **landing page de conversión** para **Control Gravedad**, la escu
 
 ## 4. Requisitos funcionales
 
-Orden de secciones = orden del embudo: **atención → autoridad → oferta → prueba → facilidad → objeciones → acción**.
+Orden de secciones = orden del embudo: **atención → identificación → autoridad → deseo → prueba → oferta y facilidad → objeciones → acción** (2026-10-26, T3.21): Hero → ¿Para quién es? → Sobre el coach → Skills → Resultados → Testimonios → Servicios → Cómo funciona → FAQ → Contacto. La oferta llega cuando el visitante ya vio las pruebas, y los tres pasos quedan justo después de ella, donde decide.
 
 ### RF-01 · Header y navegación
-- Logo o nombre a la izquierda; enlaces ancla: Sobre mí · Servicios · Skills · Resultados · FAQ · Contacto; CTA "Contáctame" siempre visible.
+- Logo o nombre a la izquierda; enlaces ancla: Sobre mí · Skills · Resultados · Servicios · FAQ · Contacto (mismo orden que la página); CTA "Contáctame" siempre visible.
 - Header *sticky* que gana fondo al hacer scroll.
 - En móvil: menú hamburguesa accesible.
 
 **Aceptación:** los enlaces llevan a su sección sin que el header la tape (`scroll-margin-top`); el menú abre y cierra con teclado y con `Esc`, actualiza `aria-expanded`, y se cierra al elegir un enlace.
 
 ### RF-02 · Hero
-- Imagen a pantalla completa (o video con *poster*, ver D-03); título orientado a beneficio; subtítulo de 1 línea.
-- CTA primario **"Escríbeme por WhatsApp"** → WhatsApp; CTA secundario "Ver la rutina" → `#servicios`; enlace "¿Necesitas algo más personalizado? Escríbeme" → `#a-medida` (2026-10-26).
+- Imagen a pantalla completa (o video con *poster*, ver D-03); título orientado a beneficio (**«Calistenia a tu nivel»**, 2026-10-26); subtítulo de 1 línea con la oferta; el lema «Desafía la gravedad» queda como frase de apoyo.
+- Solo dos acciones: CTA primario **"Escríbeme por WhatsApp"** → WhatsApp y CTA secundario "Ver la rutina" → `#servicios`. ~~Enlace "¿Necesitas algo más personalizado?" → `#a-medida`~~: retirado el 2026-10-26 (T3.21) porque competía con el CTA; esa puerta sigue en Servicios y en la FAQ.
 - 2–3 indicadores de autoridad (ej. "+X alumnos", "X años").
 
 **Aceptación:** título y CTA primario visibles sin scroll a 375×667; el elemento LCP es una imagen con `fetchpriority="high"` (nunca el video).
+
+### RF-02.1 · ¿Para quién es? (`#para-quien`)
+- Justo después del Hero (2026-10-26, T3.21). Una puerta por perfil de §2, con el mismo peso: **«Nunca he entrenado calistenia»** (principiante), **«Ya entreno y quiero skills»** (intermedio) y **«No tengo horario fijo»** (ocupado). Cada una con 1–2 líneas que responden su objeción y su CTA de WhatsApp (`data-source="audience"`, `data-service="perfil-<id>"`), con un mensaje distinto.
+- Falta el dato que más pide el perfil ocupado: cuánto dura cada sesión y cuántos días por semana (`[[PENDIENTE]]`, §17.1.1).
+
+**Aceptación:** tres perfiles, cada uno con su propio mensaje de WhatsApp; la sección va antes de `#sobre-mi`.
 
 ### RF-03 · Sobre el coach (`#sobre-mi`)
 - Foto profesional, historia breve (≤ 120 palabras), al menos 3 credenciales (certificaciones, años, logros).
@@ -97,7 +103,7 @@ Orden de secciones = orden del embudo: **atención → autoridad → oferta → 
 **Aceptación:** cada CTA abre WhatsApp con un mensaje prellenado **distinto** que nombra el servicio (ver §9.1).
 
 ### RF-04.1 · Ruta de skills (`#skills`)
-- Entre Servicios y Resultados (2026-10-26). Por cada skill que enseña el coach (parada de manos, muscle-up, front lever, planche, back lever y pistol squat), **una sola figura de gis que hace el skill** mientras se ve. Los skills de posición (parada de manos, front lever, back lever, planche) llegan a ella una vez y se quedan; los de repeticiones (muscle-up, pistol squat) van en bucle. Todas las figuras van a la misma escala; parada de manos, front lever y pistol squat los hace ella, y los demás él. Sin etapas, sin meta y sin cronómetro (2026-10-26, a pedido del usuario; reemplaza la escalera de 4 etapas de T3.15–T3.17).
+- Entre Sobre el coach y Resultados (2026-10-26; antes, entre Servicios y Resultados). Por cada skill que enseña el coach (parada de manos, muscle-up, front lever, planche, back lever y pistol squat), **una sola figura de gis que hace el skill** mientras se ve. Los skills de posición (parada de manos, front lever, back lever, planche) llegan a ella una vez y se quedan; los de repeticiones (muscle-up, pistol squat) van en bucle. Todas las figuras van a la misma escala; parada de manos, front lever y pistol squat los hace ella, y los demás él. Sin etapas, sin meta y sin cronómetro (2026-10-26, a pedido del usuario; reemplaza la escalera de 4 etapas de T3.15–T3.17).
 - Pestañas con radios nativos y `:has()`: funciona sin JS. Cada skill tiene su CTA de WhatsApp, que nombra el skill (`data-source="skills"`, `data-service="skill-<id>"`).
 - Se llega desde el menú («Skills») y desde la respuesta de la FAQ «¿Qué skills puedo aprender?».
 
@@ -117,7 +123,8 @@ Orden de secciones = orden del embudo: **atención → autoridad → oferta → 
 
 ### RF-07 · Cómo funciona
 - Tres pasos: **Escríbeme** (te comparto precio y detalles) → **Recibe tu rutina** → **Entrena a tu ritmo** (2026-10-26).
-- Presenta el método **Carga & Descarga** (semana de carga: fuerza, resistencia y técnica pulcra; semana de descarga: biomecánica, movilidad, elasticidad y descanso).
+- Va justo después de Servicios (2026-10-26, T3.21).
+- Presenta el método **Carga & Descarga** empezando por el beneficio (progresar sin estancarte ni lesionarte) y luego cada semana (carga: fuerza, resistencia y técnica pulcra; descarga: biomecánica, movilidad, elasticidad y descanso). La semana 1 llega elegida; en móvil se lee solo el enfoque de la semana elegida, y en escritorio, los dos.
 
 ### RF-08 · ~~Oferta de entrada~~ (retirada el 2026-10-26)
 - La clase muestra gratis era presencial; al quedar el servicio solo online, el usuario decidió quitar la oferta de entrada (D-02). No se sustituye por otra.
@@ -140,7 +147,7 @@ Orden de secciones = orden del embudo: **atención → autoridad → oferta → 
 - Nombre, redes, zona de servicio ("Online"), © año actual (calculado en build) y enlace a `/privacidad`.
 
 ### RF-12 · Botón flotante de WhatsApp
-- Fijo abajo a la derecha, con `aria-label`, y respeta `env(safe-area-inset-bottom)` en iOS.
+- En móvil (< 768 px), **barra fija a todo el ancho abajo** con el texto «Escríbeme por WhatsApp» (2026-10-26, T3.21: un círculo sin texto tapaba contenido y atraía menos). En escritorio, círculo de 56 px abajo a la derecha. Lleva `aria-label`, respeta `env(safe-area-inset-bottom)` en iOS, y `scroll-padding-bottom` evita que tape el elemento enfocado.
 
 **Aceptación:** no tapa el CTA del Hero ni los botones del formulario a 375 px. Se oculta cuando `#contacto` está en pantalla para no duplicar el CTA.
 
@@ -237,8 +244,8 @@ type FaqItem   = { q: string; a: string };
 
 ### 9.1 WhatsApp
 - `waLink({ service, source })` → `https://wa.me/<PUBLIC_WHATSAPP_NUMBER>?text=<encodeURIComponent(msg)>`.
-- Mensaje base: *"Hola, vi tu página web y me interesa {servicio}."* Así el coach sabe que el contacto viene de la web.
-- Todos los enlaces llevan `data-track="whatsapp"` y `data-source="hero|services|skills|contact|floating"` para la analítica, y `data-service` con el servicio (`rutina`, `a-medida`, `skill-<id>` o `general`).
+- Mensaje base: *"Hola, vi tu página web y me interesa {servicio}."* Así el coach sabe que el contacto viene de la web. Termina con dos líneas para completar, *"Mi nivel: "* y *"Mi meta: "* (2026-10-26, T3.21), para que el coach pueda responder con el precio en el primer mensaje.
+- Todos los enlaces llevan `data-track="whatsapp"` y `data-source="hero|audience|services|skills|contact|floating"` para la analítica, y `data-service` con el servicio (`rutina`, `a-medida`, `skill-<id>`, `perfil-<id>` o `general`).
 
 ### 9.2 Formulario (Web3Forms)
 - `<form method="POST" action="https://api.web3forms.com/submit">` con `access_key` (pública por diseño), `redirect` → `/gracias` (fallback sin JS) y `botcheck` (honeypot).
@@ -404,6 +411,7 @@ Cada tarea se cierra con el ciclo de §13 y su prueba e2e.
 - **T4.6 · `check:content` en verde** (sin `[[PENDIENTE]]`).
 - **T4.7 · Producción en Vercel:** ~~desactivar los builds de Netlify (§11.1 paso 1)~~ (hecho), pasar `nuevo-sitio` → `main` según D-05, `PUBLIC_SITE_URL=https://controlgravedad.vercel.app` y GA4 verificado en producción. *(Publicación anticipada el 2026-10-19 a petición del usuario, con contenido provisional visible. Pendiente para cerrarla: T4.6, `PUBLIC_GA_ID` y la key de Web3Forms.)*
 - **T4.8 · Retiro del sitio de Netlify** (§11.1 pasos 2–5) — *dep.* T4.7. **Listo cuando** la URL `*.netlify.app` redirige (301) a la nueva, las bios de las redes apuntan a la nueva URL y el sitemap está enviado a Search Console. **→ M5**
+- **T3.21 · ✅ Mejoras de conversión** (2026-10-26, branch `mejoras-conversion`) — RF-01, RF-02, RF-02.1, RF-04.1, RF-07, RF-12, §4, §9.1: a pedido del usuario, tras un análisis de conversión. Título del Hero con el beneficio («Calistenia a tu nivel») y el lema como apoyo; el Hero queda con solo dos acciones; nueva sección «¿Para quién es?» con una puerta por perfil; nuevo orden del embudo (la oferta y «Cómo funciona» juntos, después de las pruebas); el mensaje de WhatsApp pide nivel y meta; Carga & Descarga empieza por el beneficio y en móvil muestra una semana a la vez; el botón flotante pasa a barra con texto en móvil. Las dominadas de gis pasan de «Entrena online» a «¿Para quién es?» para que no haya dos atletas en la misma pantalla (Servicios quedó junto a Testimonios).
 - **T4.9 · ✅ Solo online y sin precios** (2026-10-26, branch `solo-online`) — RF-02, RF-04, RF-07–RF-09, RF-11, §9.4: notas del coach (§17.1.2). Fuera clases presenciales, Talleres, la oferta de clase muestra gratis, los precios (también del JSON-LD) y toda mención de Morelia en la landing y el SEO; un solo servicio (Rutina personalizada) con el precio por WhatsApp; bloque "¿Necesitas algo más personalizado?" (`#a-medida`) enlazado desde el Hero y la FAQ; pasos de "Cómo funciona" reescritos; `og-image.jpg` regenerada. e2e: la home no muestra precios, "presencial", "Morelia" ni "clase muestra".
 
 ## 16. Definición de "terminado"
@@ -507,6 +515,7 @@ Cada tarea se cierra con el ciclo de §13 y su prueba e2e.
 - [ ] [[PENDIENTE]] Logo en SVG oficial. Mientras tanto, `src/components/ui/Logo.astro` es un redibujo vectorial del de 150 px (también en `favicon.svg` y `og-image.jpg`).
 - [ ] [[PENDIENTE]] Paleta oficial: aplicada la de la guía de marca Vol. 1 (vino `#6A1E2B`, burdeos `#4F111E`); falta que el diseñador confirme los hex exactos (D-10).
 - [ ] [[PENDIENTE]] Preguntas frecuentes que recibe por DM.
+- [ ] [[PENDIENTE]] Cuánto dura cada sesión de la rutina y cuántos días por semana pide (para el perfil «No tengo horario fijo» de RF-02.1 y la FAQ).
 
 *Resueltos:*
 - [x] Nombre del coach en el sitio: **César Augusto** (T1.1).
@@ -612,3 +621,4 @@ Leyenda: 🔴 bloquea el inicio · 🟠 bloquea el diseño (T1.2) · 🟢 bloque
 | v0.12.5 | 2026-10-26 | Foto del Hero: se desenrolla desde la barra con un zoom que se asienta, una sola vez; se quitan su balanceo, su respuesta al puntero y su parallax |
 | v0.12.6 | 2026-10-26 | César **implementa** el método Carga & Descarga, no es su creador: se corrigen la credencial («Implementa el método…») y el indicador del Hero («método de trabajo»); §2 y §17.1.1 |
 | v0.12.7 | 2026-10-26 | T3.20: biomecánica de los atletas de gis contra la técnica de cada ejercicio (pistol squat, muscle-up y fondos con el centro de masa sobre el apoyo); en los fondos las piernas van un poco atrás, no al frente (reemplaza v0.12.2) |
+| v0.13 | 2026-10-26 | T3.21: mejoras de conversión. Título del Hero con beneficio, sin el enlace a `#a-medida`; RF-02.1 «¿Para quién es?»; nuevo orden del embudo (§4, RF-01, RF-04.1, RF-07); mensaje de WhatsApp con nivel y meta (§9.1); barra de WhatsApp en móvil (RF-12) |

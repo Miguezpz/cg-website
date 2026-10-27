@@ -42,7 +42,7 @@ test('el CTA de WhatsApp genera el enlace con el mensaje prellenado', async ({
   const url = new URL(href!);
   expect(url.origin + url.pathname).toBe('https://wa.me/524433019533');
   expect(url.searchParams.get('text')).toBe(
-    'Hola, vi tu página web y me interesa entrenar contigo.',
+    'Hola, vi tu página web y me interesa entrenar contigo.\n\nMi nivel: \nMi meta: ',
   );
   await expect(cta).toHaveAttribute('data-service', 'general');
 });

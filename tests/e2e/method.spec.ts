@@ -27,6 +27,19 @@ test.describe('Contar el método', () => {
       .not.toBe(before);
   });
 
+  test('en móvil se lee solo el enfoque de la semana elegida', async ({
+    page,
+  }) => {
+    test.skip(page.viewportSize()!.width >= 768, 'en escritorio caben los dos');
+    await page.goto('/');
+    await expect(page.getByRole('radio', { name: /Semana 1/ })).toBeChecked();
+    await expect(page.locator('[data-week-info="carga"]')).toBeVisible();
+    await expect(page.locator('[data-week-info="descarga"]')).toBeHidden();
+    await page.locator('[data-method] .week').nth(1).click();
+    await expect(page.locator('[data-week-info="descarga"]')).toBeVisible();
+    await expect(page.locator('[data-week-info="carga"]')).toBeHidden();
+  });
+
   test('la cinta de disciplinas lista las 5 una sola vez para lectores', async ({
     page,
   }) => {

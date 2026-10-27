@@ -123,6 +123,7 @@ const weekLabel = Object.fromEntries(
                   type="radio"
                   name="semana"
                   value={kind}
+                  checked={i === 0}
                   class="sr-only"
                 />
                 <span class="week-visual flex flex-col">
@@ -197,6 +198,14 @@ const weekLabel = Object.fromEntries(
     [data-week-info='descarga'] {
     border-color: var(--color-chalk);
     background-color: var(--color-steel-900);
+  }
+  /* En móvil se lee solo el enfoque de la semana elegida; en escritorio caben los dos. */
+  @media (width < 48rem) {
+    [data-method]:has(input[value='carga']:checked) [data-week-info='descarga'],
+    [data-method]:has(input[value='descarga']:checked)
+      [data-week-info='carga'] {
+      display: none;
+    }
   }
 
   /* El gis se dibuja al entrar en pantalla; por defecto ya está dibujado. */

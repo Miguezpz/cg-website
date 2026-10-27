@@ -140,6 +140,8 @@
     scrollbar-color: var(--color-steel-700) var(--color-steel-950);
     /* El header sticky no tapa anclas ni el elemento enfocado. */
     scroll-padding-top: 5.5rem;
+    /* Ni el botón fijo de WhatsApp (en móvil, una barra a todo el ancho). */
+    scroll-padding-bottom: 5rem;
   }
 
   :root {

@@ -14,7 +14,9 @@ test('cada servicio abre WhatsApp con un mensaje distinto que lo nombra (RF-04)'
   );
   expect(new Set(messages).size).toBe(messages.length);
   for (const message of messages) {
-    expect(message).toMatch(/^Hola, vi tu página web y me interesa .+\.$/);
+    expect(message).toMatch(
+      /^Hola, vi tu página web y me interesa .+\.\n\nMi nivel: \nMi meta: $/,
+    );
     expect(message).not.toContain('clase muestra');
   }
 });

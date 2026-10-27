@@ -8,12 +8,20 @@ interface WaInterest {
 }
 
 /** Dónde está el enlace; se envía a GA4 como `source` (spec §9.1). */
-export type WaSource = 'hero' | 'services' | 'skills' | 'contact' | 'floating';
+export type WaSource =
+  'hero' | 'audience' | 'services' | 'skills' | 'contact' | 'floating';
 
 const DEFAULT_INTEREST = 'entrenar contigo';
 
+/** Lo que el visitante completa para que el coach le responda con el precio. */
+const QUALIFIERS = ['Mi nivel:', 'Mi meta:'];
+
 export function waMessage(service?: Pick<WaInterest, 'waInterest'>): string {
-  return `Hola, vi tu página web y me interesa ${service?.waInterest ?? DEFAULT_INTEREST}.`;
+  return [
+    `Hola, vi tu página web y me interesa ${service?.waInterest ?? DEFAULT_INTEREST}.`,
+    '',
+    ...QUALIFIERS.map((line) => `${line} `),
+  ].join('\n');
 }
 
 export function waLink({

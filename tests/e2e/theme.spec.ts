@@ -50,9 +50,7 @@ test('la palabra clave del Hero y del cierre va en vino claro', async ({
   page,
 }) => {
   await page.goto('/');
-  await expect(page.locator('#hero-title [data-accent]')).toHaveText(
-    /gravedad/i,
-  );
+  await expect(page.locator('#hero-title [data-accent]')).toHaveText(/nivel/i);
   await expect(page.locator('#hero-title [data-accent]')).toHaveCSS(
     'color',
     WINE_GLOW,

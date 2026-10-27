@@ -56,7 +56,7 @@ test('los dibujos son decorativos y el CTA nombra el skill', async ({
     'text',
   );
   expect(text).toBe(
-    'Hola, vi tu página web y me interesa aprender la planche.',
+    'Hola, vi tu página web y me interesa aprender la planche.\n\nMi nivel: \nMi meta: ',
   );
 });
 

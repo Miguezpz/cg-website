@@ -19,24 +19,11 @@ test.describe('Hero (RF-02)', () => {
     await expect(img).toHaveAttribute('alt', /.+/);
   });
 
-  test('ofrece una entrada a algo más personalizado', async ({ page }) => {
+  test('solo dos acciones: WhatsApp y ver la rutina', async ({ page }) => {
     await page.goto('/');
-    const link = page.locator(
-      'section[aria-labelledby="hero-title"] a[href="#a-medida"]',
-    );
-    await expect(link).toHaveText('Escríbeme');
-    await expect(link).toHaveAccessibleDescription(
-      '¿Necesitas algo más personalizado?',
-    );
-    // Tocar el espacio junto al enlace no navega.
-    const box = (await link.boundingBox())!;
-    await page.mouse.click(box.x + box.width + 40, box.y + box.height / 2);
-    await expect(page.locator('#a-medida')).not.toBeInViewport();
-    await link.click();
-    await expect(page.locator('#a-medida')).toBeInViewport();
-    await expect(
-      page.locator('#a-medida a[data-track="whatsapp"]'),
-    ).toHaveAttribute('data-service', 'a-medida');
+    const hero = page.locator('section[aria-labelledby="hero-title"]');
+    await expect(hero.getByRole('link')).toHaveCount(2);
+    await expect(hero.locator('a[href="#a-medida"]')).toHaveCount(0);
   });
 
   test('los CTA generales usan un solo texto', async ({ page }) => {

@@ -2,27 +2,23 @@
 
 export const nav = [
   { label: 'Sobre mí', href: '/#sobre-mi' },
-  { label: 'Servicios', href: '/#servicios' },
   { label: 'Skills', href: '/#skills' },
   { label: 'Resultados', href: '/#resultados' },
+  { label: 'Servicios', href: '/#servicios' },
   { label: 'FAQ', href: '/#faq' },
   { label: 'Contacto', href: '/#contacto' },
 ] as const;
 
 export const hero = {
-  title: 'Desafía la gravedad',
+  // Título con el beneficio; el lema de la marca queda como frase de apoyo.
+  title: 'Calistenia a tu nivel',
   /** Palabra del título en vino claro. */
-  accent: 'gravedad',
-  lede: 'Formamos deportistas hábiles y conscientes.',
-  where: 'Calistenia online',
+  accent: 'nivel',
+  lede: 'Una rutina online hecha para ti, para progresar con técnica y sin lesionarte.',
+  where: 'Desafía la gravedad',
   primaryCta: 'Escríbeme por WhatsApp',
   note: 'precio y detalles por WhatsApp',
   secondaryCta: { label: 'Ver la rutina', href: '#servicios' },
-  onlineLink: {
-    question: '¿Necesitas algo más personalizado?',
-    label: 'Escríbeme',
-    href: '#a-medida',
-  },
   indicators: [
     { value: '5', label: 'disciplinas' },
     { value: 'Carga & Descarga', label: 'método de trabajo' },
@@ -36,6 +32,37 @@ export const hero = {
   imagePosition: '50% 75%',
   imageDemo:
     'Foto en baja resolución (540 × 960 px). Falta: la misma foto de al menos 1600 × 2000 px.',
+} as const;
+
+// Una puerta por perfil (PRODUCT.md · Users), cada una con su mensaje de WhatsApp.
+export const audience = {
+  title: '¿Para quién es?',
+  mark: { word: 'quién', kind: 'underline' },
+  profiles: [
+    {
+      id: 'principiante',
+      title: 'Nunca he entrenado calistenia',
+      text: 'Tu rutina se arma para tu nivel: empiezas con progresiones básicas y cuidas tus articulaciones desde el primer día.',
+      cta: 'Empiezo desde cero',
+      waInterest: 'empezar desde cero',
+    },
+    {
+      id: 'skills',
+      title: 'Ya entreno y quiero skills',
+      text: 'Muscle-up, parada de manos, front lever o planche, con progresiones según tu nivel y técnica pulcra.',
+      cta: 'Quiero mi primer skill',
+      waInterest: 'aprender un skill',
+    },
+    {
+      // [[PENDIENTE]] Cuánto dura cada sesión y cuántos días por semana pide la
+      // rutina (lo confirma el coach); es la duda principal de este perfil.
+      id: 'a-tu-ritmo',
+      title: 'No tengo horario fijo',
+      text: 'Recibes tu rutina en PDF y entrenas donde y cuando puedas, con seguimiento después de recibirla.',
+      cta: 'Quiero entrenar a mi ritmo',
+      waInterest: 'entrenar a mi ritmo',
+    },
+  ],
 } as const;
 
 export const about = {
@@ -98,7 +125,7 @@ export const howItWorks = {
   ],
   method: {
     title: 'Carga & Descarga',
-    text: 'Las semanas se alternan. Así ganas fuerza sin acumular fatiga ni lesiones.',
+    text: 'Progresas sin estancarte ni lesionarte: las semanas de fuerza se alternan con semanas de técnica, movilidad y descanso.',
     weeks: [
       {
         kind: 'carga',

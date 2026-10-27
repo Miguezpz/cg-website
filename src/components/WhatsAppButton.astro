@@ -8,14 +8,18 @@ interface Props {
 const { label } = Astro.props;
 ---
 
+<!-- Móvil: barra a todo el ancho con texto. Escritorio: círculo abajo a la derecha. -->
 <a
   {...waAttrs({ source: 'floating' })}
   aria-label={label}
   data-floating-wa
   data-hidden
-  class="fixed right-4 bottom-[calc(1rem+env(safe-area-inset-bottom))] z-30 inline-flex size-14 items-center justify-center rounded-full bg-whatsapp text-steel-950 shadow-[0_6px_20px_rgb(0_0_0/0.45)] transition-[opacity,translate,scale] duration-200 ease-out-expo active:scale-[0.97] data-hidden:pointer-events-none data-hidden:translate-y-[150%] data-hidden:opacity-0 data-hidden:duration-150"
+  class="fixed inset-x-0 bottom-0 z-30 flex min-h-14 items-center justify-center gap-3 bg-whatsapp px-gutter pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] text-label font-semibold text-steel-950 uppercase shadow-[0_-6px_20px_rgb(0_0_0/0.45)] transition-[opacity,translate,scale] duration-200 ease-out-expo active:scale-[0.97] data-hidden:pointer-events-none data-hidden:translate-y-[150%] data-hidden:opacity-0 data-hidden:duration-150 md:inset-x-auto md:right-4 md:bottom-[calc(1rem+env(safe-area-inset-bottom))] md:size-14 md:min-h-0 md:rounded-full md:p-0 md:shadow-[0_6px_20px_rgb(0_0_0/0.45)]"
 >
-  <Icon name="whatsapp" class="size-7" />
+  <Icon name="whatsapp" class="size-6 md:size-7" />
+  <span class="md:hidden" aria-hidden="true">
+    {label}
+  </span>
 </a>
 
 <script>

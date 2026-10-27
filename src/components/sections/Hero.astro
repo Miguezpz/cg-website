@@ -4,7 +4,6 @@ import { Picture } from 'astro:assets';
 import Button from '../ui/Button.astro';
 import ChalkNote from '../ui/ChalkNote.astro';
 import DemoNote from '../ui/DemoNote.astro';
-import Icon from '../ui/Icon.astro';
 import { waAttrs } from '../../lib/whatsapp';
 
 interface Props {
@@ -16,7 +15,6 @@ interface Props {
   primaryCta: string;
   note: string;
   secondaryCta: { label: string; href: string };
-  onlineLink: { question: string; label: string; href: string };
   indicators: readonly { value: string; label: string }[];
   image: ImageMetadata;
   imageAlt: string;
@@ -33,7 +31,6 @@ const {
   primaryCta,
   note,
   secondaryCta,
-  onlineLink,
   indicators,
   image,
   imageAlt,
@@ -111,23 +108,6 @@ const titleParts =
           arrow="up"
           class="mt-1 ml-10 hidden [--chalk-delay:900ms] lg:flex"
         />
-        <!-- Solo «Escríbeme» es enlace, en su propia línea: tocar junto a él no navega. -->
-        <p class="hero-rise mt-3 pt-2.5 text-concrete-400" style="--d:360ms">
-          <span id="hero-online-question" class="block">
-            {onlineLink.question}
-          </span>
-          <a
-            href={onlineLink.href}
-            aria-describedby="hero-online-question"
-            class="group inline-flex min-h-11 items-center gap-1 font-semibold text-chalk"
-          >
-            <span class="underline">{onlineLink.label}</span>
-            <Icon
-              name="arrow"
-              class="size-4 transition-transform duration-fast group-hover:translate-x-0.5"
-            />
-          </a>
-        </p>
       </div>
 
       <figure class="hero-unroll relative -mx-gutter self-start overflow-hidden border-steel-700 sm:mx-0 sm:border-x-2 sm:border-b-2 lg:col-start-2 lg:row-span-2 lg:row-start-1">

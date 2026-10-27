@@ -31,7 +31,7 @@ El vino de la guía (`#6A1E2B`) se lee muy bien con texto claro encima (10.2:1),
 | `signal` | `#6a1e2b` | *Deep Wine Red.* Acción primaria; texto `chalk` encima (10.2:1). Foco sobre concreto (8:1) |
 | `signal-strong` | `#4f111e` | *Deep Burgundy.* Hover/active de la acción primaria (texto `chalk`, 13.1:1) |
 | `signal-glow` | `#e0707f` | Vino claro para dibujar sobre acero: foco, cursor, checkbox, enlace en hover, canto del CTA (6.2:1 sobre `steel-950`, 5.7:1 sobre `steel-900`) |
-| `whatsapp` | `#25d366` | **Solo** el botón flotante de WhatsApp (texto `steel-950`, 9.7:1) |
+| `whatsapp` | `#25d366` | **Solo** el botón flotante de WhatsApp: barra en móvil, círculo en escritorio (texto `steel-950`, 9.7:1) |
 | `error-on-dark` / `error-on-light` | `#ffa057` / `#b42318` | Mensajes de error (9.5:1 / 5.9:1). El de oscuro es naranja para no confundirse con `signal-glow` |
 
 Tailwind solo conoce estos colores (`--color-*: initial`), así que un color suelto no compila.
@@ -69,7 +69,8 @@ Las cifras de precios usan `tabular-nums`.
 
 - **Botón primario:** fondo `signal`, texto `chalk`, `text-label`, alto mínimo 52 px, ícono de WhatsApp a la izquierda, canto interior de 1 px en `signal-glow` (`shadow-glow`). Hover: `signal-strong` (el canto no cambia: `box-shadow` no se anima). Active: `scale(0.97)` en 160 ms. Foco: contorno `signal-glow` de 2 px con separación de 3 px. Disabled: 50 % de opacidad y `cursor: not-allowed`.
 - **Botón secundario:** sin relleno, canto de 2 px en `chalk`, texto `chalk`. Hover: relleno `chalk` y texto `steel-950`.
-- **Botón flotante de WhatsApp:** círculo de 56 px en `whatsapp`, abajo a la derecha, respetando `safe-area-inset-bottom`.
+- **Botón flotante de WhatsApp:** en móvil (< 768 px), barra a todo el ancho pegada abajo, en `whatsapp`, con ícono y «Escríbeme por WhatsApp» en `text-label`; en escritorio, círculo de 56 px abajo a la derecha. Respeta `safe-area-inset-bottom` y se oculta con el CTA del Hero o Contacto en pantalla (2026-10-26, spec T3.21).
+- **Perfil (¿Para quién es?):** tres columnas sobre una raya `steel-700`, como los pasos de «Cómo funciona», no tarjetas: la frase del visitante entre comillas latinas («…») en `text-h3`, 1–2 líneas en `concrete-400` y un botón secundario pequeño con WhatsApp alineado abajo.
 - **Enlace:** subrayado de 1 px separado 0.2em; hover en `chalk` (en el formulario, `signal-glow`).
 - **Servicio:** bloque sobre la barra, **no** tarjetas iguales: a la izquierda nombre, para quién es y qué incluye; a la derecha el CTA, una anotación de gis y el recuadro «¿Necesitas algo más personalizado?» (`steel-900` con canto `steel-700`). Sin precios publicados (spec §17.1.2).
 
@@ -128,7 +129,7 @@ Las cifras de precios usan `tabular-nums`.
 - **Cómo se mueven:** cada repetición avanza **con el scroll** mientras el atleta cruza la pantalla; si el scroll se detiene, el atleta también. No hay bucles ni movimiento propio. Solo se calcula mientras está en pantalla (IntersectionObserver + `requestAnimationFrame`). Excepción: en páginas sin scroll (404) el movimiento ocurre **una sola vez** cuando el atleta se ve al 60 %.
 - **Mecánica:** poses calculadas (cinemática inversa en las dominadas: las manos nunca se despegan de la barra). La misma función dibuja la pose fija en el build, así que sin JS o con movimiento reducido se ve el atleta quieto en su pose más expresiva.
 - **Dónde:** pocos y **nunca dos en la misma pantalla** (lo verifica una prueba e2e a 375 y 1280 px). Con la altura actual de la landing caben tres, a unos 2000 px uno de otro, siempre junto a un título y nunca junto a un CTA, el formulario o el Hero:
-  - **Dominadas** (él, de frente, 3 repeticiones): junto a «Entrena online».
+  - **Dominadas** (él, de frente, 3 repeticiones): junto a «¿Para quién es?» (2026-10-26; antes junto a «Entrena online», que quedó a menos de una pantalla de los fondos al cambiar el orden del embudo).
   - **Fondos en paralelas** (ella, de perfil, 3 repeticiones, con la técnica correcta: arriba, brazos bloqueados, hombros lejos de las orejas y el cuerpo apenas inclinado al frente; al bajar, los codos van hacia atrás, el tronco se inclina hasta unos 44° y las piernas, estiradas, van un poco atrás, hasta que los hombros pasan por debajo de los codos. Qué tan adelante van los hombros se calcula para que el centro de masa quede sobre las manos; 2026-10-26, reemplaza las piernas al frente de v0.12.2): junto a «Lo que dicen los alumnos». En ella, el glúteo es una curva suave de la espalda baja a la parte de atrás del muslo, nunca un círculo pegado a la cadera (también en la pistol squat de /gracias y en la ruta de skills). Va con sus proporciones: empieza a 1/4 del tronco sobre la cadera, termina a 1/3 del muslo y sobresale unas 3 unidades del tronco.
   - **Muscle-up en anillas** (él, de perfil, 2 repeticiones): en **carbón** (`tone="charcoal"`), colgado bajo «Preguntas frecuentes», que es una sección de concreto. Sigue la biomecánica del muscle-up estricto: agarre falso (la anilla en la muñeca, la mano doblada encima); jalón lento hasta el pecho, inclinado ~28° atrás y en hueco; transición corta y rápida en la que las anillas se quedan pegadas al pecho y los **codos siguen bajando** (los hombros nunca pasan por delante de la anilla; el codo siempre dobla hacia el mismo lado de la línea muñeca → hombro, así que gira con el cuerpo alrededor de la anilla en vez de voltearse hacia la espalda, al subir y al bajar), y empuje continuo hasta el bloqueo con el cuerpo vertical. Los brazos que pasan por encima del torso llevan un corte del color del fondo (como gis borrado) para que se lean; lo mismo en los fondos. Las anillas cuelgan de su correa y **se mueven**: la correa apunta siempre al centro de masa del atleta (calculado por segmentos, antropometría de Dempster), como un péndulo en equilibrio.
   - En escritorio van arriba a la derecha del título (el muscle-up, en el espacio bajo el título); en móvil, al lado del título o del texto de entrada.
@@ -150,7 +151,7 @@ Las cifras de precios usan `tabular-nums`.
 
 - Ciclo Carga & Descarga: las marcas de gis se dibujan (`duration-draw` 900 ms) y después se trazan las barras de cada semana.
 - Comparador: un vaivén de 1.6 s la primera vez que se ve, que solo mueve la imagen (`--pos` registrada con `@property`), no el valor del control. Se cancela si el usuario lo toca.
-- Botón flotante: dos ondas la primera vez que aparece, y se detiene.
+- Botón flotante: dos ondas la primera vez que aparece, y se detiene (solo el círculo de escritorio).
 
 **Microinteracciones:**
 

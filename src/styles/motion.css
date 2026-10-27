@@ -264,15 +264,18 @@
     animation: rise-in 320ms var(--ease-out-expo) both;
   }
 
-  /* Botón flotante: dos ondas la primera vez que aparece, y se detiene. */
-  [data-floating-wa][data-pulse]::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    border: 2px solid var(--color-whatsapp);
-    animation: ping 1100ms var(--ease-out-expo) 2;
-    pointer-events: none;
+  /* Botón flotante: dos ondas la primera vez que aparece, y se detiene.
+     Solo el círculo de escritorio; la barra de móvil ya ocupa todo el ancho. */
+  @media (width >= 48rem) {
+    [data-floating-wa][data-pulse]::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      border: 2px solid var(--color-whatsapp);
+      animation: ping 1100ms var(--ease-out-expo) 2;
+      pointer-events: none;
+    }
   }
 
   /* Mensaje del formulario (éxito o error). */

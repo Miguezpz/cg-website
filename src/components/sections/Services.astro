@@ -1,6 +1,5 @@
 ---
 import type { Service } from '../../data/types';
-import Athlete from '../ui/Athlete.astro';
 import Button from '../ui/Button.astro';
 import ChalkNote from '../ui/ChalkNote.astro';
 import DemoNote from '../ui/DemoNote.astro';
@@ -21,16 +20,9 @@ const { title, mark, intro, custom, services } = Astro.props;
 ---
 
 <section id="servicios" aria-labelledby="servicios-title" class="py-section">
-  <div class="relative mx-auto w-full max-w-content px-gutter">
+  <div class="mx-auto w-full max-w-content px-gutter">
     <SectionHeading id="servicios-title" title={title} mark={mark} />
-    <!-- Móvil: el atleta junto a la entrada. Escritorio: cuelga arriba a la derecha. -->
-    <div class="mt-4 flex items-start gap-4 md:block">
-      <p class="max-w-prose flex-1 text-concrete-400 md:pr-40">{intro}</p>
-      <Athlete
-        exercise="pullup"
-        class="-mt-1 h-40 w-auto shrink-0 md:absolute md:-top-12 md:right-gutter md:mt-0 md:h-56"
-      />
-    </div>
+    <p class="mt-4 max-w-prose text-concrete-400">{intro}</p>
 
     <div class="mt-12 space-y-16 lg:space-y-20">
       {services.map((service, i) => (

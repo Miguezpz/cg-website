@@ -1,0 +1,58 @@
+---
+import Athlete from '../ui/Athlete.astro';
+import Button from '../ui/Button.astro';
+import SectionHeading, { type HeadingMark } from '../ui/SectionHeading.astro';
+import { waAttrs } from '../../lib/whatsapp';
+
+interface Props {
+  title: string;
+  mark?: HeadingMark;
+  /** Una puerta por perfil (PRODUCT.md · Users), todas con el mismo peso. */
+  profiles: readonly {
+    id: string;
+    title: string;
+    text: string;
+    cta: string;
+    waInterest: string;
+  }[];
+}
+
+const { title, mark, profiles } = Astro.props;
+---
+
+<section id="para-quien" aria-labelledby="para-quien-title" class="py-section">
+  <div class="relative mx-auto w-full max-w-content px-gutter">
+    <!-- Móvil: el atleta junto al título. Escritorio: cuelga arriba a la derecha. -->
+    <div class="flex items-start justify-between gap-4 md:block">
+      <SectionHeading id="para-quien-title" title={title} mark={mark} />
+      <Athlete
+        exercise="pullup"
+        class="-mt-4 h-32 w-auto shrink-0 md:absolute md:-top-16 md:right-gutter md:mt-0 md:h-44"
+      />
+    </div>
+
+    <ul class="mt-10 grid gap-10 md:grid-cols-3 md:gap-6">
+      {profiles.map((profile) => (
+        <li class="rise flex flex-col border-t-2 border-steel-700 pt-5">
+          <h3 class="text-h3 font-bold">«{profile.title}»</h3>
+          <p class="mt-2 mb-6 max-w-[34ch] text-concrete-400">{profile.text}</p>
+          <Button
+            variant="secondary"
+            size="sm"
+            icon="whatsapp"
+            class="mt-auto self-start"
+            {...waAttrs({
+              service: {
+                id: `perfil-${profile.id}`,
+                waInterest: profile.waInterest,
+              },
+              source: 'audience',
+            })}
+          >
+            {profile.cta}
+          </Button>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>

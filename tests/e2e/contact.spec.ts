@@ -35,6 +35,23 @@ test.describe('Contacto y botón flotante (RF-10, RF-12)', () => {
     await page.locator('#contacto').scrollIntoViewIfNeeded();
     await expect(floating).toHaveAttribute('data-hidden', '');
   });
+
+  test('en móvil es una barra con texto; en escritorio, un círculo', async ({
+    page,
+  }) => {
+    await page.goto('/');
+    const floating = page.locator('[data-floating-wa]');
+    await page.locator('#servicio-rutina').scrollIntoViewIfNeeded();
+    await expect(floating).not.toHaveAttribute('data-hidden', '');
+    const width = page.viewportSize()!.width;
+    const box = (await floating.boundingBox())!;
+    if (width < 768) {
+      await expect(floating).toContainText('Escríbeme por WhatsApp');
+      expect(box.width).toBe(width);
+    } else {
+      expect(box.width).toBe(56);
+    }
+  });
 });
 
 test.describe('Sin JavaScript (RNF-08)', () => {
