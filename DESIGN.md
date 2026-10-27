@@ -15,7 +15,7 @@ La página está hecha del material del entrenamiento, no de metáforas: **acero
 Estrategia **contenida**: neutros de acero y concreto más un solo acento, el **vino** de la marca, en **dos niveles** (2026-10-26, guía de marca: «intense wine red glows… for highlights and depth on dark surfaces»):
 
 1. **Vino relleno (`signal`) = acción.** Solo botones, selección y el foco sobre concreto. Ningún otro elemento lleva un relleno vino, para que el CTA siga siendo lo único vino y sólido de la pantalla.
-2. **Vino claro y halo = significado y profundidad.** `signal-glow` en trazos finos y cifras que **significan** algo (las semanas de carga, los números de los pasos, el progreso de scroll y la sección activa del menú), y un halo vino difuso (`glow-depth`, `shadow-depth`) detrás de los dos momentos clave: la foto del Hero y el cierre «Empieza hoy». En esos mismos dos momentos, **una** palabra del título va en vino claro: «gravedad» (Hero, prop `accent`) y «hoy» (cierre, `mark.accent`); su trazo de gis sigue en gis. Nunca en texto de lectura ni en más títulos.
+2. **Vino claro = significado.** `signal-glow` en trazos finos y cifras que **significan** algo (las semanas de carga, los números de los pasos, el progreso de scroll y la sección activa del menú). En los dos momentos clave, el Hero y el cierre «Empieza hoy», **una** palabra del título va en vino claro: «gravedad» (Hero, prop `accent`) y «hoy» (cierre, `mark.accent`); su trazo de gis sigue en gis. Nunca en texto de lectura ni en más títulos.
 
 El vino de la guía (`#6A1E2B`) se lee muy bien con texto claro encima (10.2:1), pero casi no se separa del acero (1.68:1). Por eso tiene un tono claro, `signal-glow`, para todo lo que se dibuja **directamente sobre el acero** (foco, cursor de texto, checkbox, enlaces en hover y el canto del CTA). Sobre concreto, el foco usa el vino oscuro (utilidad `on-light`, 8:1). El negro absoluto y el blanco puro de la guía se interpretan como `steel-950` y `chalk`: en OLED se ven igual y evitan el corrido del negro puro al hacer scroll.
 
@@ -30,7 +30,7 @@ El vino de la guía (`#6A1E2B`) se lee muy bien con texto claro encima (10.2:1),
 | `chalk` | `#f3f2ee` | Texto principal sobre oscuro (17.1:1) y trazos de gis |
 | `signal` | `#6a1e2b` | *Deep Wine Red.* Acción primaria; texto `chalk` encima (10.2:1). Foco sobre concreto (8:1) |
 | `signal-strong` | `#4f111e` | *Deep Burgundy.* Hover/active de la acción primaria (texto `chalk`, 13.1:1) |
-| `signal-glow` | `#e0707f` | Vino claro para dibujar sobre acero: foco, cursor, checkbox, enlace en hover, canto y halo del CTA (6.2:1 sobre `steel-950`, 5.7:1 sobre `steel-900`) |
+| `signal-glow` | `#e0707f` | Vino claro para dibujar sobre acero: foco, cursor, checkbox, enlace en hover, canto del CTA (6.2:1 sobre `steel-950`, 5.7:1 sobre `steel-900`) |
 | `whatsapp` | `#25d366` | **Solo** el botón flotante de WhatsApp (texto `steel-950`, 9.7:1) |
 | `error-on-dark` / `error-on-light` | `#ffa057` / `#b42318` | Mensajes de error (9.5:1 / 5.9:1). El de oscuro es naranja para no confundirse con `signal-glow` |
 
@@ -58,7 +58,7 @@ Las cifras de precios usan `tabular-nums`.
 ## Material y forma
 
 - **Esquinas rectas** (`radius-none`). Los campos de formulario llevan `radius-input` (2 px).
-- **Cantos de metal:** bordes de 1–2 px en `steel-700`. No hay sombras decorativas; la profundidad sale del contraste entre `steel-950` y `steel-900`. **Excepciones, todas en vino** (guía de marca, «intense wine red glows»): el resplandor del botón primario (`shadow-glow`), que además le da al CTA el canto de 3:1 que el vino solo no tiene sobre el acero; el halo de la foto del Hero (`shadow-depth`), y el halo radial detrás del cierre de Contacto (utilidad `glow-depth`).
+- **Cantos de metal:** bordes de 1–2 px en `steel-700`. No hay sombras decorativas; la profundidad sale del contraste entre `steel-950` y `steel-900`. Tampoco hay resplandores ni gradientes: el acero, el concreto y el gis son mate y de canto duro, y un halo difuso los vuelve genéricos. **Única excepción:** el canto interior vino de 1 px del botón primario (`shadow-glow`), que le da al CTA el contraste de 3:1 que el vino solo no tiene sobre el acero.
 - **Barra:** elemento horizontal de acero (2–6 px de alto) que cruza el ancho completo. Es el separador del sistema y el soporte del calendario Carga & Descarga.
 - **Gis:** trazos en SVG con un filtro de grano (`feTurbulence`) en color `chalk`. Sirven para subrayar y contar (marcas de 4+1). Su opacidad imita el polvo y su trazo es irregular, nunca un trazo vectorial limpio.
 - **Fotos:** con tratamiento real, sin duotono neón. Mientras no haya fotos, cada hueco tiene la proporción final, fondo `steel-900`, un canto `steel-700` y una etiqueta visible `[[PENDIENTE]]`.
@@ -67,7 +67,7 @@ Las cifras de precios usan `tabular-nums`.
 
 ## Componentes
 
-- **Botón primario:** fondo `signal`, texto `chalk`, `text-label`, alto mínimo 52 px, ícono de WhatsApp a la izquierda, canto interior de 1 px y halo en `signal-glow` (`shadow-glow`). Hover: `signal-strong` (el halo no cambia: `box-shadow` no se anima). Active: `scale(0.97)` en 160 ms. Foco: contorno `signal-glow` de 2 px con separación de 3 px. Disabled: 50 % de opacidad y `cursor: not-allowed`.
+- **Botón primario:** fondo `signal`, texto `chalk`, `text-label`, alto mínimo 52 px, ícono de WhatsApp a la izquierda, canto interior de 1 px en `signal-glow` (`shadow-glow`). Hover: `signal-strong` (el canto no cambia: `box-shadow` no se anima). Active: `scale(0.97)` en 160 ms. Foco: contorno `signal-glow` de 2 px con separación de 3 px. Disabled: 50 % de opacidad y `cursor: not-allowed`.
 - **Botón secundario:** sin relleno, canto de 2 px en `chalk`, texto `chalk`. Hover: relleno `chalk` y texto `steel-950`.
 - **Botón flotante de WhatsApp:** círculo de 56 px en `whatsapp`, abajo a la derecha, respetando `safe-area-inset-bottom`.
 - **Enlace:** subrayado de 1 px separado 0.2em; hover en `chalk` (en el formulario, `signal-glow`).
