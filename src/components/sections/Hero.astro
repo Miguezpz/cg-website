@@ -111,20 +111,23 @@ const titleParts =
           arrow="up"
           class="mt-1 ml-10 hidden [--chalk-delay:900ms] lg:flex"
         />
-        <a
-          href={onlineLink.href}
-          class="hero-rise group mt-3 inline-block py-2.5 text-concrete-400 transition-colors duration-fast hover:text-chalk"
-          style="--d:360ms"
-        >
-          {onlineLink.question}{' '}
-          <span class="font-semibold whitespace-nowrap text-chalk underline">
-            {onlineLink.label}
+        <!-- Solo «Escríbeme» es enlace, en su propia línea: tocar junto a él no navega. -->
+        <p class="hero-rise mt-3 pt-2.5 text-concrete-400" style="--d:360ms">
+          <span id="hero-online-question" class="block">
+            {onlineLink.question}
+          </span>
+          <a
+            href={onlineLink.href}
+            aria-describedby="hero-online-question"
+            class="group inline-flex min-h-11 items-center gap-1 font-semibold text-chalk"
+          >
+            <span class="underline">{onlineLink.label}</span>
             <Icon
               name="arrow"
-              class="ml-1 inline size-4 align-[-0.15em] transition-transform duration-fast group-hover:translate-x-0.5"
+              class="size-4 transition-transform duration-fast group-hover:translate-x-0.5"
             />
-          </span>
-        </a>
+          </a>
+        </p>
       </div>
 
       <figure class="hero-unroll relative -mx-gutter self-start overflow-hidden border-steel-700 sm:mx-0 sm:border-x-2 sm:border-b-2 lg:col-start-2 lg:row-span-2 lg:row-start-1">

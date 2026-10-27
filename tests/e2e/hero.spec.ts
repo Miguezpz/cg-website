@@ -24,7 +24,14 @@ test.describe('Hero (RF-02)', () => {
     const link = page.locator(
       'section[aria-labelledby="hero-title"] a[href="#a-medida"]',
     );
-    await expect(link).toContainText('¿Necesitas algo más personalizado?');
+    await expect(link).toHaveText('Escríbeme');
+    await expect(link).toHaveAccessibleDescription(
+      '¿Necesitas algo más personalizado?',
+    );
+    // Tocar el espacio junto al enlace no navega.
+    const box = (await link.boundingBox())!;
+    await page.mouse.click(box.x + box.width + 40, box.y + box.height / 2);
+    await expect(page.locator('#a-medida')).not.toBeInViewport();
     await link.click();
     await expect(page.locator('#a-medida')).toBeInViewport();
     await expect(
