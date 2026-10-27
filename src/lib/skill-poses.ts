@@ -8,10 +8,12 @@
 // igual la inclinación del tronco, para que el centro de masa quede sobre el
 // pie de apoyo.
 //
-// Los skills de posición (parada de manos, levers y plancha) llegan a ella
-// una vez y se quedan; los de repeticiones (muscle-up y pistol squat) se
-// repiten en bucle. La pose final es la que se dibuja fija (sin JS o con
-// movimiento reducido). Unos los hace él y otros ella.
+// Los skills de posición (parada de manos, levers y plancha) empiezan como en
+// la realidad, llegan a ella una vez y la sostienen con micro-ajustes; los de
+// repeticiones (muscle-up y pistol squat) se repiten en bucle, con la vuelta a
+// su propio ritmo. La pose final es la que se dibuja fija (sin JS o con
+// movimiento reducido). Unos los hace él y otros ella. Cada cuadro respeta los
+// límites del cuerpo: lo verifica tests/e2e/biomechanics.spec.ts.
 
 import {
   add,
