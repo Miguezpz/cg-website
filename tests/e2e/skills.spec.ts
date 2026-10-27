@@ -157,3 +157,18 @@ test.describe('con movimiento reducido', () => {
     expect(await pose(page, 'handstand')).toBe(still);
   });
 });
+
+test('a 375×667, pestañas, muscle-up y CTA caben sobre la barra de WhatsApp', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 375, height: 667 });
+  await page.goto('/');
+  await page.locator('#skills .skill-tab', { hasText: 'Muscle-up' }).click();
+  const top = await page
+    .locator('#skills fieldset')
+    .evaluate((el) => el.getBoundingClientRect().top);
+  const cta = page.locator('[data-skill="muscleup"] a[data-track="whatsapp"]');
+  const bottom = await cta.evaluate((el) => el.getBoundingClientRect().bottom);
+  // Header de 64 px arriba y barra de WhatsApp (~70 px) abajo.
+  expect(bottom - top).toBeLessThanOrEqual(667 - 64 - 70);
+});

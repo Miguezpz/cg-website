@@ -57,7 +57,7 @@ const { title, mark, intro, legend, skills } = Astro.props;
       const motion = skillMotions[skill.id];
       const [, , width, height] = motion.viewBox.split(' ');
       return (
-        <div class="skill-panel mt-10" data-skill={skill.id}>
+        <div class="skill-panel mt-6 lg:mt-8" data-skill={skill.id}>
           <h3 class="sr-only">{skill.name}</h3>
           <!-- En el piso, la figura se apoya en un escalón de acero. -->
           <div class="max-w-xl">
@@ -109,7 +109,7 @@ const { title, mark, intro, legend, skills } = Astro.props;
             variant="secondary"
             size="sm"
             icon="whatsapp"
-            class="mt-10"
+            class="mt-6 lg:mt-8"
             {...waAttrs({
               service: {
                 id: `skill-${skill.id}`,
@@ -128,17 +128,24 @@ const { title, mark, intro, legend, skills } = Astro.props;
 
 <style>
   /* Misma escala para todas las figuras (unidades del dibujo → rem): un
-     cuerpo mide lo mismo en cualquier skill. Si no cabe, se reduce. */
+     cuerpo mide lo mismo en cualquier skill. Si no cabe, se reduce.
+     La escala deja ver en una pantalla las pestañas, la figura más alta (el
+     muscle-up) y su CTA: en móvil, también con la barra de WhatsApp abajo. */
   .skill-figure {
-    --u: 0.09rem;
+    --u: 0.065rem;
     width: calc(var(--w) * var(--u));
     max-width: 100%;
     height: auto;
     aspect-ratio: var(--w) / var(--h);
   }
+  @media (min-width: 48rem) {
+    .skill-figure {
+      --u: 0.075rem;
+    }
+  }
   @media (min-width: 64rem) {
     .skill-figure {
-      --u: 0.1rem;
+      --u: 0.08rem;
     }
   }
 
