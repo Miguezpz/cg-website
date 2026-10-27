@@ -54,22 +54,29 @@ test.describe('Momentos de firma', () => {
     ).toBeVisible();
   });
 
-  test('la foto colgante se balancea con el puntero', async ({ page }) => {
+  test('la foto del Hero se desenrolla una vez y queda quieta', async ({
+    page,
+  }) => {
     await page.goto('/');
-    test.skip(
-      page.viewportSize()!.width < 1024 ||
-        (await page.evaluate(() => !matchMedia('(pointer: fine)').matches)),
-      'Solo en escritorio con puntero fino',
+    const figure = page.locator('section[aria-labelledby="hero-title"] figure');
+    const names = await figure.evaluate((el) =>
+      el
+        .getAnimations({ subtree: true })
+        .map((a) => (a as CSSAnimation).animationName),
     );
-    const hero = page.locator('section[aria-labelledby="hero-title"]');
-    const box = (await hero.boundingBox())!;
-    await page.mouse.move(box.x + 20, box.y + 200);
-    await page.mouse.move(box.x + box.width - 20, box.y + 300, { steps: 10 });
-    await expect
-      .poll(() =>
-        page.locator('.hero-hang').evaluate((el) => el.style.transform),
-      )
-      .toMatch(/rotate\(-\d/);
+    expect(names).toEqual(expect.arrayContaining(['unroll', 'settle']));
+    await figure.evaluate((el) =>
+      Promise.all(el.getAnimations({ subtree: true }).map((a) => a.finished)),
+    );
+    // Termina sin recorte (Chromium escribe «inset(0px 0px 0%)»).
+    expect(
+      await figure.evaluate((el) => getComputedStyle(el).clipPath),
+    ).toMatch(/^inset\(0px( 0px 0%)?\)$/);
+    // Ya no responde al puntero.
+    const box = (await figure.boundingBox())!;
+    await page.mouse.move(box.x - 200, box.y + 100);
+    await page.mouse.move(box.x + box.width + 20, box.y + 200, { steps: 6 });
+    expect(await figure.evaluate((el) => el.style.transform)).toBe('');
   });
 
   test.describe('con movimiento reducido', () => {

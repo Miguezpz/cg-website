@@ -92,7 +92,7 @@
   --duration-nav: 300ms;
   --duration-enter: 520ms;
   --duration-draw: 900ms;
-  --duration-swing: 1600ms;
+  --duration-unroll: 1200ms;
 
   /* Ícono de WhatsApp que «suena» al pasar el puntero (botón primario). */
   --animate-ring: ring 520ms var(--ease-out-expo);

@@ -55,12 +55,12 @@
       both;
   }
 
-  /* La foto cuelga de la barra solo cuando está justo debajo de ella. */
-  @media (min-width: 64rem) {
-    .hero-hang {
-      transform-origin: 50% 0;
-      animation: hang var(--duration-swing) 250ms both;
-    }
+  /* La foto se desenrolla desde la barra y se asienta (zoom de 1.12 a 1). */
+  .hero-unroll {
+    animation: unroll var(--duration-unroll) var(--ease-out-expo) 250ms both;
+  }
+  .hero-settle {
+    animation: settle var(--duration-unroll) var(--ease-out-expo) 250ms both;
   }
 
   /* 2. Ligado al scroll. ---------------------------------------------------- */
@@ -115,14 +115,7 @@
       animation-range: cover 0% cover 100%;
     }
 
-    /* Hero: al salir de pantalla, la foto baja y el título se eleva. */
-    .hero-parallax {
-      animation-name: parallax-exit;
-      animation-timing-function: linear;
-      animation-fill-mode: both;
-      animation-timeline: view();
-      animation-range: exit 0% exit 100%;
-    }
+    /* Hero: al salir de pantalla, el título se eleva. */
     .hero-lift {
       animation-name: lift;
       animation-timing-function: linear;
@@ -316,29 +309,6 @@
   }
 }
 
-/* Oscilación amortiguada de algo que cuelga y se asienta. */
-@keyframes hang {
-  0% {
-    rotate: 2deg;
-    animation-timing-function: ease-in-out;
-  }
-  30% {
-    rotate: -1.2deg;
-    animation-timing-function: ease-in-out;
-  }
-  55% {
-    rotate: 0.6deg;
-    animation-timing-function: ease-in-out;
-  }
-  78% {
-    rotate: -0.25deg;
-    animation-timing-function: ease-in-out;
-  }
-  100% {
-    rotate: 0deg;
-  }
-}
-
 @keyframes ledge {
   from {
     translate: 0 100%;
@@ -379,14 +349,23 @@
   }
 }
 
-@keyframes parallax-exit {
+/* Arranca con el tercio de arriba (las manos en la barra) ya visible: la foto
+   nunca está oculta del todo, para no retrasar el LCP. */
+@keyframes unroll {
   from {
-    scale: 1.1;
-    translate: 0 0;
+    clip-path: inset(0 0 70% 0);
   }
   to {
-    scale: 1.1;
-    translate: 0 4.5%;
+    clip-path: inset(0);
+  }
+}
+
+@keyframes settle {
+  from {
+    scale: 1.12;
+  }
+  to {
+    scale: 1;
   }
 }
 

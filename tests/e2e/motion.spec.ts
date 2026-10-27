@@ -11,9 +11,7 @@ test.describe('Movimiento «Peso y control» (RNF-07)', () => {
     const names = await page.evaluate(() =>
       document.getAnimations().map((a) => (a as CSSAnimation).animationName),
     );
-    expect(names).toEqual(
-      expect.arrayContaining(['bar-draw', 'rise-in']),
-    );
+    expect(names).toEqual(expect.arrayContaining(['bar-draw', 'rise-in']));
     // Nada en bucle infinito.
     const infinite = await page.evaluate(
       () =>

@@ -608,3 +608,4 @@ Leyenda: 🔴 bloquea el inicio · 🟠 bloquea el diseño (T1.2) · 🟢 bloque
 | v0.12.2 | 2026-10-26 | T3.13: la atleta de los fondos lleva las piernas estiradas al frente en diagonal (técnica correcta); muscle-up de la ruta de skills fluido; glúteo con las proporciones de ella |
 | v0.12.3 | 2026-10-26 | Se quitan las marcas de agarre de gis sobre la barra del Hero y su polvo de magnesia |
 | v0.12.4 | 2026-10-26 | Sin resplandores: se quitan los halos vino de la foto del Hero y del cierre de Contacto, y el halo del CTA primario (queda su canto de 1 px). Ajusta T3.10/T3.12 |
+| v0.12.5 | 2026-10-26 | Foto del Hero: se desenrolla desde la barra con un zoom que se asienta, una sola vez; se quitan su balanceo, su respuesta al puntero y su parallax |

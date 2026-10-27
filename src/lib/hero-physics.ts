@@ -1,8 +1,6 @@
-// Momentos de firma del Hero (DESIGN.md · Movimiento), solo con puntero fino y
-// sin movimiento reducido:
-// - El título «siente la gravedad»: las letras cerca del puntero se hunden y
-//   vuelven con un resorte.
-// - La foto que cuelga de la barra se balancea según el puntero, como un péndulo.
+// Firma del Hero (DESIGN.md · Movimiento), solo con puntero fino y sin
+// movimiento reducido: el título «siente la gravedad»; las letras cerca del
+// puntero se hunden y vuelven con un resorte.
 
 interface Spring {
   x: number;
@@ -26,12 +24,6 @@ export function initHeroPhysics(): void {
 
   const title = document.getElementById('hero-title');
   if (title) gravityTitle(title);
-
-  const figure = document.querySelector<HTMLElement>('.hero-hang');
-  const area = title?.closest('section');
-  if (figure && area && matchMedia('(min-width: 64rem)').matches) {
-    hangingPhoto(figure, area);
-  }
 }
 
 function gravityTitle(title: HTMLElement): void {
@@ -120,38 +112,6 @@ function gravityTitle(title: HTMLElement): void {
   });
   title.addEventListener('pointerleave', () => {
     for (const l of letters) l.y.target = l.r.target = 0;
-    kick();
-  });
-}
-
-function hangingPhoto(figure: HTMLElement, area: HTMLElement): void {
-  const angle = spring();
-  let raf = 0;
-  let center = 0;
-  let width = 1;
-
-  const tick = () => {
-    const moving = step(angle, 0.05, 0.92);
-    figure.style.transform = `rotate(${angle.x.toFixed(3)}deg)`;
-    raf = moving ? requestAnimationFrame(tick) : 0;
-  };
-  const kick = () => {
-    if (!raf) raf = requestAnimationFrame(tick);
-  };
-
-  area.addEventListener('pointerenter', () => {
-    const rect = figure.getBoundingClientRect();
-    center = rect.left + rect.width / 2;
-    width = rect.width;
-  });
-  area.addEventListener('pointermove', (event) => {
-    // El borde inferior se acerca al puntero (rotación desde arriba).
-    const rel = Math.max(-1, Math.min(1, (event.clientX - center) / width));
-    angle.target = -rel * 2.2;
-    kick();
-  });
-  area.addEventListener('pointerleave', () => {
-    angle.target = 0;
     kick();
   });
 }

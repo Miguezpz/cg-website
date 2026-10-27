@@ -89,7 +89,7 @@ Las cifras de precios usan `tabular-nums`.
 
 - La barra se traza de izquierda a derecha en 700 ms (`scale` desde la izquierda).
 - El texto de apoyo sube escalonado 60 ms: entrada, ciudad, botones, enlace online e indicadores (`--duration-enter` 520 ms).
-- En escritorio, la foto cuelga de la barra y se asienta con una oscilación amortiguada de ±2° (`--duration-swing` 1.6 s).
+- La foto se desenrolla hacia abajo desde la barra (`clip-path`, desde el tercio de arriba, donde están las manos) mientras se asienta de un zoom de 1.12 a 1 (`--duration-unroll` 1.2 s, 250 ms de retraso). Pasa una sola vez: después, la foto queda quieta; no hay parallax ni balanceo (2026-10-26).
 - El `h1` y la imagen nunca se ocultan, para no retrasar el LCP.
 
 **Ligado al scroll** (CSS `animation-timeline`, sin JS):
@@ -98,7 +98,7 @@ Las cifras de precios usan `tabular-nums`.
 - `.rise`: listas, tarjetas, FAQ y formulario suben 1.5 rem mientras entran.
 - `.steel-bar` (componente `SteelBar`): las barras de 6 px de cada bloque se trazan al cruzar la parte baja de la pantalla.
 - `.reveal-photo` + `.parallax`: la foto del coach se descubre hacia arriba desde su barra y se mueve más lento que la página.
-- `.hero-parallax` / `.hero-lift`: al salir de pantalla, la foto del Hero baja y el título se eleva.
+- `.hero-lift`: al salir de pantalla, el título del Hero se eleva.
 - `.scroll-progress`: una barra vino claro (`signal-glow`) de 2 px bajo el header indica cuánto llevas de página.
 
 **Gis vivo** (`src/lib/chalk.ts` + `ChalkMark`, 2026-10-24):
@@ -121,7 +121,6 @@ Las cifras de precios usan `tabular-nums`.
 **Firma del Hero** (`src/lib/hero-physics.ts`, solo con puntero fino):
 
 - **El título siente la gravedad:** al pasar el puntero, las letras cercanas se hunden (hasta 0.14em) y se inclinan como una cuerda; vuelven con un resorte. Se parten en letras al primer contacto, con `aria-label` en el `h1`.
-- **La foto colgante responde:** en escritorio se balancea hacia el puntero (±2.2°) y, al salir, oscila como un péndulo hasta detenerse.
 
 **Atletas de gis** (`src/lib/athlete-poses.ts` + `athletes.ts`, componente `Athlete`, 2026-10-26):
 
