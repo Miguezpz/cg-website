@@ -17,17 +17,31 @@ test.describe('Cierres con acción (PRODUCT.md · principio 3)', () => {
     });
   }
 
-  test('el botón flotante se oculta mientras se ve un cierre', async ({
+  test('el botón flotante no desaparece en los cierres de en medio (RF-12)', async ({
     page,
   }) => {
     await page.goto('/');
     const floating = page.locator('[data-floating-wa]');
-    await page.locator('#como-funciona-title').scrollIntoViewIfNeeded();
+    for (const source of ['about', 'testimonials']) {
+      await page
+        .locator(`main a[data-source="${source}"]`)
+        .evaluate((el) => el.scrollIntoView({ block: 'center' }));
+      await expect(floating).not.toHaveAttribute('data-hidden', '');
+    }
+  });
+
+  test('no se oculta con Contacto apenas asomando por abajo (RF-12)', async ({
+    page,
+  }) => {
+    await page.goto('/');
+    const floating = page.locator('[data-floating-wa]');
+    // Contacto asoma 10 % de la pantalla: menos que el margen del 20 %.
+    await page.locator('#contacto').evaluate((el) => {
+      document.documentElement.style.scrollBehavior = 'auto';
+      const top = el.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo(0, top - window.innerHeight * 0.9);
+    });
     await expect(floating).not.toHaveAttribute('data-hidden', '');
-    await page
-      .locator('#testimonios a[data-source="testimonials"]')
-      .scrollIntoViewIfNeeded();
-    await expect(floating).toHaveAttribute('data-hidden', '');
   });
 });
 

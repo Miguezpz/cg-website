@@ -8,7 +8,7 @@
 | Coach | **César Augusto** (en redes: "Chesare Mozart") |
 | Modalidad | **Solo online** (desde 2026-10-26). Lo presencial existe solo a petición y **no se publica** (§17.1.2) |
 | Branch | ramas que salen de `main` (`main` = producción) |
-| Versión | v0.16 (borrador) |
+| Versión | v0.16.1 (borrador) |
 | Punto de partida | Proyecto desde cero. No se reutiliza código, estilos ni estructura del branch `main` |
 | Idioma del sitio | Español (`es-MX`) |
 | Hosting | **Vercel, plan Hobby (gratuito)**, en un subdominio `*.vercel.app` (sin dominio propio). Reemplaza al sitio actual en `*.netlify.app` (ver §11.1) |
@@ -154,7 +154,7 @@ Orden de secciones = orden del embudo: **atención → identificación → autor
 ### RF-12 · Botón flotante de WhatsApp
 - En móvil (< 768 px), **barra fija a todo el ancho abajo** con el texto «Escríbeme por WhatsApp» (2026-10-26, T3.21: un círculo sin texto tapaba contenido y atraía menos). En escritorio, círculo de 56 px abajo a la derecha. Lleva `aria-label`, respeta `env(safe-area-inset-bottom)` en iOS, y `scroll-padding-bottom` evita que tape el elemento enfocado.
 
-**Aceptación:** no tapa el CTA del Hero ni los botones del formulario a 375 px. Se oculta cuando `#contacto` o cualquier CTA general (Hero, cierres de Sobre mí y Testimonios; T3.22) está en pantalla, para no duplicarlo.
+**Aceptación:** no tapa el CTA del Hero ni los botones del formulario a 375 px. Se oculta solo mientras se ve el CTA del Hero o `#contacto` (contados solo en el 80 % de arriba de la pantalla, para que no titile en el borde ni con la barra de Safari). En los cierres de Sobre mí y Testimonios se queda visible (2026-10-28, T3.26; antes también se ocultaba ahí, T3.22, y aparecía y desaparecía tres veces al recorrer la página).
 
 ### RF-13 · Páginas `/privacidad` y `404`
 - `/privacidad`: aviso conforme a la LFPDPPP (responsable, datos recabados, finalidad, derechos ARCO, uso de cookies/analítica). El texto lo valida el cliente.
@@ -425,6 +425,7 @@ Cada tarea se cierra con el ciclo de §13 y su prueba e2e.
   - **Lógica:** entradas reales (patada a la parada de manos, levers desde el colgado y back lever pasando por el invertido, plancha desde la plancha inclinada); el muscle-up baja en negativa sin kip y la pistol squat baja lento y sube rápido; tempo excéntrico más lento en los atletas de scroll; micro-ajustes al sostener (decisión del usuario; reemplaza «se quedan» de T3.19).
   - Lighthouse local en `/`: 99/100/100/100, LCP ≈ 2.0 s, TBT ≤ 23 ms, CLS 0. JS propio ≈ 9.1 KB gzip (RNF-03).
 - **T3.25 · ✅ Historia, credenciales, fotos y logo del coach** (2026-10-28, branch `historia-coach`) — RF-01, RF-02, RF-03, RF-11, §9.4: con la segunda tanda de información de César. Historia real (sin aviso demo); credenciales en «Logros y competencias» y «Certificaciones», con detalle (tipo de evento, institución y año); franja de 3 fotos de Body Control (enero 2023) antes del cierre «¿Entrenamos juntos?»; en escritorio la foto del coach queda fija mientras se lee. Indicador del Hero «27 de 254». `Person` del JSON-LD con `award` y `hasCredential`. El monograma de `Logo.astro`, `favicon.svg`, `favicon.ico` y `og-image.jpg` se trazan del PNG oficial de 2000 px (coincidencia del 99,5 % con el PNG; el redibujo anterior coincidía en un 42 %). Las fotos van a 1600 px y sin EXIF. e2e: `tests/e2e/coach-story.spec.ts`.
+- **T3.26 · ✅ Botón flotante estable** (2026-10-28, sobre `main`) — RF-12: a pedido del usuario, porque el botón aparecía y desaparecía constantemente. Solo lo ocultan el CTA del Hero y Contacto, con `rootMargin` de −20 % abajo como margen; los cierres de Sobre mí y Testimonios ya no. e2e: sigue visible en los cierres y con Contacto asomando un 10 %.
 - **T4.9 · ✅ Solo online y sin precios** (2026-10-26, branch `solo-online`) — RF-02, RF-04, RF-07–RF-09, RF-11, §9.4: notas del coach (§17.1.2). Fuera clases presenciales, Talleres, la oferta de clase muestra gratis, los precios (también del JSON-LD) y toda mención de Morelia en la landing y el SEO; un solo servicio (Rutina personalizada) con el precio por WhatsApp; bloque "¿Necesitas algo más personalizado?" (`#a-medida`) enlazado desde el Hero y la FAQ; pasos de "Cómo funciona" reescritos; `og-image.jpg` regenerada. e2e: la home no muestra precios, "presencial", "Morelia" ni "clase muestra".
 
 ## 16. Definición de "terminado"
@@ -642,3 +643,4 @@ Leyenda: 🔴 bloquea el inicio · 🟠 bloquea el diseño (T1.2) · 🟢 bloque
 | v0.14.2 | 2026-10-27 | T3.23: figuras de la ruta de skills más chicas para que la sección quepa en una pantalla, también en móvil con la barra de WhatsApp |
 | v0.15 | 2026-10-27 | T3.24: biomecánica verificada por prueba en las figuras de gis; entradas reales, bajada propia y micro-ajustes al sostener (RF-04.1) |
 | v0.16 | 2026-10-28 | T3.25: historia, certificaciones y logros reales del coach (RF-03); fotos de Body Control (enero 2023) en Sobre mí; indicador «27 de 254» en el Hero (RF-02); `award` y `hasCredential` en el JSON-LD (§9.4); logo, favicon y og-image trazados del PNG oficial (§17.1.1) |
+| v0.16.1 | 2026-10-28 | T3.26: el botón flotante de WhatsApp solo se oculta en el Hero y en Contacto, con margen para que no titile (RF-12) |

@@ -23,34 +23,38 @@ const { label } = Astro.props;
 </a>
 
 <script>
-  // Se oculta mientras hay otro CTA general en pantalla (Hero, cierres de
-  // Sobre mí y Testimonios) o la sección de contacto, para no duplicarlo.
+  // Se oculta solo al principio (CTA del Hero) y al final (Contacto); en medio
+  // se queda fijo aunque se vean los cierres de Sobre mí y Testimonios: que
+  // aparezca y desaparezca distrae más de lo que estorba verlo dos veces.
   const button = document.querySelector<HTMLElement>('[data-floating-wa]');
   const targets = [
-    ...document.querySelectorAll(
-      'main a[data-track="whatsapp"]:is([data-source="hero"], [data-source="about"], [data-source="testimonials"])',
-    ),
+    document.querySelector('main a[data-track="whatsapp"][data-source="hero"]'),
     document.querySelector('#contacto'),
   ].filter((el): el is HTMLElement => el instanceof HTMLElement);
 
   if (button && targets.length) {
     const visible = new Set<Element>();
     let pulsed = false;
-    const observer = new IntersectionObserver((entries) => {
-      for (const entry of entries) {
-        if (entry.isIntersecting) visible.add(entry.target);
-        else visible.delete(entry.target);
-      }
-      const hide = visible.size > 0;
-      button.toggleAttribute('data-hidden', hide);
-      button.toggleAttribute('inert', hide);
-      // La primera vez que aparece emite dos ondas (motion.css) y se detiene.
-      if (!hide && !pulsed) {
-        pulsed = true;
-        button.toggleAttribute('data-pulse', true);
-        setTimeout(() => button.removeAttribute('data-pulse'), 2400);
-      }
-    });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) visible.add(entry.target);
+          else visible.delete(entry.target);
+        }
+        const hide = visible.size > 0;
+        button.toggleAttribute('data-hidden', hide);
+        button.toggleAttribute('inert', hide);
+        // La primera vez que aparece emite dos ondas (motion.css) y se detiene.
+        if (!hide && !pulsed) {
+          pulsed = true;
+          button.toggleAttribute('data-pulse', true);
+          setTimeout(() => button.removeAttribute('data-pulse'), 2400);
+        }
+      },
+      // Cuenta como visible solo arriba del 80 % de la pantalla: así no titila
+      // cuando Contacto queda en el borde ni cuando Safari cambia su barra.
+      { rootMargin: '0px 0px -20% 0px' },
+    );
     targets.forEach((target) => observer.observe(target));
   }
 </script>
