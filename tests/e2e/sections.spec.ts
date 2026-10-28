@@ -12,7 +12,10 @@ test.describe('Secciones de la landing', () => {
     await expect(about.getByRole('heading', { level: 2 })).toHaveText(
       /César Augusto/i,
     );
-    await expect(about.locator('img')).toHaveAttribute('alt', /César Augusto/);
+    await expect(about.locator('img').first()).toHaveAttribute(
+      'alt',
+      /César Augusto, coach/,
+    );
     expect(await about.locator('li').count()).toBeGreaterThanOrEqual(3);
   });
 

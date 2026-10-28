@@ -6,6 +6,12 @@ import type { FaqItem, Service, Site } from '../data/types';
 const PENDING = '[[PENDIENTE]]';
 const isReal = (...texts: string[]) => texts.every((t) => !t.includes(PENDING));
 
+export interface CredentialGroup {
+  kind: 'award' | 'certification';
+  title: string;
+  items: readonly { text: string; detail: string }[];
+}
+
 // Todo es online (2026-10-26); sin precios publicados no hay `offers`.
 const areaServed: Record<Service['id'], object> = {
   rutina: { '@type': 'Country', name: 'México' },
@@ -16,14 +22,29 @@ export function buildStructuredData({
   siteUrl,
   services,
   faq,
+  credentials = [],
   coachImage,
 }: {
   site: Site;
   siteUrl: URL;
   services: Service[];
   faq: FaqItem[];
+  credentials?: readonly CredentialGroup[];
   coachImage?: string;
 }) {
+  const credentialItems = (kind: CredentialGroup['kind']) =>
+    credentials
+      .filter((group) => group.kind === kind)
+      .flatMap((group) => group.items)
+      .filter((item) => isReal(item.text, item.detail));
+  const awards = credentialItems('award').map((i) => `${i.text} (${i.detail})`);
+  const certifications = credentialItems('certification').map((i) => ({
+    '@type': 'EducationalOccupationalCredential',
+    credentialCategory: 'certificate',
+    name: i.text,
+    description: i.detail,
+  }));
+
   const orgId = new URL('#organizacion', siteUrl).href;
   const personId = new URL('#coach', siteUrl).href;
 
@@ -47,6 +68,8 @@ export function buildStructuredData({
     jobTitle: 'Coach de calistenia',
     worksFor: { '@id': orgId },
     ...(coachImage && { image: new URL(coachImage, siteUrl).href }),
+    ...(awards.length && { award: awards }),
+    ...(certifications.length && { hasCredential: certifications }),
   };
 
   const serviceNodes = services

@@ -1,6 +1,9 @@
 // Textos de la landing. Todo lo provisional va marcado con [[PENDIENTE]].
 
 import { site } from './site';
+import bodyControlBarJump from '../assets/coach/body-control-bar-jump.jpg';
+import bodyControlTalk from '../assets/coach/body-control-talk.jpg';
+import bodyControlWatching from '../assets/coach/body-control-watching.jpg';
 
 export const nav = [
   { label: 'Sobre mí', href: '/#sobre-mi' },
@@ -27,7 +30,7 @@ export const hero = {
   secondaryCta: { label: 'Ver la rutina', href: '#servicios' },
   indicators: [
     { value: '7–12 días', label: 'para recibir tu rutina' },
-    { value: 'Carga & Descarga', label: 'método de trabajo' },
+    { value: '27 de 254', label: 'semifinalista en Calisfest 2024' },
     { value: 'Gravedad Zero', label: 'evento que organizamos' },
   ],
   // [[PENDIENTE]] La foto actual mide 540 × 960 px: falta la versión en alta
@@ -75,18 +78,73 @@ export const about = {
   title: 'César Augusto',
   mark: { word: 'Augusto', kind: 'underline' },
   role: 'Coach y fundador de Control Gravedad',
-  // [[PENDIENTE]] Historia real del coach (máx. 120 palabras).
+  // Historia del coach, con sus palabras (2026-10-28; 100 palabras).
   story: [
-    'La calistenia me enseñó que la fuerza se construye con técnica, paciencia y constancia. Fundé Control Gravedad para entrenar así a más personas, estén donde estén: con un método que alterna semanas de carga y de descarga para progresar sin lastimarte.',
+    'Empecé en el parque de mi colonia, entrenando de forma empírica, y con el tiempo descubrí que la verdadera transformación nace del conocimiento y la estrategia. Así nació Control Gravedad, un espacio impulsado por mi pasión por el coaching y el deseo genuino de guiar a otros hacia su mejor versión, construyendo un entorno seguro para el crecimiento físico, mental y emocional.',
+    'Mi objetivo con cada alumno es claro: lograr el dominio y conocimiento total de su propio cuerpo para alcanzar resultados extraordinarios. Busco que fortalezcan su mente y descubran que, con disciplina, constancia e inteligencia, absolutamente todo es posible.',
   ],
-  demo: 'Historia de ejemplo. Falta: la historia real del coach (máx. 120 palabras), sus años de experiencia y sus certificaciones.',
+  // Lo más reciente primero en cada grupo. `kind` decide cómo va en el JSON-LD.
+  // [[PENDIENTE]] Años de experiencia del coach (spec §17.1.1).
   credentials: [
-    'Implementa el método Carga & Descarga',
-    'Organizador de Gravedad Zero, evento de calistenia (enero 2026)',
-    'Calistenia, streetlifting, movilidad, skills y entrenamiento funcional',
-    // [[PENDIENTE]] Años de experiencia y certificaciones reales. No se
-    // muestra nada mientras tanto: «por confirmar» le resta autoridad.
+    {
+      kind: 'award',
+      title: 'Logros y competencias',
+      items: [
+        {
+          text: 'Semifinalista en Calisfest',
+          detail: 'Evento internacional · puesto 27 de 254 atletas · 2024',
+        },
+        {
+          text: 'Organizador de Gravedad Zero',
+          detail: 'Evento de calistenia · enero 2026',
+        },
+        {
+          text: 'Competidor en Calisfest',
+          detail: 'Evento internacional · 2023',
+        },
+        {
+          text: 'Competidor en el Filtro de los 32 Aztecas',
+          detail: 'Evento nacional · 2022',
+        },
+      ],
+    },
+    {
+      kind: 'certification',
+      title: 'Certificaciones',
+      items: [
+        {
+          text: 'Calistenia, yoga restaurativo y terapéutico, entrenamiento funcional y flow movement',
+          detail: 'Brave Academy · 2026',
+        },
+        {
+          text: 'Calistenia, yoga restaurativo y terapéutico y entrenamiento funcional',
+          detail: 'Brave Academy · 2023',
+        },
+      ],
+    },
   ],
+  // Fotos de una sesión de Body Control (enero 2023), sin metadatos EXIF. El
+  // orden del DOM es el de móvil: las dos verticales arriba y la horizontal abajo.
+  gallery: {
+    caption: 'Body Control · enero 2023',
+    photos: [
+      {
+        src: bodyControlBarJump,
+        alt: 'Atleta sin camiseta pasa por encima de una barra alta en un parque mientras el público lo graba con sus teléfonos',
+        orientation: 'portrait',
+      },
+      {
+        src: bodyControlTalk,
+        alt: 'César Augusto, sin camiseta, habla al público con un micrófono frente a un muro verde, junto a unas bocinas',
+        orientation: 'landscape',
+      },
+      {
+        src: bodyControlWatching,
+        alt: 'César Augusto, con playera roja sin mangas y las manos atrás, observa la sesión junto a otros asistentes',
+        orientation: 'portrait',
+      },
+    ],
+  },
   cta: { lead: '¿Entrenamos juntos?', label: 'Escríbeme por WhatsApp' },
   photoAlt:
     'César Augusto, coach de Control Gravedad, con camisa negra y lentes, de pie con las manos en los bolsillos',
