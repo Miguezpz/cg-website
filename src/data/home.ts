@@ -1,9 +1,9 @@
 // Textos de la landing. Todo lo provisional va marcado con [[PENDIENTE]].
 
 import { site } from './site';
-import bodyControlBarJump from '../assets/coach/body-control-bar-jump.jpg';
-import bodyControlTalk from '../assets/coach/body-control-talk.jpg';
-import bodyControlWatching from '../assets/coach/body-control-watching.jpg';
+import classHandstandSpot from '../assets/coach/class-handstand-spot.jpg';
+import classSupermanCue from '../assets/coach/class-superman-cue.jpg';
+import classCoachBack from '../assets/coach/class-coach-back.jpg';
 
 export const nav = [
   { label: 'Sobre mí', href: '/#sobre-mi' },
@@ -33,14 +33,11 @@ export const hero = {
     { value: '27 de 254', label: 'semifinalista en Calisfest 2024' },
     { value: 'Gravedad Zero', label: 'evento que organizamos' },
   ],
-  // [[PENDIENTE]] La foto actual mide 540 × 960 px: falta la versión en alta
-  // resolución (vertical, de al menos 1600 × 2000 px).
+  // Body Control, enero 2023 (1600 × 2416 px, sin EXIF).
   imageAlt:
-    'Atleta sin camiseta y con gorra en hollow back sobre barras paralelas bajas, en un parque con árboles',
-  // El recorte 4:5 baja hasta las manos y las barras.
-  imagePosition: '50% 75%',
-  imageDemo:
-    'Foto en baja resolución (540 × 960 px). Falta: la misma foto de al menos 1600 × 2000 px.',
+    'César Augusto, sin camiseta, en parada de manos sobre una barra alta de parque, entre árboles y cielo despejado',
+  // El recorte 4:5 deja dentro los pies y la barra bajo las manos.
+  imagePosition: '50% 60%',
 } as const;
 
 // Una puerta por perfil (PRODUCT.md · Users), cada una con su mensaje de WhatsApp.
@@ -123,31 +120,32 @@ export const about = {
       ],
     },
   ],
-  // Fotos de una sesión de Body Control (enero 2023), sin metadatos EXIF. El
-  // orden del DOM es el de móvil: las dos verticales arriba y la horizontal abajo.
+  // Clases en el IMCUFIDE, sin metadatos EXIF y sin caras de alumnos que se
+  // reconozcan. El orden del DOM es el de móvil: las dos verticales arriba y la
+  // horizontal abajo.
   gallery: {
-    caption: 'Body Control · enero 2023',
+    caption: 'En clase, corrigiendo la técnica',
     photos: [
       {
-        src: bodyControlBarJump,
-        alt: 'Atleta sin camiseta pasa por encima de una barra alta en un parque mientras el público lo graba con sus teléfonos',
+        src: classHandstandSpot,
+        alt: 'César Augusto sostiene de las piernas a un alumno en parada de manos durante una clase en un parque, mientras otros practican detrás',
         orientation: 'portrait',
       },
       {
-        src: bodyControlTalk,
-        alt: 'César Augusto, sin camiseta, habla al público con un micrófono frente a un muro verde, junto a unas bocinas',
+        src: classSupermanCue,
+        alt: 'César Augusto, en cuclillas, corrige con la mano la espalda de un alumno acostado boca abajo que estira los brazos hacia unos conos',
         orientation: 'landscape',
       },
       {
-        src: bodyControlWatching,
-        alt: 'César Augusto, con playera roja sin mangas y las manos atrás, observa la sesión junto a otros asistentes',
+        src: classCoachBack,
+        alt: 'César Augusto de espaldas, con la playera negra de Control Gravedad que dice «Coach César», frente a un muro con el logo del IMCUFIDE',
         orientation: 'portrait',
       },
     ],
   },
   cta: { lead: '¿Entrenamos juntos?', label: 'Escríbeme por WhatsApp' },
   photoAlt:
-    'César Augusto, coach de Control Gravedad, con camisa negra y lentes, de pie con las manos en los bolsillos',
+    'César Augusto, coach de Control Gravedad, sonríe sentado en un banco alto, con camisa negra, lentes y una mano en la cadera',
 } as const;
 
 export const servicesSection = {

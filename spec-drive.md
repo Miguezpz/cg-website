@@ -8,7 +8,7 @@
 | Coach | **César Augusto** (en redes: "Chesare Mozart") |
 | Modalidad | **Solo online** (desde 2026-10-26). Lo presencial existe solo a petición y **no se publica** (§17.1.2) |
 | Branch | ramas que salen de `main` (`main` = producción) |
-| Versión | v0.16.1 (borrador) |
+| Versión | v0.17 (borrador) |
 | Punto de partida | Proyecto desde cero. No se reutiliza código, estilos ni estructura del branch `main` |
 | Idioma del sitio | Español (`es-MX`) |
 | Hosting | **Vercel, plan Hobby (gratuito)**, en un subdominio `*.vercel.app` (sin dominio propio). Reemplaza al sitio actual en `*.netlify.app` (ver §11.1) |
@@ -76,7 +76,7 @@ Orden de secciones = orden del embudo: **atención → identificación → autor
 **Aceptación:** los enlaces llevan a su sección sin que el header la tape (`scroll-margin-top`); el menú abre y cierra con teclado y con `Esc`, actualiza `aria-expanded`, y se cierra al elegir un enlace.
 
 ### RF-02 · Hero
-- Imagen a pantalla completa (o video con *poster*, ver D-03); el nombre **«Control Gravedad»** en pequeño sobre el título, solo bajo 640 px, donde el header muestra únicamente el monograma (desde 640 px ya lo lleva el header); título **«Desafía la gravedad»** con el beneficio en el subtítulo: «Calistenia online a tu nivel, para progresar con técnica y sin lesionarte» (decisión del usuario, 2026-10-26; reemplaza «Calistenia a tu nivel» de T3.21, que conviene comparar con GA4 cuando esté conectado); el lema «Formamos deportistas hábiles y conscientes» como frase de apoyo.
+- Imagen a pantalla completa (o video con *poster*, ver D-03); el nombre **«Control Gravedad»** en pequeño sobre el título, solo bajo 640 px, donde el header muestra únicamente el monograma (desde 640 px ya lo lleva el header); título **«Desafía la gravedad»** con el beneficio en el subtítulo: «Calistenia online a tu nivel, para progresar con técnica y sin lesionarte» (decisión del usuario, 2026-10-26; reemplaza «Calistenia a tu nivel» de T3.21, que conviene comparar con GA4 cuando esté conectado); el lema «Formamos deportistas hábiles y conscientes» como frase de apoyo. La foto es César en parada de manos sobre una barra alta (Body Control, enero 2023; 1600 × 2416 px; 2026-10-28, T3.27).
 - Solo dos acciones: CTA primario **"Escríbeme por WhatsApp"** → WhatsApp y CTA secundario "Ver la rutina" → `#servicios`. ~~Enlace "¿Necesitas algo más personalizado?" → `#a-medida`~~: retirado el 2026-10-26 (T3.21) porque competía con el CTA; esa puerta sigue en Servicios y en la FAQ.
 - 2–3 indicadores de autoridad (ej. "+X alumnos", "X años"). Hoy: «7–12 días para recibir tu rutina», «27 de 254 · semifinalista en Calisfest 2024» y «Gravedad Zero» (2026-10-26, T3.22: «5 disciplinas» no convencía de nada; 2026-10-28, T3.25: el puesto en Calisfest reemplaza a «Carga & Descarga», que ya se explica en «Cómo funciona»).
 
@@ -89,12 +89,12 @@ Orden de secciones = orden del embudo: **atención → identificación → autor
 **Aceptación:** tres perfiles, cada uno con su propio mensaje de WhatsApp; la sección va antes de `#sobre-mi`.
 
 ### RF-03 · Sobre el coach (`#sobre-mi`)
-- Foto profesional, historia breve (≤ 120 palabras), al menos 3 credenciales (certificaciones, años, logros). Nunca se muestra una credencial «por confirmar» (2026-10-26, T3.22).
+- Foto profesional (retrato de estudio de César, recortado de la rodilla hacia arriba; 2026-10-28, T3.27), historia breve (≤ 120 palabras), al menos 3 credenciales (certificaciones, años, logros). Nunca se muestra una credencial «por confirmar» (2026-10-26, T3.22).
 - Cierra con «¿Entrenamos juntos?» y el CTA general de WhatsApp (`data-source="about"`).
 - Historia del coach con sus palabras (100 palabras, 2026-10-28) y credenciales en dos grupos, lo más reciente primero (T3.25):
   - **Logros y competencias:** semifinalista en Calisfest 2024 (internacional; puesto 27 de 254), **organizador de Gravedad Zero** (evento de calistenia en Morelia, 10 de enero de 2026; participantes `[[PENDIENTE]]`; en el sitio no se nombra la ciudad, §17.1.2), competidor en Calisfest 2023 (internacional) y en el Filtro de los 32 Aztecas 2022 (nacional).
   - **Certificaciones (Brave Academy):** Calistenia, yoga restaurativo y terapéutico, entrenamiento funcional y flow movement (2026); Calistenia, yoga restaurativo y terapéutico y entrenamiento funcional (2023).
-- Franja de 3 fotos de una sesión de **Body Control (enero 2023)** bajo las credenciales, en escala de grises como la foto del coach (2026-10-28, decisión del usuario). El alt nombra a César cuando es él (confirmado por el usuario); al atleta del salto no se le nombra.
+- Franja de 3 fotos de **César dando clase** bajo las credenciales, en escala de grises como la foto del coach, con el pie «En clase, corrigiendo la técnica» (2026-10-28, T3.27; reemplaza las fotos de Body Control de T3.25, decisión del usuario). Solo fotos sin caras de alumnos que se reconozcan; el pie no nombra la ciudad ni el lugar (T4.9).
 - Nombre visible del coach: **César Augusto**; "Chesare Mozart" solo como referencia a sus redes.
 
 ### RF-04 · Servicios (`#servicios`)
@@ -426,6 +426,7 @@ Cada tarea se cierra con el ciclo de §13 y su prueba e2e.
   - Lighthouse local en `/`: 99/100/100/100, LCP ≈ 2.0 s, TBT ≤ 23 ms, CLS 0. JS propio ≈ 9.1 KB gzip (RNF-03).
 - **T3.25 · ✅ Historia, credenciales, fotos y logo del coach** (2026-10-28, branch `historia-coach`) — RF-01, RF-02, RF-03, RF-11, §9.4: con la segunda tanda de información de César. Historia real (sin aviso demo); credenciales en «Logros y competencias» y «Certificaciones», con detalle (tipo de evento, institución y año); franja de 3 fotos de Body Control (enero 2023) antes del cierre «¿Entrenamos juntos?»; en escritorio la foto del coach queda fija mientras se lee. Indicador del Hero «27 de 254». `Person` del JSON-LD con `award` y `hasCredential`. El monograma de `Logo.astro`, `favicon.svg`, `favicon.ico` y `og-image.jpg` se trazan del PNG oficial de 2000 px (coincidencia del 99,5 % con el PNG; el redibujo anterior coincidía en un 42 %). Las fotos van a 1600 px y sin EXIF. e2e: `tests/e2e/coach-story.spec.ts`.
 - **T3.26 · ✅ Botón flotante estable** (2026-10-28, sobre `main`) — RF-12: a pedido del usuario, porque el botón aparecía y desaparecía constantemente. Solo lo ocultan el CTA del Hero y Contacto, con `rootMargin` de −20 % abajo como margen; los cierres de Sobre mí y Testimonios ya no. e2e: sigue visible en los cierres y con Contacto asomando un 10 %.
+- **T3.27 · ✅ Fotos reales del Hero, del coach y de clases** (2026-10-28, sobre `main`) — RF-02, RF-03, §17.1.1: con la tercera tanda de fotos de César. Hero: parada de manos en barra (Body Control, enero 2023), sin aviso demo. Sobre mí: retrato de estudio de 1400 × 1799 px en lugar del de 537 × 690. Franja: 3 fotos de clase (César sosteniendo una parada de manos, corrigiendo un superman y de espaldas con la playera «Coach César»), sin alumnos reconocibles. Las demás fotos de la tanda (alumnos con la cara visible, otra coach) no se usan. Sin EXIF. e2e: `coach-story.spec.ts` y `demo.spec.ts`.
 - **T4.9 · ✅ Solo online y sin precios** (2026-10-26, branch `solo-online`) — RF-02, RF-04, RF-07–RF-09, RF-11, §9.4: notas del coach (§17.1.2). Fuera clases presenciales, Talleres, la oferta de clase muestra gratis, los precios (también del JSON-LD) y toda mención de Morelia en la landing y el SEO; un solo servicio (Rutina personalizada) con el precio por WhatsApp; bloque "¿Necesitas algo más personalizado?" (`#a-medida`) enlazado desde el Hero y la FAQ; pasos de "Cómo funciona" reescritos; `og-image.jpg` regenerada. e2e: la home no muestra precios, "presencial", "Morelia" ni "clase muestra".
 
 ## 16. Definición de "terminado"
@@ -518,7 +519,7 @@ Cada tarea se cierra con el ciclo de §13 y su prueba e2e.
 - [ ] [[PENDIENTE]] **Permiso de uso de las reseñas de Google Maps** (Roberto González, Sofía Hernández y Asdrubal Ramirez): el coach les escribe, les muestra el recorte exacto que se publica y guarda la respuesta (captura del chat). Si alguien dice que no, se quita su reseña de `src/data/testimonials.ts`. Hasta entonces, la sección muestra el aviso «Demo».
 - [ ] [[PENDIENTE]] Años de experiencia del coach (la historia, las certificaciones y los logros llegaron el 2026-10-28, T3.25).
 - [ ] [[PENDIENTE]] ¿Qué necesita el alumno para entrenar (barra, paralelas, ligas…)? Hoy la FAQ dice solo "Ropa cómoda, agua y toalla" (demo).
-- [ ] [[PENDIENTE]] Fotos: la del Hero en alta resolución (≥ 1600 × 2000 px) y fotos reales de antes y después (con consentimiento escrito). *(2026-10-26: llegaron las de Gael, ya en el sitio; de él faltan el consentimiento, el tiempo de entrenamiento y el logro. Falta un segundo atleta.)*
+- [ ] [[PENDIENTE]] Fotos reales de antes y después (con consentimiento escrito). *(2026-10-26: llegaron las de Gael, ya en el sitio; de él faltan el consentimiento, el tiempo de entrenamiento y el logro. Falta un segundo atleta. La del Hero en alta resolución llegó el 2026-10-28, T3.27.)*
 - [ ] [[PENDIENTE]] Aviso de privacidad: nombre del responsable, fecha y validación del texto.
 - [ ] [[PENDIENTE]] Formulario de salud del coach (Google Form): agregarle aviso de privacidad y casilla de consentimiento expreso, porque pide datos sensibles (LFPDPPP).
 
@@ -550,8 +551,8 @@ Leyenda: 🔴 bloquea el inicio · 🟠 bloquea el diseño (T1.2) · 🟢 bloque
 | ✅ | Nombre del coach / marca | **César Augusto** · escuela **Control Gravedad** |
 | ✅ | Ciudad / zona de servicio | **Online** (2026-10-26; antes Morelia presencial + online) |
 | ✅ | Información de la marca desde Instagram | §17.1.1 (T0.0) |
-| 🟠 | Foto o video del Hero | Foto ≥ 2400×1600 px (horizontal) **y** ≥ 1080×1920 px (vertical). Video: 10–20 s, sin audio, 1080p |
-| 🟠 | Fotos profesionales del coach | ≥ 1600 px por el lado mayor, buena luz y fondo limpio |
+| ✅ | Foto o video del Hero | Foto ≥ 2400×1600 px (horizontal) **y** ≥ 1080×1920 px (vertical). Video: 10–20 s, sin audio, 1080p |
+| ✅ | Fotos profesionales del coach | ≥ 1600 px por el lado mayor, buena luz y fondo limpio |
 | 🟠 | Preferencias de estilo / color | Referencias que le gusten o colores de marca existentes |
 | 🟢 | Logo | SVG preferido |
 | ✅ | Número de WhatsApp | `524433019533` |
@@ -644,3 +645,4 @@ Leyenda: 🔴 bloquea el inicio · 🟠 bloquea el diseño (T1.2) · 🟢 bloque
 | v0.15 | 2026-10-27 | T3.24: biomecánica verificada por prueba en las figuras de gis; entradas reales, bajada propia y micro-ajustes al sostener (RF-04.1) |
 | v0.16 | 2026-10-28 | T3.25: historia, certificaciones y logros reales del coach (RF-03); fotos de Body Control (enero 2023) en Sobre mí; indicador «27 de 254» en el Hero (RF-02); `award` y `hasCredential` en el JSON-LD (§9.4); logo, favicon y og-image trazados del PNG oficial (§17.1.1) |
 | v0.16.1 | 2026-10-28 | T3.26: el botón flotante de WhatsApp solo se oculta en el Hero y en Contacto, con margen para que no titile (RF-12) |
+| v0.17 | 2026-10-28 | T3.27: fotos reales en el Hero (parada de manos en barra) y en Sobre mí (retrato de estudio); la franja de Body Control pasa a ser de César dando clase (RF-02, RF-03, §17) |

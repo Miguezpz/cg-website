@@ -29,14 +29,14 @@ test.describe('Historia, credenciales y fotos del coach (T3.25)', () => {
     await expect(about).toContainText('Filtro de los 32 Aztecas');
   });
 
-  test('franja de 3 fotos de Body Control con alt y pie, antes del CTA', async ({
+  test('franja de 3 fotos de clases con alt y pie, antes del CTA', async ({
     page,
   }) => {
     const gallery = page.locator('#sobre-mi figure').filter({
       has: page.locator('figcaption'),
     });
     await expect(gallery.locator('figcaption')).toHaveText(
-      'Body Control · enero 2023',
+      'En clase, corrigiendo la técnica',
     );
     const imgs = gallery.locator('img');
     await expect(imgs).toHaveCount(3);

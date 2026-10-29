@@ -14,13 +14,16 @@ test.describe('Contenido demo', () => {
     }
   });
 
-  test('la foto del Hero avisa que falta la versión en alta resolución', async ({
+  test('la foto del Hero es la real, sin aviso demo (T3.27)', async ({
     page,
   }) => {
     await page.goto('/');
-    await expect(
-      page.locator('section[aria-labelledby="hero-title"] .demo-note'),
-    ).toContainText('1600 × 2000');
+    const hero = page.locator('section[aria-labelledby="hero-title"]');
+    await expect(hero.locator('.demo-note')).toHaveCount(0);
+    await expect(hero.locator('figure img')).toHaveAttribute(
+      'alt',
+      /^César Augusto/,
+    );
   });
 
   test('las respuestas demo no se publican en los datos estructurados', async ({
