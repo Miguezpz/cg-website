@@ -8,6 +8,14 @@ Landing page de conversión para **Control Gravedad**, la escuela de calistenia 
 
 Si la tarea **T0.0** del spec no está marcada como cerrada, **antes de hacer cualquier otra cosa pide al usuario la información de la marca tomada del Instagram de Control Gravedad**: costos, precios, horarios, restricciones, información general de la marca, etc. El checklist completo está en el spec, §17.1. No avances con otras tareas hasta recibirla (o hasta que el usuario diga explícitamente que se omita).
 
+## 📋 Planes pendientes (`plans/`)
+
+**Al iniciar cualquier sesión, lista la carpeta [`plans/`](plans/) y dile al usuario, en tu primera respuesta, qué planes hay pendientes** (nombre y estado de cada uno), aunque haya pedido otra cosa. Todo archivo en `plans/` es un plan pendiente o a medias.
+
+- Un plan por archivo (`plans/<tema>.md`), con su estado y sus pasos como casillas.
+- Al avanzar, marca las casillas y actualiza el estado en el mismo archivo.
+- Al terminar un plan, borra su archivo (queda en el historial de git y en el spec).
+
 ## Estado
 
 - Branches de trabajo: salen de `main` (ej. `red-theme`, acento vino de la guía de marca). `nuevo-sitio` se eliminó el 2026-10-25. `main` es producción en Vercel; los cambios pasan a `main` solo cuando el usuario lo pide.
