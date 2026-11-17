@@ -1,0 +1,414 @@
+---
+// La prueba de gravedad: secuencia de 400vh ligada al scroll
+// (src/lib/gravity/finale.ts) y contacto directo. Sin JS o con movimiento
+// reducido los tres paneles quedan apilados con cuadros fijos (el póster de
+// la película) y todo el contenido a la vista.
+import type { ImageMetadata } from 'astro';
+import Button from '../ui/Button.astro';
+import Icon from '../ui/Icon.astro';
+import Plate from './Plate.astro';
+import film from '../../data/gravity-film.json';
+import { waAttrs } from '../../lib/whatsapp';
+
+interface Props {
+  skip: string;
+  grip: {
+    title: string;
+    text: string;
+    hold: string;
+    holdHint: string;
+    held: string;
+    image: ImageMetadata;
+    imageAlt: string;
+  };
+  tension: {
+    text: string;
+    overlay: string;
+    readout: string;
+    posterAlt: string;
+  };
+  summit: {
+    accent: string;
+    rest: string;
+    text: string;
+    cta: string;
+    service: { id: string; waInterest: string };
+    image: ImageMetadata;
+    imageAlt: string;
+  };
+  form: {
+    title: string;
+    text: string;
+    name: { label: string; placeholder: string };
+    contact: { label: string; placeholder: string };
+    goal: { label: string; placeholder: string; options: readonly string[] };
+    privacy: { before: string; link: string; after: string };
+    submit: string;
+    sending: string;
+    success: string;
+    error: string;
+    errors: {
+      required: string;
+      contact: string;
+      goal: string;
+      privacy: string;
+    };
+    errorCta: string;
+    subject: string;
+  };
+  formAction: string;
+  accessKey: string;
+  redirect: string;
+}
+
+const { skip, grip, tension, summit, form, formAction, accessKey, redirect } =
+  Astro.props;
+
+const field =
+  'block min-h-12 w-full rounded-input border border-steel-700 bg-steel-950 px-4 py-3 text-chalk placeholder:text-concrete-400 transition-colors duration-fast hover:border-concrete-400 user-invalid:border-error-on-dark';
+const label = 'mb-2 block text-label font-semibold uppercase';
+const errorText = 'mt-2 text-label text-error-on-dark';
+const cover = 'absolute inset-0 size-full';
+// Velo plano (no gradiente) para que el texto se lea sobre la foto.
+const scrim = 'absolute inset-0 bg-steel-950 opacity-50';
+---
+
+<section
+  id="prueba"
+  data-finale
+  data-frames={film.frames}
+  data-pad={film.pad}
+  data-sizes={film.sizes.join(',')}
+  aria-labelledby="g-finale-title"
+  class="relative z-10 bg-steel-900"
+>
+  <div data-finale-track>
+    <div data-finale-stage class="relative">
+      <a
+        href="#contacto"
+        data-finale-skip
+        class="absolute top-20 right-(--spacing-gutter) z-20 inline-flex min-h-11 items-center gap-2 border border-steel-700 bg-steel-950 px-4 text-label font-semibold text-chalk uppercase transition-colors duration-fast hover:border-signal-glow hover:text-signal-glow"
+      >
+        {skip}
+        <Icon name="arrow" class="size-4 rotate-90" />
+      </a>
+
+      <!-- a. El agarre -->
+      <div
+        data-panel="a"
+        data-active
+        class="relative flex min-h-svh items-end overflow-clip"
+      >
+        <Plate
+          src={grip.image}
+          alt={grip.imageAlt}
+          sizes="100vw"
+          fill
+          class="size-full"
+          imgClass="size-full object-cover"
+        />
+        <div class={scrim}></div>
+        <div class="relative mx-auto flex w-full max-w-content flex-col items-start gap-10 px-gutter pt-36 pb-24 md:flex-row md:items-end md:justify-between">
+          <div>
+            <h2
+              id="g-finale-title"
+              data-grip-line
+              class="max-w-[14ch] text-h2 font-bold uppercase"
+            >
+              {grip.title}
+            </h2>
+            <p data-grip-line class="mt-4 text-lede">
+              {grip.text}
+            </p>
+          </div>
+          <div data-hold-wrap hidden class="flex flex-col items-center gap-3">
+            <button
+              type="button"
+              data-hold
+              aria-describedby="g-hold-hint"
+              class="g-hold relative grid size-40 place-items-center rounded-full bg-steel-950 px-5 text-center text-label font-semibold text-chalk uppercase select-none"
+            >
+              <svg
+                viewBox="0 0 100 100"
+                aria-hidden="true"
+                focusable="false"
+                class="pointer-events-none absolute inset-0 size-full -rotate-90"
+              >
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="48"
+                  fill="none"
+                  stroke-width="1.25"
+                  class="stroke-steel-700"
+                ></circle>
+                <circle
+                  data-hold-arc
+                  cx="50"
+                  cy="50"
+                  r="48"
+                  fill="none"
+                  stroke-width="1.25"
+                  pathLength="1"
+                  stroke-dasharray="1"
+                  stroke-dashoffset="1"
+                  class="stroke-signal-glow"
+                ></circle>
+              </svg>
+              <span class="relative">{grip.hold}</span>
+            </button>
+            <p id="g-hold-hint" class="sr-only">
+              {grip.holdHint}
+            </p>
+            <p
+              data-hold-status
+              data-held={grip.held}
+              role="status"
+              class="sr-only"
+            ></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- b. Tensión isométrica -->
+      <div data-panel="b" class="relative bg-steel-900">
+        <div
+          data-tension
+          class="flex min-h-[60svh] flex-col items-center justify-center gap-10 px-gutter py-section"
+        >
+          <div aria-hidden="true" class="flex h-32 items-end gap-5">
+            {[0, 1, 2, 3, 4].map(() => (
+              <span class="relative block h-full w-0.5 bg-steel-700">
+                <span
+                  data-bar
+                  class="g-bar-fill absolute inset-0 bg-signal-glow"
+                />
+              </span>
+            ))}
+          </div>
+          <p class="text-center text-h3 font-bold uppercase">{tension.text}</p>
+        </div>
+        <div
+          data-film
+          class="relative flex min-h-svh items-end overflow-clip bg-steel-900"
+        >
+          <div class={cover}>
+            <img
+              data-film-poster
+              src="/assets/gravity/planche-poster.webp"
+              alt={tension.posterAlt}
+              width={film.width}
+              height={film.height}
+              loading="lazy"
+              decoding="async"
+              class="size-full object-contain md:object-cover"
+            />
+          </div>
+          <canvas data-film-canvas aria-hidden="true" class={cover}></canvas>
+          <div class="relative mx-auto flex w-full max-w-content flex-wrap items-end justify-between gap-4 px-gutter pt-36 pb-24">
+            <p class="bg-steel-950 px-4 py-3 text-h3 font-bold uppercase">
+              {tension.overlay}
+            </p>
+            <p class="bg-steel-950 px-4 py-3 text-h3 font-bold text-signal-glow uppercase tabular-nums">
+              <span data-readout>100%</span> {tension.readout}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- c. La cima -->
+      <div
+        data-panel="c"
+        class="relative flex min-h-svh items-end overflow-clip"
+      >
+        <Plate
+          src={summit.image}
+          alt={summit.imageAlt}
+          sizes="100vw"
+          fill
+          class="size-full"
+          imgClass="size-full object-cover"
+        />
+        <canvas
+          data-burst-canvas
+          aria-hidden="true"
+          class:list={[cover, 'pointer-events-none text-chalk']}
+        ></canvas>
+        <div class="relative mx-auto w-full max-w-content px-gutter pt-36 pb-24">
+          <div class="max-w-xl bg-steel-950 p-6 sm:p-8">
+            <h2 class="text-display font-bold uppercase">
+              <span class="text-signal-glow">{summit.accent}</span>{' '}
+              {summit.rest}
+            </h2>
+            <p class="mt-4 max-w-[34ch] text-lede">{summit.text}</p>
+            <Button
+              icon="whatsapp"
+              class="mt-6 w-full sm:w-auto"
+              {...waAttrs({ service: summit.service, source: 'finale' })}
+            >
+              {summit.cta}
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contacto directo -->
+  <div id="contacto" data-section="contacto" class="bg-steel-950">
+    <div class="mx-auto grid w-full max-w-content gap-10 px-gutter py-section lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16">
+      <div>
+        <h3 id="g-form-title" class="text-h2 font-bold uppercase">
+          {form.title}
+        </h3>
+        <p class="mt-5 max-w-[30ch] text-lede text-concrete-400">{form.text}</p>
+      </div>
+
+      <form
+        method="POST"
+        action={formAction}
+        data-gravity-form
+        aria-labelledby="g-form-title"
+        class="border border-steel-700 bg-steel-900 p-6 sm:p-8"
+      >
+        <input type="hidden" name="access_key" value={accessKey} />
+        <input type="hidden" name="subject" value={form.subject} />
+        <input
+          type="hidden"
+          name="from_name"
+          value="Landing Control Gravedad"
+        />
+        <input type="hidden" name="redirect" value={redirect} />
+        <input
+          type="checkbox"
+          name="botcheck"
+          class="hidden"
+          tabindex="-1"
+          autocomplete="off"
+          aria-hidden="true"
+        />
+
+        <div class="space-y-5">
+          <div>
+            <label for="g-name" class={label}>
+              {form.name.label}
+              <span aria-hidden="true">*</span>
+            </label>
+            <input
+              id="g-name"
+              name="name"
+              type="text"
+              autocomplete="name"
+              required
+              placeholder={form.name.placeholder}
+              aria-describedby="g-name-error"
+              class={field}
+            />
+            <p id="g-name-error" class={errorText} data-error-for="name" hidden>
+              {form.errors.required}
+            </p>
+          </div>
+          <div>
+            <label for="g-contact" class={label}>
+              {form.contact.label}
+              <span aria-hidden="true">*</span>
+            </label>
+            <input
+              id="g-contact"
+              name="contact"
+              type="text"
+              inputmode="email"
+              autocomplete="off"
+              spellcheck="false"
+              required
+              pattern="(\+?[0-9][0-9 ]{9,})|([^@ ]+@[^@ ]+\.[^@ ]+)"
+              placeholder={form.contact.placeholder}
+              aria-describedby="g-contact-error"
+              class={field}
+            />
+            <p
+              id="g-contact-error"
+              class={errorText}
+              data-error-for="contact"
+              hidden
+            >
+              {form.errors.contact}
+            </p>
+          </div>
+          <div>
+            <label for="g-goal" class={label}>
+              {form.goal.label}
+              <span aria-hidden="true">*</span>
+            </label>
+            <select
+              id="g-goal"
+              name="goal"
+              required
+              aria-describedby="g-goal-error"
+              class={field}
+            >
+              <option value="" disabled selected>
+                {form.goal.placeholder}
+              </option>
+              {form.goal.options.map((option) => (
+                <option>{option}</option>
+              ))}
+            </select>
+            <p id="g-goal-error" class={errorText} data-error-for="goal" hidden>
+              {form.errors.goal}
+            </p>
+          </div>
+          <label class="flex min-h-11 cursor-pointer items-start gap-3">
+            <input
+              type="checkbox"
+              name="privacy"
+              required
+              aria-describedby="g-privacy-error"
+              class="mt-0.5 size-5 shrink-0 accent-signal-glow"
+            />
+            <span class="text-concrete-400">
+              {form.privacy.before}
+              <a
+                href="/privacidad/"
+                class="text-chalk underline hover:text-signal-glow"
+              >
+                {form.privacy.link}
+              </a>
+              {form.privacy.after}
+            </span>
+          </label>
+          <p
+            id="g-privacy-error"
+            class:list={[errorText, '-mt-3']}
+            data-error-for="privacy"
+            hidden
+          >
+            {form.errors.privacy}
+          </p>
+        </div>
+
+        <Button type="submit" class="mt-6 w-full" data-submit>
+          <span data-submit-label>{form.submit}</span>
+        </Button>
+        <div class="mt-4 min-h-6" aria-live="polite" role="status">
+          <p data-form-message hidden></p>
+          <a
+            data-form-fallback
+            hidden
+            {...waAttrs({ source: 'contact' })}
+            class="mt-2 inline-flex min-h-11 items-center gap-2 font-semibold text-chalk underline hover:text-signal-glow"
+          >
+            <Icon name="whatsapp" class="size-5" />
+            {form.errorCta}
+          </a>
+        </div>
+        <template data-copy>
+          <span data-key="submit">{form.submit}</span>
+          <span data-key="sending">{form.sending}</span>
+          <span data-key="success">{form.success}</span>
+          <span data-key="error">{form.error}</span>
+        </template>
+      </form>
+    </div>
+  </div>
+</section>

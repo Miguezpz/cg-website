@@ -1,0 +1,70 @@
+---
+// Velo de carga: la silueta de la anilla se llena de gis de abajo hacia arriba
+// con el avance real de los assets del Hero (src/lib/gravity/loader.ts).
+// Es decorativo (aria-hidden). Sin JS lo oculta el <noscript> de la página y
+// con movimiento reducido, el CSS.
+interface Props {
+  text: string;
+}
+
+const { text } = Astro.props;
+
+// La máscara sale del canal alfa del recorte de la anilla (SESSION 1). Si aún
+// no existe el archivo, se usa una anilla de dos círculos.
+const masks = import.meta.glob<string>('../../assets/gravity/ring-mask.svg', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+});
+const raw = Object.values(masks)[0];
+const viewBox = raw?.match(/viewBox="([\d.\s-]+)"/)?.[1];
+const d = raw?.match(/<path[^>]*\sd="([^"]+)"/)?.[1];
+const mask =
+  viewBox && d
+    ? { viewBox, d }
+    : {
+        viewBox: '0 0 100 100',
+        d: 'M50 4a46 46 0 1 0 0 92a46 46 0 1 0 0-92ZM50 20a30 30 0 1 1 0 60a30 30 0 1 1 0-60Z',
+      };
+const [, , width, height] = mask.viewBox.trim().split(/\s+/).map(Number);
+---
+
+<div
+  data-loader
+  aria-hidden="true"
+  class="g-loader fixed inset-0 z-70 grid place-items-center bg-steel-950"
+>
+  <div class="flex flex-col items-center gap-6">
+    <svg viewBox={mask.viewBox} class="h-36 w-auto" focusable="false">
+      <defs>
+        <path
+          id="g-ring-shape"
+          d={mask.d}
+          fill-rule="evenodd"
+          clip-rule="evenodd"
+        ></path>
+        <clipPath id="g-ring-clip">
+          <use href="#g-ring-shape"></use>
+        </clipPath>
+      </defs>
+      <use href="#g-ring-shape" class="fill-steel-700"></use>
+      <g clip-path="url(#g-ring-clip)">
+        <rect
+          data-loader-fill
+          data-height={height}
+          class="g-loader-fill fill-chalk"
+          x="0"
+          y="0"
+          width={width}
+          height={height}
+          style={`transform: translateY(${height}px)`}
+        ></rect>
+      </g>
+    </svg>
+    <p class="text-label text-concrete-400 tabular-nums">{text}</p>
+  </div>
+  <span
+    data-loader-line
+    class="g-loader-line absolute inset-x-0 bottom-0 h-0.5 origin-left scale-x-0 bg-signal-glow"
+  ></span>
+</div>

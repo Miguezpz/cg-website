@@ -1,0 +1,225 @@
+/*
+ * Landing animada /gravedad (spec T5.1). Solo tokens de @theme.
+ * Todo lo que pinea, escala o se liga al scroll se activa con JS
+ * ([data-enhanced]): sin JS o con movimiento reducido la página queda
+ * completa, en flujo normal y con cuadros fijos.
+ */
+
+/* Mínimo de 15 px en etiquetas y 18 px en lectura, solo en esta página. */
+html:has(.gravity-page) {
+  --text-label: 0.9375rem;
+  --text-body: 1.125rem;
+}
+
+.gravity-page {
+  overflow-x: clip;
+}
+
+/* El header fijo mide 4rem: las anclas dejan el borde de la sección justo
+   debajo (html ya trae scroll-padding-top de 5.5rem). */
+.gravity-page [id] {
+  scroll-margin-top: -1.5rem;
+}
+/* Anclas de la pila sticky: marcan dónde empieza cada sección sin pinear. */
+.gravity-page .g-anchor {
+  display: block;
+  height: 0;
+  scroll-margin-top: -5.5rem;
+}
+
+/* Placas de foto con las esquinas achaflanadas (sin sombras). */
+.plate-chamfer {
+  clip-path: polygon(
+    0 0,
+    calc(100% - 1.5rem) 0,
+    100% 1.5rem,
+    100% 100%,
+    1.5rem 100%,
+    0 calc(100% - 1.5rem)
+  );
+}
+
+/* 1. Loader ---------------------------------------------------------------- */
+
+/* Seguro sin JS activo: si el script no llega a quitarlo, se quita solo. */
+.g-loader {
+  animation: g-loader-failsafe 1ms linear 4s forwards;
+}
+.g-loader-fill {
+  transition: transform 260ms var(--ease-out-expo);
+}
+.g-loader-line {
+  transition: scale 260ms var(--ease-out-expo);
+}
+@keyframes g-loader-failsafe {
+  to {
+    visibility: hidden;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .g-loader {
+    display: none;
+  }
+}
+
+/* 2. Header ---------------------------------------------------------------- */
+
+.g-header {
+  transition:
+    background-color var(--duration-fast),
+    border-color var(--duration-fast);
+}
+.g-menu > summary {
+  list-style: none;
+}
+.g-menu > summary::-webkit-details-marker {
+  display: none;
+}
+.g-menu:not([open]) .g-menu-close,
+.g-menu[open] .g-menu-open {
+  display: none;
+}
+
+/* 3. Pila sticky de las tres primeras secciones ---------------------------- */
+
+[data-stack][data-enhanced] > [data-stack-item] {
+  position: sticky;
+  top: var(--stick-top, 0px);
+}
+/* El centro de la escala es el de la pantalla, aunque la sección sea más alta. */
+[data-stack-inner] {
+  transform-origin: 50% calc(100% - 50svh);
+}
+[data-stack-shade] {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  background: var(--color-steel-950);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Hero: el canvas solo se ve cuando ya dibujó (si no, queda la foto). */
+[data-hero-canvas]:not([data-ready]) {
+  visibility: hidden;
+}
+.g-parallax {
+  transition: translate 600ms var(--ease-out-expo);
+}
+
+/* 4. Método ---------------------------------------------------------------- */
+
+.g-node-mark {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* 5. Herramientas ---------------------------------------------------------- */
+
+/* El numeral señalado se marca con un trazo fino vino claro (el vino claro
+   no se usa como texto sobre concreto: no alcanza 4.5:1). */
+.g-tool-n {
+  border-bottom: 2px solid transparent;
+  transition:
+    color var(--duration-fast),
+    border-color var(--duration-fast);
+}
+@media (hover: hover) {
+  .group:hover > .g-tool-n {
+    border-bottom-color: var(--color-signal-glow);
+  }
+}
+.group:focus-visible > .g-tool-n {
+  border-bottom-color: var(--color-signal-glow);
+}
+
+[data-ring-viewer][data-ready] [data-ring-fallback] {
+  visibility: hidden;
+}
+[data-ring-viewer] canvas {
+  touch-action: pan-y;
+  cursor: grab;
+}
+[data-ring-viewer] canvas:active {
+  cursor: grabbing;
+}
+
+/* 6. Progresión: al señalar o enfocar un nivel, los demás se atenúan. ------- */
+
+@media (hover: hover) {
+  .g-levels:has(> li:hover) > li:not(:hover) {
+    opacity: 0.3;
+  }
+}
+.g-levels:has(> li:focus-visible) > li:not(:focus-visible) {
+  opacity: 0.3;
+}
+.g-levels > li {
+  transition: opacity var(--duration-fast) var(--ease-out-expo);
+}
+.g-rail-progress {
+  transform-origin: top center;
+}
+
+/* 7. La prueba de gravedad ------------------------------------------------- */
+
+.g-hold {
+  -webkit-touch-callout: none;
+  touch-action: manipulation;
+}
+.g-bar-fill {
+  transform-origin: bottom center;
+}
+
+[data-finale][data-enhanced] [data-finale-track] {
+  height: 400vh;
+}
+[data-finale][data-enhanced] [data-finale-stage] {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: clip;
+}
+/* Los paneles se cortan en seco (sin fundido): solo uno se ve a la vez. */
+[data-finale][data-enhanced] [data-panel] {
+  position: absolute;
+  inset: 0;
+  min-height: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+[data-finale][data-enhanced] [data-panel][data-active] {
+  opacity: 1;
+  pointer-events: auto;
+}
+/* En la secuencia, las barras de tensión y la película ocupan el mismo cuadro. */
+[data-finale][data-enhanced] [data-tension],
+[data-finale][data-enhanced] [data-film] {
+  position: absolute;
+  inset: 0;
+}
+[data-finale][data-enhanced] [data-phase='tension'] [data-film],
+[data-finale][data-enhanced] [data-phase='film'] [data-tension] {
+  visibility: hidden;
+}
+[data-finale]:not([data-enhanced]) [data-film-canvas],
+[data-finale]:not([data-enhanced]) [data-burst-canvas] {
+  display: none;
+}
+
+/* 8. Footer: sin JS, la correa es una franja quieta con su canto vino claro. */
+
+.g-footer {
+  border-top: 2px solid var(--color-signal-glow);
+  background: var(--color-steel-900);
+}
+.g-footer[data-wave] {
+  border-top-color: transparent;
+  background: transparent;
+}
+
+/* Header transparente solo arriba del todo y con el menú cerrado. */
+.g-header[data-at-top]:not(:has(.g-menu[open])) {
+  border-color: transparent;
+  background: transparent;
+}

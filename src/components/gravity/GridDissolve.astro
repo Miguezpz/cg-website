@@ -1,0 +1,24 @@
+---
+// Costura entre una sección oscura y una clara: retícula de 24 px que se
+// disuelve hacia arriba (src/lib/gravity/grid-dissolve.ts). Cuadros mate del
+// color de la sección que entra; sin JS no se dibuja nada (canto recto).
+interface Props {
+  tone: 'concrete-100' | 'steel-900' | 'steel-950';
+}
+
+const { tone } = Astro.props;
+const tones = {
+  'concrete-100': 'text-concrete-100',
+  'steel-900': 'text-steel-900',
+  'steel-950': 'text-steel-950',
+} as const;
+---
+
+<canvas
+  data-dissolve
+  aria-hidden="true"
+  class:list={[
+    'pointer-events-none absolute inset-x-0 bottom-full h-36 w-full',
+    tones[tone],
+  ]}
+></canvas>

@@ -1,0 +1,53 @@
+---
+// Foto de /gravedad: WebP adaptable (480/960/1600) vía astro:assets.
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+
+interface Props {
+  src: ImageMetadata;
+  alt: string;
+  sizes: string;
+  class?: string;
+  imgClass?: string;
+  eager?: boolean;
+  chamfer?: boolean;
+  /** Ocupa todo su contenedor (fondo a sangre) en vez de ir en el flujo. */
+  fill?: boolean;
+}
+
+const {
+  src,
+  alt,
+  sizes,
+  class: className,
+  imgClass,
+  eager = false,
+  chamfer = false,
+  fill = false,
+} = Astro.props;
+
+// 480 / 960 / 1600, sin ampliar por encima del original.
+const top = Math.min(src.width, 1600);
+const widths = [...new Set([480, 960, 1600].filter((w) => w < top)), top];
+---
+
+<div
+  class:list={[
+    fill ? 'absolute inset-0' : 'relative',
+    chamfer && 'plate-chamfer',
+    className,
+  ]}
+>
+  <Image
+    src={src}
+    alt={alt}
+    widths={widths}
+    sizes={sizes}
+    format="webp"
+    quality={72}
+    loading={eager ? 'eager' : 'lazy'}
+    fetchpriority={eager ? 'high' : undefined}
+    decoding={eager ? 'sync' : 'async'}
+    class={imgClass}
+  />
+</div>

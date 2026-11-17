@@ -1,0 +1,110 @@
+---
+// Herramientas mínimas (concreto claro): anilla en 3D a la izquierda, con
+// Three.js cargado solo cuando la sección se acerca
+// (src/lib/gravity/ring-viewer.ts), y los cinco recortes en retícula.
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+import GridDissolve from './GridDissolve.astro';
+import Plate from './Plate.astro';
+import film from '../../data/gravity-film.json';
+
+interface Props {
+  title: string;
+  text: string;
+  viewer: {
+    label: string;
+    hint: string;
+    image: ImageMetadata;
+    imageAlt: string;
+  };
+  items: readonly {
+    n: string;
+    name: string;
+    image: ImageMetadata;
+    alt: string;
+  }[];
+}
+
+const { title, text, viewer, items } = Astro.props;
+---
+
+<section
+  id="equipo"
+  data-section="equipo"
+  aria-labelledby="g-tools-title"
+  class="on-light relative z-10 bg-concrete-100 text-steel-950"
+>
+  <GridDissolve tone="concrete-100" />
+  <div class="mx-auto w-full max-w-content px-gutter py-section">
+    <h2 id="g-tools-title" class="text-h2 font-bold uppercase">
+      {title}
+    </h2>
+    <p class="mt-5 max-w-[32ch] text-lede">{text}</p>
+
+    <div class="mt-12 grid gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-16">
+      <div>
+        <div
+          data-ring-viewer
+          data-glb={film.glb ?? ''}
+          class="relative aspect-square w-full border border-steel-700"
+        >
+          <Image
+            data-ring-fallback
+            src={viewer.image}
+            alt={viewer.imageAlt}
+            widths={[320, 640, Math.min(viewer.image.width, 960)]}
+            sizes="(min-width: 64rem) 28rem, 92vw"
+            format="webp"
+            quality={72}
+            loading="lazy"
+            class="absolute inset-0 size-full object-contain p-8"
+          />
+          <canvas
+            data-ring-canvas
+            hidden
+            tabindex="0"
+            role="img"
+            aria-label={viewer.label}
+            aria-describedby="g-ring-hint"
+            class="absolute inset-0 size-full [--strap:var(--color-steel-950)] [--wood:var(--color-birch)]"
+          ></canvas>
+        </div>
+        <p
+          id="g-ring-hint"
+          data-ring-hint
+          hidden
+          class="mt-3 text-label text-concrete-600"
+        >
+          {viewer.hint}
+        </p>
+      </div>
+
+      <ul class="grid grid-cols-2 gap-px self-start border border-steel-700 bg-steel-700 sm:grid-cols-6">
+        {items.map((item, i) => (
+          <li
+            tabindex="0"
+            class:list={[
+              'group flex flex-col bg-concrete-100 p-4',
+              i < 3 ? 'sm:col-span-2' : 'sm:col-span-3',
+              i === items.length - 1 && 'col-span-2',
+            ]}
+          >
+            <span class="g-tool-n self-start text-label font-semibold text-concrete-600 tabular-nums transition-colors duration-fast group-hover:text-steel-950 group-focus-visible:text-steel-950">
+              {item.n}
+            </span>
+            <Plate
+              src={item.image}
+              alt={item.alt}
+              sizes="(min-width: 64rem) 16rem, (min-width: 40rem) 30vw, 45vw"
+              class="mx-auto my-3 aspect-square w-full max-w-56 transition-transform duration-200 ease-out-expo group-hover:-translate-y-1.5 group-focus-visible:-translate-y-1.5"
+              imgClass="size-full object-contain"
+            />
+            <span class="mt-auto text-label font-semibold uppercase">
+              {item.name}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>

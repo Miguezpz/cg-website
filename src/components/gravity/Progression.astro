@@ -1,0 +1,77 @@
+---
+// De cero al control total (acero): riel vertical con una línea de progreso
+// ligada al scroll y cinco niveles alternados
+// (src/lib/gravity/progression.ts).
+import type { ImageMetadata } from 'astro';
+import GridDissolve from './GridDissolve.astro';
+import Plate from './Plate.astro';
+
+interface Props {
+  title: string;
+  levels: readonly {
+    label: string;
+    text: string;
+    image: ImageMetadata;
+    alt: string;
+  }[];
+}
+
+const { title, levels } = Astro.props;
+---
+
+<section
+  id="progresion"
+  data-section="progresion"
+  aria-labelledby="g-progression-title"
+  class="relative z-10 bg-steel-950"
+>
+  <GridDissolve tone="steel-950" />
+  <div class="mx-auto w-full max-w-content px-gutter py-section">
+    <h2
+      id="g-progression-title"
+      class="max-w-[18ch] text-h2 font-bold uppercase"
+    >
+      {title}
+    </h2>
+
+    <div class="relative mt-14">
+      <div
+        data-rail
+        aria-hidden="true"
+        class="absolute inset-y-0 left-1.5 w-px bg-steel-700 md:left-1/2"
+      >
+        <span
+          data-rail-progress
+          class="g-rail-progress absolute inset-y-0 -left-px w-0.5 bg-signal-glow"
+        ></span>
+        <span
+          data-rail-marker
+          class="absolute bottom-0 -left-1.5 size-3 rotate-45 border-2 border-signal-glow bg-steel-950"
+        ></span>
+      </div>
+      <ol class="g-levels space-y-14 md:space-y-20">
+        {levels.map((level, i) => (
+          <li
+            tabindex="0"
+            class="grid gap-5 pl-8 md:grid-cols-2 md:items-center md:gap-20 md:pl-0"
+          >
+            <Plate
+              src={level.image}
+              alt={level.alt}
+              sizes="(min-width: 72rem) 32rem, (min-width: 48rem) 44vw, 86vw"
+              chamfer
+              class={`aspect-3/2 w-full ${i % 2 === 1 ? 'md:order-2' : ''}`}
+              imgClass="size-full object-cover"
+            />
+            <div>
+              <p class="text-label font-semibold text-signal-glow uppercase tabular-nums">
+                {level.label}
+              </p>
+              <p class="mt-3 max-w-[30ch] text-lede">{level.text}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+</section>

@@ -16,7 +16,11 @@ export type WaSource =
   | 'services'
   | 'skills'
   | 'contact'
-  | 'floating';
+  | 'floating'
+  // Landing animada /gravedad (spec T5.1).
+  | 'method'
+  | 'finale'
+  | 'footer';
 
 const DEFAULT_INTEREST = 'entrenar contigo';
 

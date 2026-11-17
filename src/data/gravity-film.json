@@ -1,0 +1,10 @@
+{
+  "placeholder": false,
+  "frames": 253,
+  "fps": 15,
+  "pad": 3,
+  "sizes": [640, 1280],
+  "width": 1280,
+  "height": 720,
+  "glb": "/assets/gravity/ring.glb"
+}

@@ -49,6 +49,8 @@
   --color-whatsapp: #25d366;
   --color-error-on-dark: #ffa057;
   --color-error-on-light: #b42318;
+  /* Madera de abedul: solo material de la anilla 3D de /gravedad (DESIGN.md). */
+  --color-birch: #c9a57b;
   --color-transparent: transparent;
   --color-current: currentColor;
 

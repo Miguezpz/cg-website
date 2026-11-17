@@ -1,0 +1,152 @@
+---
+// El método y las modalidades (concreto claro): puntos de fondo en Canvas 2D
+// y una ruta escalonada de cuatro etapas que se traza en vino claro al entrar
+// (src/lib/gravity/method.ts). Sin JS la ruta ya se ve trazada.
+import Button from '../ui/Button.astro';
+import GridDissolve from './GridDissolve.astro';
+import { waAttrs } from '../../lib/whatsapp';
+
+interface Props {
+  title: string;
+  text: string;
+  pathLabel: string;
+  checkpoints: readonly { n: string; label: string }[];
+  stats: readonly { value: string; label: string }[];
+  cta: string;
+  service: { id: string; waInterest: string };
+}
+
+const { title, text, pathLabel, checkpoints, stats, cta, service } =
+  Astro.props;
+
+// Escalera de cuatro peldaños: cada nodo descansa en un tramo horizontal.
+const PATH = 'M20 440H150V330H270V210H380V80H480';
+const LENGTH = 130 + 110 + 120 + 120 + 110 + 130 + 100;
+// Posición de cada nodo y cuánto del trazo se ha recorrido al llegar a él.
+const nodes = [
+  { x: 70, y: 440, at: 50 / LENGTH, anchor: 'start' },
+  { x: 190, y: 330, at: (130 + 110 + 40) / LENGTH, anchor: 'start' },
+  {
+    x: 300,
+    y: 210,
+    at: (130 + 110 + 120 + 120 + 30) / LENGTH,
+    anchor: 'start',
+  },
+  {
+    x: 420,
+    y: 80,
+    at: (130 + 110 + 120 + 120 + 110 + 130 + 40) / LENGTH,
+    anchor: 'end',
+  },
+] as const;
+---
+
+<div id="metodo" class="g-anchor"></div>
+<section
+  data-stack-item
+  data-section="metodo"
+  aria-labelledby="g-method-title"
+  class="on-light relative z-2 bg-steel-950"
+>
+  <GridDissolve tone="concrete-100" />
+  <div
+    data-stack-inner
+    class="relative overflow-clip bg-concrete-100 text-steel-950"
+  >
+    <canvas
+      data-dots
+      aria-hidden="true"
+      class="pointer-events-none absolute inset-0 size-full text-steel-700 opacity-20"
+    ></canvas>
+    <div class="relative mx-auto grid min-h-svh w-full max-w-content gap-12 px-gutter py-section lg:grid-cols-2 lg:items-center lg:gap-16">
+      <div>
+        <h2 id="g-method-title" class="text-h2 font-bold uppercase">
+          {title}
+        </h2>
+        <p class="mt-5 max-w-[32ch] text-lede">{text}</p>
+        <ul class="mt-8 border-t border-steel-700">
+          {stats.map((stat) => (
+            <li class="flex flex-wrap items-baseline gap-x-4 gap-y-1 border-b border-steel-700 py-4">
+              <strong class="min-w-28 text-h3 font-bold tabular-nums">
+                {stat.value}
+              </strong>
+              <span class="text-label font-semibold text-concrete-600 uppercase">
+                {stat.label}
+              </span>
+            </li>
+          ))}
+        </ul>
+        <Button
+          icon="whatsapp"
+          class="mt-8 w-full sm:w-auto"
+          {...waAttrs({ service, source: 'method' })}
+        >
+          {cta}
+        </Button>
+      </div>
+
+      <svg
+        data-method-path
+        viewBox="0 0 500 520"
+        role="img"
+        aria-label={pathLabel}
+        class="w-full max-w-lg justify-self-center font-sans lg:max-w-none"
+      >
+        <path
+          d={PATH}
+          fill="none"
+          stroke-width="2"
+          class="stroke-steel-700"
+        ></path>
+        <path
+          data-path-progress
+          d={PATH}
+          pathLength="1"
+          fill="none"
+          stroke-width="2"
+          stroke-dasharray="1"
+          stroke-dashoffset="0"
+          class="stroke-signal-glow"
+        ></path>
+        {checkpoints.map((point, i) => {
+          const node = nodes[i];
+          const textX = node.anchor === 'end' ? node.x + 10 : node.x - 10;
+          return (
+            <g>
+              <rect
+                x={node.x - 10}
+                y={node.y - 10}
+                width="20"
+                height="20"
+                stroke-width="2"
+                class="fill-concrete-100 stroke-steel-950"
+              />
+              <rect
+                data-node-mark
+                data-at={node.at.toFixed(4)}
+                x={node.x - 5}
+                y={node.y - 5}
+                width="10"
+                height="10"
+                class="g-node-mark fill-signal-glow"
+              />
+              <text
+                x={textX}
+                y={node.y + 44}
+                text-anchor={node.anchor}
+                font-size="22"
+                class="fill-steel-950 font-bold tabular-nums"
+              >
+                {point.n}
+                <tspan class="fill-concrete-600 font-semibold" dx="6">
+                  {point.label}
+                </tspan>
+              </text>
+            </g>
+          );
+        })}
+      </svg>
+    </div>
+    <div data-stack-shade></div>
+  </div>
+</section>

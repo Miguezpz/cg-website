@@ -4,6 +4,7 @@
       "staticDistDir": "./dist",
       "url": [
         "http://localhost/index.html",
+        "http://localhost/gravedad/index.html",
         "http://localhost/privacidad/index.html"
       ],
       "numberOfRuns": 3

@@ -1,0 +1,99 @@
+---
+// Hero «revelado de gis»: el <img> nítido es la base (LCP, sin JS y con
+// movimiento reducido); encima, un canvas WebGL2 pinta el velo de magnesia y
+// su canto (src/lib/gravity/hero-gl.ts).
+import type { ImageMetadata } from 'astro';
+import { getImage } from 'astro:assets';
+import Button from '../ui/Button.astro';
+import Plate from './Plate.astro';
+import { waAttrs } from '../../lib/whatsapp';
+
+interface Props {
+  title: string;
+  accent: string;
+  subheadline: string;
+  tagline: string;
+  cta: string;
+  image: ImageMetadata;
+  chalkImage: ImageMetadata;
+  imageAlt: string;
+  note: string;
+}
+
+const {
+  title,
+  accent,
+  subheadline,
+  tagline,
+  cta,
+  image,
+  chalkImage,
+  imageAlt,
+  note,
+} = Astro.props;
+
+// Textura del velo: misma toma que el retrato, con la nube de magnesia.
+const [chalk, chalkSmall] = await Promise.all(
+  [960, 480].map((width) =>
+    getImage({
+      src: chalkImage,
+      format: 'webp',
+      width: Math.min(chalkImage.width, width),
+      quality: 72,
+    }),
+  ),
+);
+---
+
+<section
+  data-stack-item
+  data-section="inicio"
+  aria-labelledby="g-hero-title"
+  class="relative z-1 bg-steel-950"
+>
+  <div data-stack-inner data-hero class="relative overflow-clip bg-steel-900">
+    <div class="mx-auto grid min-h-svh w-full max-w-content gap-10 px-gutter pt-24 pb-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.85fr)] lg:items-center lg:gap-12 lg:pb-8">
+      <div>
+        <h1 id="g-hero-title" class="text-display font-bold uppercase">
+          {title}
+          <span class="block text-signal-glow">{accent}</span>
+        </h1>
+        <p class="mt-6 text-body text-concrete-400">{subheadline}</p>
+        <p class="mt-2 max-w-[30ch] text-body">{tagline}</p>
+        <Button
+          icon="whatsapp"
+          class="mt-8 w-full sm:w-auto"
+          {...waAttrs({ source: 'hero' })}
+        >
+          {cta}
+        </Button>
+      </div>
+
+      <figure class="mx-auto w-full max-w-88 self-end lg:max-w-[min(100%,calc((100svh-11rem)*0.75))] lg:self-center">
+        <div data-hero-figure class="relative aspect-3/4 overflow-clip">
+          <div data-hero-parallax class="g-parallax absolute -inset-[3%]">
+            <Plate
+              src={image}
+              alt={imageAlt}
+              sizes="(min-width: 64rem) 32rem, (min-width: 24rem) 22rem, 92vw"
+              eager
+              class="size-full"
+              imgClass="size-full object-cover"
+            />
+            <canvas
+              data-hero-canvas
+              data-chalk-src={chalk.src}
+              data-chalk-src-small={chalkSmall.src}
+              aria-hidden="true"
+              class="pointer-events-none absolute inset-0 size-full [--chalk:var(--color-chalk)] [--glow:var(--color-signal-glow)]"
+            ></canvas>
+          </div>
+        </div>
+        <figcaption class="mt-2 text-label text-concrete-400">
+          {note}
+        </figcaption>
+      </figure>
+    </div>
+    <div data-stack-shade></div>
+  </div>
+</section>

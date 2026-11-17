@@ -1,0 +1,66 @@
+---
+// Landing animada «La prueba de gravedad» (spec T5.1). Vive junto a la home
+// para compararlas antes de reemplazarla.
+import '../styles/gravity.css';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import WhatsAppButton from '../components/WhatsAppButton.astro';
+import Loader from '../components/gravity/Loader.astro';
+import GravityHeader from '../components/gravity/GravityHeader.astro';
+import Hero from '../components/gravity/Hero.astro';
+import Method from '../components/gravity/Method.astro';
+import Session from '../components/gravity/Session.astro';
+import Tools from '../components/gravity/Tools.astro';
+import Progression from '../components/gravity/Progression.astro';
+import Finale from '../components/gravity/Finale.astro';
+import GravityFooter from '../components/gravity/GravityFooter.astro';
+import { contact } from '../data/home';
+import {
+  finale,
+  footer,
+  header,
+  hero,
+  loader,
+  method,
+  nav,
+  progression,
+  seo,
+  session,
+  tools,
+} from '../data/gravity';
+---
+
+<BaseLayout title={seo.title} description={seo.description}>
+  <noscript slot="head">
+    <style>
+      [data-loader] {
+        display: none !important;
+      }
+    </style>
+  </noscript>
+  <Loader slot="header" {...loader} />
+  <GravityHeader slot="header" {...header} links={nav} />
+
+  <div class="gravity-page">
+    <div data-stack>
+      <Hero {...hero} />
+      <Method {...method} />
+      <Session {...session} />
+    </div>
+    <Tools {...tools} />
+    <Progression {...progression} />
+    <Finale
+      {...finale}
+      formAction="https://api.web3forms.com/submit"
+      accessKey={import.meta.env.PUBLIC_WEB3FORMS_KEY ?? ''}
+      redirect={new URL('/gracias/', Astro.site).href}
+    />
+  </div>
+
+  <GravityFooter slot="footer" {...footer} links={nav} />
+  <WhatsAppButton slot="footer" label={contact.floatingLabel} />
+</BaseLayout>
+
+<script>
+  import { initGravity } from '../lib/gravity/main';
+  initGravity();
+</script>

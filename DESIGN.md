@@ -33,6 +33,7 @@ El vino de la guía (`#6A1E2B`) se lee muy bien con texto claro encima (10.2:1),
 | `signal-glow` | `#e0707f` | Vino claro para dibujar sobre acero: foco, cursor, checkbox, enlace en hover, canto del CTA (6.2:1 sobre `steel-950`, 5.7:1 sobre `steel-900`) |
 | `whatsapp` | `#25d366` | **Solo** el botón flotante de WhatsApp: barra en móvil, círculo en escritorio (texto `steel-950`, 9.7:1) |
 | `error-on-dark` / `error-on-light` | `#ffa057` / `#b42318` | Mensajes de error (9.5:1 / 5.9:1). El de oscuro es naranja para no confundirse con `signal-glow` |
+| `birch` | `#c9a57b` | **Solo** material de la anilla 3D de `/gravedad` (madera de abedul). Nunca texto ni UI |
 
 Tailwind solo conoce estos colores (`--color-*: initial`), así que un color suelto no compila.
 

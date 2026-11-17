@@ -1,0 +1,79 @@
+---
+// Barra superior de /gravedad: marca a la izquierda y navegación a la derecha
+// (activa en vino claro). En móvil el menú es un <details>: funciona sin JS.
+import Icon from '../ui/Icon.astro';
+
+interface Props {
+  brand: string;
+  home: string;
+  navLabel: string;
+  menuLabel: string;
+  mobileNavLabel: string;
+  links: readonly { label: string; href: string }[];
+}
+
+const { brand, home, navLabel, menuLabel, mobileNavLabel, links } = Astro.props;
+---
+
+<div
+  data-g-sentinel
+  class="absolute top-0 h-px w-full"
+  aria-hidden="true"
+></div>
+<header
+  data-g-header
+  class="g-header fixed inset-x-0 top-0 z-40 border-b border-steel-700 bg-steel-950"
+>
+  <div class="mx-auto flex h-16 w-full max-w-content items-center gap-4 px-gutter">
+    <a
+      href="#contenido"
+      aria-label={home}
+      translate="no"
+      class="mr-auto flex min-h-11 items-center text-label font-bold tracking-[0.08em] text-chalk uppercase"
+    >
+      {brand}
+    </a>
+
+    <nav aria-label={navLabel} class="hidden lg:block">
+      <ul class="flex items-center gap-1">
+        {links.map((link) => (
+          <li>
+            <a
+              href={link.href}
+              data-g-nav
+              class="inline-flex min-h-11 items-center border-b-2 border-transparent px-3 text-label font-semibold text-concrete-400 uppercase transition-colors duration-fast hover:text-chalk aria-[current=location]:border-signal-glow aria-[current=location]:text-chalk"
+            >
+              {link.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <details data-g-menu class="g-menu lg:hidden">
+      <summary class="-mr-2 inline-flex size-11 cursor-pointer items-center justify-center text-chalk">
+        <Icon name="menu" class="g-menu-open size-6" />
+        <Icon name="close" class="g-menu-close size-6" />
+        <span class="sr-only">{menuLabel}</span>
+      </summary>
+      <nav
+        aria-label={mobileNavLabel}
+        class="absolute inset-x-0 top-16 border-b border-steel-700 bg-steel-950 px-gutter pt-2 pb-6"
+      >
+        <ul class="border-t border-steel-700">
+          {links.map((link) => (
+            <li class="border-b border-steel-700">
+              <a
+                href={link.href}
+                data-g-nav
+                class="flex min-h-14 items-center text-h3 font-bold uppercase aria-[current=location]:text-signal-glow"
+              >
+                {link.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </details>
+  </div>
+</header>

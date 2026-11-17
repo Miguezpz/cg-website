@@ -1,0 +1,102 @@
+---
+// Footer «onda de tensión»: una correa negra tejida que ondula en Canvas 2D
+// (src/lib/gravity/footer-wave.ts) con su canto de 2 px en vino claro. Sin JS
+// queda una franja quieta de acero.
+import Icon from '../ui/Icon.astro';
+import type { SocialLink } from '../../data/types';
+import { waAttrs } from '../../lib/whatsapp';
+
+interface Props {
+  title: string;
+  whatsapp: string;
+  instagram?: SocialLink;
+  sectionsLabel: string;
+  links: readonly { label: string; href: string }[];
+  top: string;
+  copyright: string;
+  privacy: string;
+  note: string;
+}
+
+const {
+  title,
+  whatsapp,
+  instagram,
+  sectionsLabel,
+  links,
+  top,
+  copyright,
+  privacy,
+  note,
+} = Astro.props;
+
+const link =
+  'inline-flex min-h-11 items-center gap-2 text-label font-semibold text-chalk uppercase underline transition-colors duration-fast hover:text-signal-glow';
+---
+
+<footer data-footer class="g-footer relative z-10 overflow-clip">
+  <canvas
+    data-wave-canvas
+    aria-hidden="true"
+    class="pointer-events-none absolute inset-0 size-full [--edge:var(--color-signal-glow)] [--speck:var(--color-chalk)] [--strap:var(--color-steel-900)] [--thread:var(--color-steel-700)]"
+  ></canvas>
+  <div class="relative mx-auto w-full max-w-content px-gutter pt-28 pb-[calc(6rem+env(safe-area-inset-bottom))] md:pb-16">
+    <h2 class="text-h2 font-bold uppercase">{title}</h2>
+
+    <div class="mt-8 flex flex-wrap gap-x-8 gap-y-2">
+      <a {...waAttrs({ source: 'footer' })} class={link}>
+        <Icon name="whatsapp" class="size-5" />
+        {whatsapp}
+      </a>
+      {instagram && (
+        <a
+          href={instagram.url}
+          target="_blank"
+          rel="noopener"
+          data-track="social"
+          data-network={instagram.network}
+          class={link}
+        >
+          <Icon name="instagram" class="size-5" />
+          <span translate="no">{instagram.handle}</span>{' '}
+          <span class="sr-only">en Instagram</span>
+        </a>
+      )}
+    </div>
+
+    <nav aria-label={sectionsLabel} class="mt-6 border-t border-steel-700 pt-4">
+      <ul class="flex flex-wrap gap-x-6">
+        {links.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              class="inline-flex min-h-11 items-center text-label font-semibold text-concrete-400 uppercase transition-colors duration-fast hover:text-signal-glow"
+            >
+              {item.label}
+            </a>
+          </li>
+        ))}
+        <li>
+          <a
+            href="#contenido"
+            class="inline-flex min-h-11 items-center gap-2 text-label font-semibold text-chalk uppercase transition-colors duration-fast hover:text-signal-glow"
+          >
+            {top}
+            <Icon name="arrow" class="size-4 -rotate-90" />
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="mt-8 flex flex-col gap-2 text-label text-concrete-400 sm:flex-row sm:justify-between">
+      <p>{copyright}</p>
+      <a
+        href="/privacidad/"
+        class="inline-flex min-h-11 items-center underline hover:text-chalk sm:min-h-0"
+      >
+        {privacy}
+      </a>
+    </div>
+    <p class="mt-4 max-w-prose text-label text-concrete-400">{note}</p>
+  </div>
+</footer>

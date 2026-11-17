@@ -35,3 +35,6 @@ playwright-report/
 .impeccable/mocks/
 .impeccable/review/
 .impeccable/questions/
+
+# Material de trabajo de la landing /gravedad (originales de Higgsfield, video fuente)
+.gravity-work/

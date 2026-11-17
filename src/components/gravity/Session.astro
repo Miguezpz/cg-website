@@ -1,0 +1,64 @@
+---
+// En la sesión (acero): dos indicaciones del coach como filas de texto
+// separadas por cantos de 1 px. Sin audio (decisión del usuario, 2026-11-15).
+import type { ImageMetadata } from 'astro';
+import GridDissolve from './GridDissolve.astro';
+import Plate from './Plate.astro';
+
+interface Props {
+  title: string;
+  cues: readonly { n: string; label: string; text: string }[];
+  image: ImageMetadata;
+  imageAlt: string;
+}
+
+const { title, cues, image, imageAlt } = Astro.props;
+---
+
+<div id="sesion" class="g-anchor"></div>
+<section
+  data-stack-item
+  data-section="sesion"
+  aria-labelledby="g-session-title"
+  class="relative z-3 bg-steel-950"
+>
+  <GridDissolve tone="steel-900" />
+  <div data-stack-inner class="relative overflow-clip bg-steel-900">
+    <div class="mx-auto grid min-h-svh w-full max-w-content gap-12 px-gutter py-section lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-center lg:gap-16">
+      <div>
+        <h2 id="g-session-title" class="text-h2 font-bold uppercase">
+          {title}
+        </h2>
+        <ol class="mt-10 border-t border-steel-700">
+          {cues.map((cue, i) => (
+            <li
+              data-reveal={i}
+              class="grid grid-cols-[2.5rem_minmax(0,1fr)] gap-x-4 border-b border-steel-700 py-7"
+            >
+              <span
+                aria-hidden="true"
+                class="text-label font-semibold text-signal-glow tabular-nums"
+              >
+                {cue.n}
+              </span>
+              <div>
+                <h3 class="text-label font-semibold text-concrete-400 uppercase">
+                  {cue.label}
+                </h3>
+                <p class="mt-2 max-w-[34ch] text-lede">{cue.text}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+      <Plate
+        src={image}
+        alt={imageAlt}
+        sizes="(min-width: 64rem) 30rem, 92vw"
+        chamfer
+        class="aspect-4/3 w-full"
+        imgClass="size-full object-cover"
+      />
+    </div>
+  </div>
+</section>
