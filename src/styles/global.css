@@ -136,6 +136,8 @@
     font-family: var(--font-sans);
     font-size: 100%;
     -webkit-text-size-adjust: 100%;
+    /* Sin el recuadro azul del navegador al tocar en móvil (se hereda a todo). */
+    -webkit-tap-highlight-color: transparent;
     text-rendering: optimizeLegibility;
     scrollbar-color: var(--color-steel-700) var(--color-steel-950);
     /* El header sticky no tapa anclas ni el elemento enfocado. */
@@ -167,7 +169,6 @@
   select,
   textarea {
     touch-action: manipulation;
-    -webkit-tap-highlight-color: transparent;
   }
 
   /* Tailwind v4 deja el cursor del navegador en botones y listas: que se lean
